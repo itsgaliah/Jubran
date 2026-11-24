@@ -240,10 +240,3 @@ document.getElementById("receive-button")
     renderMessages();
     renderContacts();
   });
-
-    saveContacts();
-    input.value = "";
-
-    renderMessages();
-    renderContacts();
-  });
