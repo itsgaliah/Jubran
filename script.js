@@ -74,6 +74,8 @@ document.querySelectorAll(".app").forEach(button => {
   appTitle.textContent = name;
   appContent.textContent = appMessages[name] || "";
 }
+   });
+}); 
 
 function renderContacts() {
   conversationList.replaceChildren();
