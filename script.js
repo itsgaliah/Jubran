@@ -221,3 +221,23 @@ document.getElementById("back-home")
     homeScreen.classList.remove("hidden");
     activeContact = null;
   });
+document.getElementById("receive-message-form")
+  .addEventListener("submit", event => {
+    event.preventDefault();
+
+    const input = document.getElementById("receive-input");
+    const text = input.value.trim();
+
+    if (!text || !activeContact) return;
+
+    activeContact.messages.push({
+      text: text,
+      type: "received"
+    });
+
+    saveContacts();
+    input.value = "";
+
+    renderMessages();
+    renderContacts();
+  });
