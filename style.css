@@ -208,3 +208,145 @@ body {
   padding: 10px 18px;
   cursor: pointer;
 }
+
+.messages-app {
+  background: #fff;
+  color: #222;
+  height: 100%;
+  padding: 20px 15px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.messages-app h2 {
+  font-size: 27px;
+  margin: 15px 0 5px;
+}
+
+.message-subtitle {
+  color: #888;
+  font-size: 13px;
+}
+
+#add-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+#add-contact-form input,
+#send-message-form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+  width: 100%;
+}
+
+#add-contact-form button,
+#send-message-form button {
+  background: #1685ee;
+  color: white;
+  border: none;
+  padding: 11px;
+  border-radius: 12px;
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 5px;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  background: white;
+  color: #222;
+  border-radius: 0;
+  text-align: left;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #dce8f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.conversation-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.conversation-info small {
+  color: #888;
+}
+
+#chat-view {
+  margin-top: 15px;
+}
+
+#chat-view h3 {
+  text-align: center;
+}
+
+#chat-messages {
+  min-height: 250px;
+  max-height: 330px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.sent {
+  background: #1685ee;
+  color: white;
+  align-self: flex-end;
+}
+
+.received {
+  background: #e8e8ed;
+  color: #222;
+  align-self: flex-start;
+}
+
+#send-message-form {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+#send-message-form button {
+  flex-shrink: 0;
+}
+
+#back-messages {
+  background: #eee;
+  border: none;
+  border-radius: 15px;
+  padding: 8px 12px;
+  color: #1685ee;
+}
