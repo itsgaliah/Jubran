@@ -303,8 +303,8 @@ function renderCalls() {
     details.textContent = call.time;
 
     const direction = document.createElement("span");
-    direction.className = "call-direction";
-    direction.textContent =
+    direction.className = "call-direction " +
+  (call.type === "Incoming call" ? "incoming" : "outgoing");    direction.textContent =
       call.type === "Incoming call" ? "↙ Incoming" : "↗ Outgoing";
 
     info.append(name, details, direction);
