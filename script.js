@@ -15,7 +15,16 @@ const chatView = document.getElementById("chat-view");
 const chatName = document.getElementById("chat-name");
 const chatMessages = document.getElementById("chat-messages");
 
-let contacts = [];
+let contacts = JSON.parse(
+  localStorage.getItem("myPhoneContacts") || "[]"
+);
+
+function saveContacts() {
+  localStorage.setItem(
+    "myPhoneContacts",
+    JSON.stringify(contacts)
+  );
+}
 let activeContact = null;
 
 const appMessages = {
