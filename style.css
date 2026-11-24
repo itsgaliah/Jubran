@@ -367,4 +367,25 @@ body {
   display: block;
   border-radius: 50%;
 }
+#receive-message-form {
+  display: flex;
+  gap: 7px;
+  margin-top: 10px;
+}
 
+#receive-message-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+#receive-message-form button {
+  background: #888;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  flex-shrink: 0;
+}
