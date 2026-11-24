@@ -136,8 +136,10 @@
       <input id="contact-name" type="text"
         placeholder="Person's name" required>
 
-      <input id="contact-photo" type="url"
-        placeholder="Photo URL (optional)">
+<label for="contact-photo">Choose a photo</label>
+
+<input id="contact-photo" type="file"
+  accept="image/*">
 
       <button type="submit">+ Add Contact</button>
     </form>
