@@ -64,6 +64,7 @@ document.querySelectorAll(".app").forEach(button => {
   genericApp.classList.remove("hidden");
   phoneApp.classList.remove("hidden");
   otherApp.classList.add("hidden");
+    renderCalls();
 
 } else {
   messagesApp.classList.add("hidden");
