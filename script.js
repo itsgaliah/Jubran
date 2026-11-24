@@ -71,11 +71,11 @@ document.querySelectorAll(".app").forEach(button => {
   phoneApp.classList.add("hidden");
   otherApp.classList.remove("hidden");
 
-  appTitle.textContent = name;
+    appTitle.textContent = name;
   appContent.textContent = appMessages[name] || "";
 }
-   });
-}); 
+  });
+});
 
 function renderContacts() {
   conversationList.replaceChildren();
