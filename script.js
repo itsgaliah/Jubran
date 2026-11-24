@@ -221,9 +221,8 @@ document.getElementById("back-home")
     homeScreen.classList.remove("hidden");
     activeContact = null;
   });
-document.getElementById("receive-message-form")
-  .addEventListener("submit", event => {
-    event.preventDefault();
+document.getElementById("receive-button")
+  .addEventListener("click", () => {
 
     const input = document.getElementById("receive-input");
     const text = input.value.trim();
@@ -234,6 +233,13 @@ document.getElementById("receive-message-form")
       text: text,
       type: "received"
     });
+
+    saveContacts();
+    input.value = "";
+
+    renderMessages();
+    renderContacts();
+  });
 
     saveContacts();
     input.value = "";
