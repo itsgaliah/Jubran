@@ -193,12 +193,14 @@ document.getElementById("send-message-form")
 
     if (!text || !activeContact) return;
 
-    activeContact.messages.push({
-      text,
-      type: "sent"
-    });
+activeContact.messages.push({
+  text,
+  type: "sent"
+});
 
-    input.value = "";
+saveContacts();
+
+input.value = "";
     renderMessages();
     renderContacts();
   });
