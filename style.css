@@ -421,3 +421,48 @@ body {
   border: none;
   background: #e8e8e8;
 }
+.call-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.call-item .avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd;
+  font-size: 20px;
+}
+
+.call-item .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.call-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.call-direction {
+  font-size: 13px;
+}
+
+.call-direction.incoming {
+  color: #34a853;
+}
+
+.call-direction.outgoing {
+  color: #3985e9;
+}
