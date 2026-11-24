@@ -252,3 +252,61 @@ document.getElementById("receive-button")
     renderMessages();
     renderContacts();
   });
+let calls = JSON.parse(
+  localStorage.getItem("myPhoneCalls") || "[]"
+);
+
+function saveCalls() {
+  localStorage.setItem(
+    "myPhoneCalls",
+    JSON.stringify(calls)
+  );
+}
+
+function renderCalls() {
+  const callList = document.getElementById("call-list");
+
+  callList.replaceChildren();
+
+  if (calls.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "No recent calls";
+    callList.appendChild(empty);
+    return;
+  }
+
+  calls.forEach(call => {
+    const item = document.createElement("div");
+    item.className = "call-item";
+
+    const name = document.createElement("strong");
+    name.textContent = call.name;
+
+    const details = document.createElement("small");
+    details.textContent = call.type + " · " + call.time;
+
+    item.append(name, details);
+    callList.appendChild(item);
+  });
+}
+
+document.getElementById("add-call")
+  .addEventListener("click", () => {
+
+    const name = prompt("Enter the person's name:");
+
+    if (!name || !name.trim()) return;
+
+    const incoming = confirm(
+      "Incoming call? Press OK for Incoming or Cancel for Outgoing."
+    );
+
+    calls.unshift({
+      name: name.trim(),
+      type: incoming ? "Incoming call" : "Outgoing call",
+      time: new Date().toLocaleString()
+    });
+
+    saveCalls();
+    renderCalls();
+  });
