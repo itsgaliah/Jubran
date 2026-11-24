@@ -1,5 +1,4 @@
 
-
 const lockScreen = document.querySelector(".lock-screen");
 const homeScreen = document.getElementById("home-screen");
 const appScreen = document.getElementById("app-screen");
@@ -17,9 +16,12 @@ const chatView = document.getElementById("chat-view");
 const chatName = document.getElementById("chat-name");
 const chatMessages = document.getElementById("chat-messages");
 
+// Contacts
 let contacts = JSON.parse(
   localStorage.getItem("myPhoneContacts") || "[]"
 );
+
+let activeContact = null;
 
 function saveContacts() {
   localStorage.setItem(
@@ -27,8 +29,20 @@ function saveContacts() {
     JSON.stringify(contacts)
   );
 }
-let activeContact = null;
 
+// Calls
+let calls = JSON.parse(
+  localStorage.getItem("myPhoneCalls") || "[]"
+);
+
+function saveCalls() {
+  localStorage.setItem(
+    "myPhoneCalls",
+    JSON.stringify(calls)
+  );
+}
+
+// App messages
 const appMessages = {
   Phone: "Recent calls will appear here.",
   Photos: "Your photo gallery will appear here.",
@@ -40,11 +54,13 @@ const appMessages = {
   Music: "Your music will appear here."
 };
 
+// Unlock phone
 function unlockPhone() {
   lockScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
 }
 
+// Open apps
 document.querySelectorAll(".app").forEach(button => {
   button.addEventListener("click", () => {
     const name = button.dataset.app;
@@ -53,31 +69,32 @@ document.querySelectorAll(".app").forEach(button => {
     appScreen.classList.remove("hidden");
 
     if (name === "Messages") {
-  genericApp.classList.add("hidden");
-  messagesApp.classList.remove("hidden");
-  chatView.classList.add("hidden");
-  conversationList.classList.remove("hidden");
-  renderContacts();
+      genericApp.classList.add("hidden");
+      messagesApp.classList.remove("hidden");
+      chatView.classList.add("hidden");
+      conversationList.classList.remove("hidden");
+      renderContacts();
 
-} else if (name === "Phone") {
-  messagesApp.classList.add("hidden");
-  genericApp.classList.remove("hidden");
-  phoneApp.classList.remove("hidden");
-  otherApp.classList.add("hidden");
-    renderCalls();
+    } else if (name === "Phone") {
+      messagesApp.classList.add("hidden");
+      genericApp.classList.remove("hidden");
+      phoneApp.classList.remove("hidden");
+      otherApp.classList.add("hidden");
+      renderCalls();
 
-} else {
-  messagesApp.classList.add("hidden");
-  genericApp.classList.remove("hidden");
-  phoneApp.classList.add("hidden");
-  otherApp.classList.remove("hidden");
+    } else {
+      messagesApp.classList.add("hidden");
+      genericApp.classList.remove("hidden");
+      phoneApp.classList.add("hidden");
+      otherApp.classList.remove("hidden");
 
-    appTitle.textContent = name;
-  appContent.textContent = appMessages[name] || "";
-}
+      appTitle.textContent = name;
+      appContent.textContent = appMessages[name] || "";
+    }
   });
 });
 
+// Render contacts
 function renderContacts() {
   conversationList.replaceChildren();
 
@@ -119,11 +136,12 @@ function renderContacts() {
     button.append(avatar, info);
 
     button.addEventListener("click", () => openChat(contact));
+
     conversationList.appendChild(button);
   });
 }
 
-
+// Add contact
 document.getElementById("add-contact-form")
   .addEventListener("submit", event => {
     event.preventDefault();
@@ -168,12 +186,13 @@ document.getElementById("add-contact-form")
       };
 
       reader.readAsDataURL(file);
+
     } else {
       addContact("");
     }
   });
 
-
+// Open chat
 function openChat(contact) {
   activeContact = contact;
   chatName.textContent = contact.name;
@@ -184,8 +203,11 @@ function openChat(contact) {
   renderMessages();
 }
 
+// Render messages
 function renderMessages() {
   chatMessages.replaceChildren();
+
+  if (!activeContact) return;
 
   activeContact.messages.forEach(message => {
     const bubble = document.createElement("div");
@@ -197,6 +219,7 @@ function renderMessages() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+// Send message
 document.getElementById("send-message-form")
   .addEventListener("submit", event => {
     event.preventDefault();
@@ -206,37 +229,21 @@ document.getElementById("send-message-form")
 
     if (!text || !activeContact) return;
 
-activeContact.messages.push({
-  text,
-  type: "sent"
-});
+    activeContact.messages.push({
+      text: text,
+      type: "sent"
+    });
 
-saveContacts();
+    saveContacts();
 
-input.value = "";
+    input.value = "";
     renderMessages();
     renderContacts();
   });
 
-document.getElementById("back-messages")
-  .addEventListener("click", () => {
-    chatView.classList.add("hidden");
-    conversationList.classList.remove("hidden");
-    activeContact = null;
-    renderContacts();
-  });
-
-document.getElementById("back-home")
-  .addEventListener("click", () => {
-    appScreen.classList.add("hidden");
-    messagesApp.classList.add("hidden");
-    genericApp.classList.remove("hidden");
-    homeScreen.classList.remove("hidden");
-    activeContact = null;
-  });
+// Receive message
 document.getElementById("receive-button")
   .addEventListener("click", () => {
-
     const input = document.getElementById("receive-input");
     const text = input.value.trim();
 
@@ -253,17 +260,31 @@ document.getElementById("receive-button")
     renderMessages();
     renderContacts();
   });
-let calls = JSON.parse(
-  localStorage.getItem("myPhoneCalls") || "[]"
-);
 
-function saveCalls() {
-  localStorage.setItem(
-    "myPhoneCalls",
-    JSON.stringify(calls)
-  );
-}
+// Back to conversations
+document.getElementById("back-messages")
+  .addEventListener("click", () => {
+    chatView.classList.add("hidden");
+    conversationList.classList.remove("hidden");
 
+    activeContact = null;
+    renderContacts();
+  });
+
+// Back home
+document.getElementById("back-home")
+  .addEventListener("click", () => {
+    appScreen.classList.add("hidden");
+    messagesApp.classList.add("hidden");
+    genericApp.classList.remove("hidden");
+    phoneApp.classList.add("hidden");
+    otherApp.classList.remove("hidden");
+    homeScreen.classList.remove("hidden");
+
+    activeContact = null;
+  });
+
+// Render calls
 function renderCalls() {
   const callList = document.getElementById("call-list");
   callList.replaceChildren();
@@ -304,7 +325,9 @@ function renderCalls() {
 
     const direction = document.createElement("span");
     direction.className = "call-direction " +
-  (call.type === "Incoming call" ? "incoming" : "outgoing");    direction.textContent =
+      (call.type === "Incoming call" ? "incoming" : "outgoing");
+
+    direction.textContent =
       call.type === "Incoming call" ? "↙ Incoming" : "↗ Outgoing";
 
     info.append(name, details, direction);
@@ -313,35 +336,10 @@ function renderCalls() {
     callList.appendChild(item);
   });
 }
-  const callList = document.getElementById("call-list");
 
-  callList.replaceChildren();
-
-  if (calls.length === 0) {
-    const empty = document.createElement("p");
-    empty.textContent = "No recent calls";
-    callList.appendChild(empty);
-    return;
-  }
-
-  calls.forEach(call => {
-    const item = document.createElement("div");
-    item.className = "call-item";
-
-    const name = document.createElement("strong");
-    name.textContent = call.name;
-
-    const details = document.createElement("small");
-    details.textContent = call.type + " · " + call.time;
-
-    item.append(name, details);
-    callList.appendChild(item);
-  });
-}
-
+// Add call
 document.getElementById("add-call")
   .addEventListener("click", () => {
-
     const name = prompt("Enter the person's name:");
 
     if (!name || !name.trim()) return;
