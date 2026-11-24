@@ -266,6 +266,54 @@ function saveCalls() {
 
 function renderCalls() {
   const callList = document.getElementById("call-list");
+  callList.replaceChildren();
+
+  if (calls.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "No recent calls";
+    callList.appendChild(empty);
+    return;
+  }
+
+  calls.forEach(call => {
+    const item = document.createElement("div");
+    item.className = "call-item";
+
+    const contact = contacts.find(
+      person => person.name.toLowerCase() === call.name.toLowerCase()
+    );
+
+    const avatar = document.createElement("span");
+    avatar.className = "avatar";
+
+    if (contact && contact.photo) {
+      const img = document.createElement("img");
+      img.src = contact.photo;
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = call.name.charAt(0).toUpperCase();
+    }
+
+    const info = document.createElement("div");
+
+    const name = document.createElement("strong");
+    name.textContent = call.name;
+
+    const details = document.createElement("small");
+    details.textContent = call.time;
+
+    const direction = document.createElement("span");
+    direction.className = "call-direction";
+    direction.textContent =
+      call.type === "Incoming call" ? "↙ Incoming" : "↗ Outgoing";
+
+    info.append(name, details, direction);
+    item.append(avatar, info);
+
+    callList.appendChild(item);
+  });
+}
+  const callList = document.getElementById("call-list");
 
   callList.replaceChildren();
 
