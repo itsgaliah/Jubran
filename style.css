@@ -350,3 +350,21 @@ body {
   padding: 8px 12px;
   color: #1685ee;
 }
+
+#add-contact-form label {
+  font-size: 13px;
+  color: #777;
+}
+
+#contact-photo {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.avatar img {
+  display: block;
+  border-radius: 50%;
+}
+
