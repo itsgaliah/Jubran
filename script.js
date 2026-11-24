@@ -53,19 +53,27 @@ document.querySelectorAll(".app").forEach(button => {
     appScreen.classList.remove("hidden");
 
     if (name === "Messages") {
-      genericApp.classList.add("hidden");
-      messagesApp.classList.remove("hidden");
-      chatView.classList.add("hidden");
-      conversationList.classList.remove("hidden");
-      renderContacts();
-    } else {
-      messagesApp.classList.add("hidden");
-      genericApp.classList.remove("hidden");
-      appTitle.textContent = name;
-      appContent.textContent = appMessages[name] || "";
-    }
-  });
-});
+  genericApp.classList.add("hidden");
+  messagesApp.classList.remove("hidden");
+  chatView.classList.add("hidden");
+  conversationList.classList.remove("hidden");
+  renderContacts();
+
+} else if (name === "Phone") {
+  messagesApp.classList.add("hidden");
+  genericApp.classList.remove("hidden");
+  phoneApp.classList.remove("hidden");
+  otherApp.classList.add("hidden");
+
+} else {
+  messagesApp.classList.add("hidden");
+  genericApp.classList.remove("hidden");
+  phoneApp.classList.add("hidden");
+  otherApp.classList.remove("hidden");
+
+  appTitle.textContent = name;
+  appContent.textContent = appMessages[name] || "";
+}
 
 function renderContacts() {
   conversationList.replaceChildren();
