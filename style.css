@@ -1,0 +1,98 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #222;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.phone {
+  width: 350px;
+  min-height: 700px;
+  background: linear-gradient(160deg, #293b55, #101522);
+  border: 7px solid #111;
+  border-radius: 45px;
+  padding: 22px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 10px 40px #0008;
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+h1 {
+  margin-top: 45px;
+  font-size: 32px;
+}
+
+.date {
+  color: #ddd;
+  margin-bottom: 40px;
+}
+
+.apps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px 10px;
+}
+
+.app {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.app-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 8px;
+  border-radius: 17px;
+  font-size: 27px;
+}
+
+.messages { background: #39b86a; }
+.photos { background: #f4e8c7; }
+.notes { background: #e9d77b; }
+.music { background: #c65a87; }
+.settings { background: #aaa; }
+.camera { background: #555; }
+
+.screen {
+  margin-top: 35px;
+  padding: 15px;
+  min-height: 110px;
+  border-radius: 18px;
+  background: #ffffff20;
+}
+
+.screen p {
+  color: #ddd;
+  font-size: 14px;
+}
+
+.home-button {
+  margin-top: 20px;
+  padding: 10px 35px;
+  border-radius: 20px;
+  border: 1px solid #ffffff80;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
