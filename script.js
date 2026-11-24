@@ -6,6 +6,8 @@ const appScreen = document.getElementById("app-screen");
 
 const genericApp = document.getElementById("generic-app");
 const messagesApp = document.getElementById("messages-app");
+const phoneApp = document.getElementById("phone-app");
+const otherApp = document.getElementById("other-app");
 
 const appTitle = document.getElementById("app-title");
 const appContent = document.getElementById("app-content");
