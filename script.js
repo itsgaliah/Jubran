@@ -110,6 +110,7 @@ function renderContacts() {
   });
 }
 
+
 document.getElementById("add-contact-form")
   .addEventListener("submit", event => {
     event.preventDefault();
@@ -118,21 +119,47 @@ document.getElementById("add-contact-form")
     const photoInput = document.getElementById("contact-photo");
 
     const name = nameInput.value.trim();
-    const photo = photoInput.value.trim();
+    const file = photoInput.files[0];
 
     if (!name) return;
 
-    contacts.push({
-      name,
-      photo,
-      messages: []
-    });
+    function addContact(photo) {
+      contacts.push({
+        name: name,
+        photo: photo,
+        messages: []
+      });
 
-    nameInput.value = "";
-    photoInput.value = "";
+      saveContacts();
+      renderContacts();
 
-    renderContacts();
+      nameInput.value = "";
+      photoInput.value = "";
+    }
+
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        alert("Please choose an image.");
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Choose a photo smaller than 2 MB.");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        addContact(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      addContact("");
+    }
   });
+
 
 function openChat(contact) {
   activeContact = contact;
