@@ -117,11 +117,51 @@
 
 </section>
 
+
 <section id="app-screen" class="app-screen hidden">
+
   <button id="back-home">← Home</button>
-  <h2 id="app-title"></h2>
-  <p id="app-content"></p>
+
+  <div id="generic-app">
+    <h2 id="app-title"></h2>
+    <p id="app-content"></p>
+  </div>
+
+  <div id="messages-app" class="messages-app hidden">
+
+    <h2>Messages</h2>
+    <p class="message-subtitle">Your conversations</p>
+
+    <form id="add-contact-form">
+      <input id="contact-name" type="text"
+        placeholder="Person's name" required>
+
+      <input id="contact-photo" type="url"
+        placeholder="Photo URL (optional)">
+
+      <button type="submit">+ Add Contact</button>
+    </form>
+
+    <div id="conversation-list"></div>
+
+    <div id="chat-view" class="hidden">
+      <button id="back-messages">← Conversations</button>
+
+      <h3 id="chat-name"></h3>
+
+      <div id="chat-messages"></div>
+
+      <form id="send-message-form">
+        <input id="message-input" type="text"
+          placeholder="iMessage" required>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+  </div>
+
 </section>
+
 
     
   </main>
