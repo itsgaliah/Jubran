@@ -3,64 +3,76 @@ const lockScreen = document.querySelector(".lock-screen");
 const homeScreen = document.getElementById("home-screen");
 const appScreen = document.getElementById("app-screen");
 
-const genericApp = document.getElementById("generic-app");
-const messagesApp = document.getElementById("messages-app");
-const phoneApp = document.getElementById("phone-app");
-const otherApp = document.getElementById("other-app");
-
-const appTitle = document.getElementById("app-title");
-const appContent = document.getElementById("app-content");
-
-const conversationList = document.getElementById("conversation-list");
-const chatView = document.getElementById("chat-view");
-const chatName = document.getElementById("chat-name");
-const chatMessages = document.getElementById("chat-messages");
-
-// Contacts
-let contacts = JSON.parse(
-  localStorage.getItem("myPhoneContacts") || "[]"
-);
-
-let activeContact = null;
-
-function saveContacts() {
-  localStorage.setItem(
-    "myPhoneContacts",
-    JSON.stringify(contacts)
-  );
-}
-
-// Calls
-let calls = JSON.parse(
-  localStorage.getItem("myPhoneCalls") || "[]"
-);
-
-function saveCalls() {
-  localStorage.setItem(
-    "myPhoneCalls",
-    JSON.stringify(calls)
-  );
-}
-
-// App messages
 const appMessages = {
-  Phone: "Recent calls will appear here.",
-  Photos: "Your photo gallery will appear here.",
-  Camera: "Camera screen.",
-  TikTok: "Your TikTok feed will appear here.",
-  Instagram: "Your Instagram feed will appear here.",
-  Notes: "Your notes will appear here.",
-  Settings: "Your phone settings.",
-  Music: "Your music will appear here."
+  Photos: "Your photo gallery",
+  Camera: "Your camera",
+  Notes: "Your notes",
+  TikTok: "Your TikTok feed",
+  Instagram: "Your Instagram feed",
+  Music: "Your music library",
+  Settings: "Your phone settings"
 };
 
-// Unlock phone
+// STORAGE
+function loadData(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+let contacts = loadData("myPhoneContacts");
+let calls = loadData("myPhoneCalls");
+let notes = loadData("myPhoneNotes");
+let photos = loadData("myPhonePhotos");
+
+let activeContact = null;
+let cameraStream = null;
+
+function saveData(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {
+    alert("Storage is full. Please remove some saved items.");
+  }
+}
+
+function saveContacts() {
+  saveData("myPhoneContacts", contacts);
+}
+
+function saveCalls() {
+  saveData("myPhoneCalls", calls);
+}
+
+function saveNotes() {
+  saveData("myPhoneNotes", notes);
+}
+
+function savePhotos() {
+  saveData("myPhonePhotos", photos);
+}
+
+// UNLOCK
 function unlockPhone() {
   lockScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
 }
 
-// Open apps
+// APP NAVIGATION
+const appElements = {
+  Phone: "phone-app",
+  Messages: "messages-app",
+  Photos: "photos-app",
+  Camera: "camera-app",
+  Notes: "notes-app",
+  TikTok: "tiktok-app",
+  Instagram: "instagram-app",
+  Music: "music-app",
+  Settings: "settings-app"
+};
+
 document.querySelectorAll(".app").forEach(button => {
   button.addEventListener("click", () => {
     const name = button.dataset.app;
@@ -68,33 +80,38 @@ document.querySelectorAll(".app").forEach(button => {
     homeScreen.classList.add("hidden");
     appScreen.classList.remove("hidden");
 
-    if (name === "Messages") {
-      genericApp.classList.add("hidden");
-      messagesApp.classList.remove("hidden");
-      chatView.classList.add("hidden");
-      conversationList.classList.remove("hidden");
-      renderContacts();
+    Object.values(appElements).forEach(id => {
+      document.getElementById(id).classList.add("hidden");
+    });
 
-    } else if (name === "Phone") {
-      messagesApp.classList.add("hidden");
-      genericApp.classList.remove("hidden");
-      phoneApp.classList.remove("hidden");
-      otherApp.classList.add("hidden");
-      renderCalls();
+    const target = document.getElementById(appElements[name]);
 
-    } else {
-      messagesApp.classList.add("hidden");
-      genericApp.classList.remove("hidden");
-      phoneApp.classList.add("hidden");
-      otherApp.classList.remove("hidden");
-
-      appTitle.textContent = name;
-      appContent.textContent = appMessages[name] || "";
+    if (target) {
+      target.classList.remove("hidden");
     }
+
+    if (name === "Messages") renderContacts();
+    if (name === "Phone") renderCalls();
+    if (name === "Photos") renderPhotos();
+    if (name === "Notes") renderNotes();
   });
 });
 
-// Render contacts
+// BACK HOME
+document.getElementById("back-home").addEventListener("click", () => {
+  appScreen.classList.add("hidden");
+  homeScreen.classList.remove("hidden");
+
+  activeContact = null;
+  stopCamera();
+});
+
+// MESSAGES
+const conversationList = document.getElementById("conversation-list");
+const chatView = document.getElementById("chat-view");
+const chatName = document.getElementById("chat-name");
+const chatMessages = document.getElementById("chat-messages");
+
 function renderContacts() {
   conversationList.replaceChildren();
 
@@ -114,7 +131,6 @@ function renderContacts() {
     if (contact.photo) {
       const img = document.createElement("img");
       img.src = contact.photo;
-      img.alt = "";
       avatar.appendChild(img);
     } else {
       avatar.textContent = contact.name.charAt(0).toUpperCase();
@@ -127,10 +143,11 @@ function renderContacts() {
     name.textContent = contact.name;
 
     const lastMessage = document.createElement("small");
-    lastMessage.textContent =
-      contact.messages.length
-        ? contact.messages[contact.messages.length - 1].text
-        : "No messages yet";
+    const messages = contact.messages || [];
+
+    lastMessage.textContent = messages.length
+      ? messages[messages.length - 1].text
+      : "No messages yet";
 
     info.append(name, lastMessage);
     button.append(avatar, info);
@@ -141,7 +158,7 @@ function renderContacts() {
   });
 }
 
-// Add contact
+// ADD CONTACT
 document.getElementById("add-contact-form")
   .addEventListener("submit", event => {
     event.preventDefault();
@@ -156,8 +173,8 @@ document.getElementById("add-contact-form")
 
     function addContact(photo) {
       contacts.push({
-        name: name,
-        photo: photo,
+        name,
+        photo,
         messages: []
       });
 
@@ -181,18 +198,14 @@ document.getElementById("add-contact-form")
 
       const reader = new FileReader();
 
-      reader.onload = () => {
-        addContact(reader.result);
-      };
-
+      reader.onload = () => addContact(reader.result);
       reader.readAsDataURL(file);
-
     } else {
       addContact("");
     }
   });
 
-// Open chat
+// OPEN CHAT
 function openChat(contact) {
   activeContact = contact;
   chatName.textContent = contact.name;
@@ -203,11 +216,12 @@ function openChat(contact) {
   renderMessages();
 }
 
-// Render messages
 function renderMessages() {
   chatMessages.replaceChildren();
 
   if (!activeContact) return;
+
+  activeContact.messages = activeContact.messages || [];
 
   activeContact.messages.forEach(message => {
     const bubble = document.createElement("div");
@@ -219,7 +233,7 @@ function renderMessages() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Send message
+// SEND MESSAGE
 document.getElementById("send-message-form")
   .addEventListener("submit", event => {
     event.preventDefault();
@@ -230,18 +244,18 @@ document.getElementById("send-message-form")
     if (!text || !activeContact) return;
 
     activeContact.messages.push({
-      text: text,
+      text,
       type: "sent"
     });
 
     saveContacts();
-
     input.value = "";
+
     renderMessages();
     renderContacts();
   });
 
-// Receive message
+// RECEIVE MESSAGE
 document.getElementById("receive-button")
   .addEventListener("click", () => {
     const input = document.getElementById("receive-input");
@@ -250,7 +264,7 @@ document.getElementById("receive-button")
     if (!text || !activeContact) return;
 
     activeContact.messages.push({
-      text: text,
+      text,
       type: "received"
     });
 
@@ -261,7 +275,7 @@ document.getElementById("receive-button")
     renderContacts();
   });
 
-// Back to conversations
+// BACK TO CONVERSATIONS
 document.getElementById("back-messages")
   .addEventListener("click", () => {
     chatView.classList.add("hidden");
@@ -271,20 +285,7 @@ document.getElementById("back-messages")
     renderContacts();
   });
 
-// Back home
-document.getElementById("back-home")
-  .addEventListener("click", () => {
-    appScreen.classList.add("hidden");
-    messagesApp.classList.add("hidden");
-    genericApp.classList.remove("hidden");
-    phoneApp.classList.add("hidden");
-    otherApp.classList.remove("hidden");
-    homeScreen.classList.remove("hidden");
-
-    activeContact = null;
-  });
-
-// Render calls
+// PHONE CALLS
 function renderCalls() {
   const callList = document.getElementById("call-list");
   callList.replaceChildren();
@@ -332,12 +333,11 @@ function renderCalls() {
 
     info.append(name, details, direction);
     item.append(avatar, info);
-
     callList.appendChild(item);
   });
 }
 
-// Add call
+// ADD CALL
 document.getElementById("add-call")
   .addEventListener("click", () => {
     const name = prompt("Enter the person's name:");
@@ -357,3 +357,167 @@ document.getElementById("add-call")
     saveCalls();
     renderCalls();
   });
+
+// PHOTOS
+const galleryUpload = document.getElementById("gallery-upload");
+const photoGallery = document.getElementById("photo-gallery");
+
+function renderPhotos() {
+  photoGallery.replaceChildren();
+
+  photos.forEach(photo => {
+    const img = document.createElement("img");
+    img.src = photo;
+    img.alt = "Saved photo";
+    photoGallery.appendChild(img);
+  });
+}
+
+galleryUpload.addEventListener("change", () => {
+  const files = Array.from(galleryUpload.files);
+
+  files.forEach(file => {
+    if (!file.type.startsWith("image/")) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Each photo must be smaller than 2 MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      photos.push(reader.result);
+      savePhotos();
+      renderPhotos();
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+  galleryUpload.value = "";
+});
+
+// CAMERA
+const cameraPreview = document.getElementById("camera-preview");
+const cameraCanvas = document.getElementById("camera-canvas");
+const cameraMessage = document.getElementById("camera-message");
+
+document.getElementById("start-camera")
+  .addEventListener("click", async () => {
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        cameraMessage.textContent = "Camera is not supported here.";
+        return;
+      }
+
+      cameraStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+        audio: false
+      });
+
+      cameraPreview.srcObject = cameraStream;
+      cameraMessage.textContent = "Camera is ready!";
+    } catch {
+      cameraMessage.textContent =
+        "Camera permission was denied or unavailable.";
+    }
+  });
+
+document.getElementById("take-photo")
+  .addEventListener("click", () => {
+    if (!cameraStream || !cameraPreview.videoWidth) {
+      cameraMessage.textContent = "Open the camera first.";
+      return;
+    }
+
+    cameraCanvas.width = cameraPreview.videoWidth;
+    cameraCanvas.height = cameraPreview.videoHeight;
+
+    const context = cameraCanvas.getContext("2d");
+    context.drawImage(
+      cameraPreview,
+      0,
+      0,
+      cameraCanvas.width,
+      cameraCanvas.height
+    );
+
+    const photo = cameraCanvas.toDataURL("image/jpeg");
+
+    photos.push(photo);
+    savePhotos();
+
+    cameraMessage.textContent = "Photo saved to Photos!";
+  });
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+    cameraStream = null;
+  }
+
+  cameraPreview.srcObject = null;
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) stopCamera();
+});
+
+// NOTES
+const noteTitle = document.getElementById("note-title");
+const noteContent = document.getElementById("note-content");
+const notesList = document.getElementById("notes-list");
+
+function renderNotes() {
+  notesList.replaceChildren();
+
+  notes.forEach((note, index) => {
+    const item = document.createElement("div");
+    item.className = "note-item";
+
+    const title = document.createElement("h3");
+    title.textContent = note.title || "Untitled";
+
+    const content = document.createElement("p");
+    content.textContent = note.content;
+
+    const remove = document.createElement("button");
+    remove.textContent = "Delete";
+
+    remove.addEventListener("click", () => {
+      notes.splice(index, 1);
+      saveNotes();
+      renderNotes();
+    });
+
+    item.append(title, content, remove);
+    notesList.appendChild(item);
+  });
+}
+
+document.getElementById("save-note")
+  .addEventListener("click", () => {
+    const title = noteTitle.value.trim();
+    const content = noteContent.value.trim();
+
+    if (!title && !content) return;
+
+    notes.unshift({ title, content });
+
+    saveNotes();
+    renderNotes();
+
+    noteTitle.value = "";
+    noteContent.value = "";
+  });
+
+// LIKE BUTTONS
+document.querySelectorAll(".like-button").forEach(button => {
+  button.addEventListener("click", () => {
+    const liked = button.dataset.liked === "true";
+
+    button.dataset.liked = String(!liked);
+    button.textContent = liked ? "♡ Like" : "♥ Liked";
+  });
+});
