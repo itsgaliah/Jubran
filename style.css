@@ -2667,3 +2667,194 @@ body.dark-mode #take-photo {
     padding: 13px;
   }
 }
+/* ===== IPHONE NOTIFICATIONS ===== */
+
+.notification-banner {
+  position: absolute;
+  top: 55px;
+  left: 12px;
+  right: 12px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px;
+  border-radius: 20px;
+
+  background: #ffffffed;
+  color: #222;
+
+  box-shadow: 0 8px 25px #0003;
+  backdrop-filter: blur(20px);
+
+  animation: notificationSlide .3s ease;
+}
+
+.notification-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #31c75b;
+  font-size: 22px;
+}
+
+.notification-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.notification-content strong {
+  font-size: 14px;
+}
+
+.notification-content p {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #666;
+  overflow-wrap: anywhere;
+}
+
+@keyframes notificationSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== INCOMING CALL ===== */
+
+.incoming-call {
+  position: absolute;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 85px 25px 65px;
+
+  color: white;
+  background:
+    radial-gradient(circle at top, #647b9d, transparent 55%),
+    linear-gradient(160deg, #303b55, #101521);
+}
+
+.incoming-call-top {
+  text-align: center;
+  padding-top: 35px;
+}
+
+.incoming-call-top > p:first-child {
+  font-size: 14px;
+  opacity: .8;
+}
+
+.caller-avatar {
+  width: 105px;
+  height: 105px;
+
+  display: grid;
+  place-items: center;
+
+  margin: 65px auto 20px;
+
+  border-radius: 50%;
+  background: #ffffff30;
+  font-size: 45px;
+}
+
+.incoming-call-top h2 {
+  font-size: 29px;
+  margin-bottom: 10px;
+}
+
+.incoming-call-top p:last-child {
+  font-size: 15px;
+  opacity: .7;
+}
+
+.call-actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 35px;
+}
+
+.call-actions button {
+  width: 75px;
+  height: 75px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  border: none;
+  border-radius: 50%;
+
+  color: white;
+  font-size: 24px;
+}
+
+.call-actions button span {
+  position: absolute;
+  margin-top: 105px;
+  font-size: 12px;
+}
+
+.decline-call {
+  background: #ff453a;
+}
+
+.accept-call {
+  background: #30d158;
+}
+
+/* ===== SIMULATE CALL BUTTON ===== */
+
+#simulate-incoming-call {
+  width: 100%;
+  padding: 13px;
+  margin-top: 12px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: #30b65b;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===== APP HOME INDICATOR ===== */
+
+.app-home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 108px;
+  height: 4px;
+
+  border-radius: 10px;
+  background: #222;
+
+  z-index: 50;
+  pointer-events: none;
+}
+
+.dark-mode .app-home-indicator {
+  background: white;
+}
