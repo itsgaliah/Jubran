@@ -869,3 +869,82 @@ body {
 .app-screen {
   position: relative;
 }
+
+/* ===== IPHONE STATUS BAR ===== */
+
+.status-bar,
+.home-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 101;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.battery-icon {
+  width: 23px;
+  height: 11px;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  padding: 1.5px;
+  position: relative;
+  display: inline-flex;
+}
+
+.battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -3.5px;
+  top: 2.5px;
+  width: 2px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 0 2px 2px 0;
+}
+
+.battery-level {
+  width: 80%;
+  height: 100%;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+/* ===== DYNAMIC ISLAND ===== */
+
+.dynamic-island {
+  width: 112px;
+  height: 32px;
+  border-radius: 30px;
+  background: #000;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 13px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px #0003;
+}
+
+.dynamic-island::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #526c91, #111 70%);
+  border: 1px solid #252525;
+  box-shadow: 0 0 3px #526c91;
+}
