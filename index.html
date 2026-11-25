@@ -7,187 +7,233 @@
   <title>My iPhone</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <main class="phone">
+<main class="phone">
 
-    <div class="lock-screen">
+  <!-- LOCK SCREEN -->
+  <div class="lock-screen">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>●●● WiFi ▰</span>
+    </div>
 
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●  WiFi  ▰</span>
-      </div>
+    <div class="lock-content">
+      <p class="day">Tuesday, November 24</p>
+      <h1 id="clock">9:41</h1>
+      <p class="welcome">Welcome to my phone</p>
+    </div>
 
-      <div class="lock-content">
-        <p class="day">Tuesday, November 24</p>
-        <h1 id="clock">9:41</h1>
-        <p class="welcome">Welcome to my phone</p>
-      </div>
+    <div class="widgets">
+      <div class="widget">☁️<br>Weather</div>
+      <div class="widget">📅<br>Calendar</div>
+    </div>
 
-      <div class="widgets">
-        <div class="widget">☁️<br>Weather</div>
-        <div class="widget">📅<br>Calendar</div>
-      </div>
+    <div class="bottom-icons">
+      <button>🔦</button>
+      <button>📷</button>
+    </div>
 
-      <div class="bottom-icons">
-        <button>🔦</button>
-        <button>📷</button>
-      </div>
+    <div class="swipe">Swipe up to unlock</div>
+    <button class="unlock" onclick="unlockPhone()">Unlock</button>
+  </div>
 
-      <div class="swipe">
-        Swipe up to unlock
-      </div>
+  <!-- HOME SCREEN -->
+  <section id="home-screen" class="home-screen hidden">
 
-      <button class="unlock" onclick="unlockPhone()">
-        Unlock
+    <div class="home-status">
+      <span>9:41</span>
+      <span>●●● WiFi ▰</span>
+    </div>
+
+    <div class="app-grid">
+
+      <button class="app" data-app="Messages">
+        <span class="app-icon green">💬</span>
+        Messages
+      </button>
+
+      <button class="app" data-app="Phone">
+        <span class="app-icon green">📞</span>
+        Phone
+      </button>
+
+      <button class="app" data-app="Photos">
+        <span class="app-icon white">🌈</span>
+        Photos
+      </button>
+
+      <button class="app" data-app="Camera">
+        <span class="app-icon gray">📷</span>
+        Camera
+      </button>
+
+      <button class="app" data-app="TikTok">
+        <span class="app-icon black">♪</span>
+        TikTok
+      </button>
+
+      <button class="app" data-app="Instagram">
+        <span class="app-icon pink">📸</span>
+        Instagram
+      </button>
+
+      <button class="app" data-app="Notes">
+        <span class="app-icon yellow">📝</span>
+        Notes
+      </button>
+
+      <button class="app" data-app="Settings">
+        <span class="app-icon gray">⚙️</span>
+        Settings
       </button>
 
     </div>
 
-    
-<section id="home-screen" class="home-screen hidden">
+    <div class="dock">
+      <button class="app" data-app="Phone">
+        <span class="app-icon green">📞</span>
+      </button>
 
-  <div class="home-status">
-    <span>9:41</span>
-    <span>●●● WiFi ▰</span>
-  </div>
+      <button class="app" data-app="Messages">
+        <span class="app-icon green">💬</span>
+      </button>
 
-  <div class="app-grid">
+      <button class="app" data-app="Photos">
+        <span class="app-icon white">🌈</span>
+      </button>
 
-    <button class="app" data-app="Messages">
-      <span class="app-icon green">💬</span>
-      Messages
-    </button>
-
-    <button class="app" data-app="Phone">
-      <span class="app-icon green">📞</span>
-      Phone
-    </button>
-
-    <button class="app" data-app="Photos">
-      <span class="app-icon white">🌈</span>
-      Photos
-    </button>
-
-    <button class="app" data-app="Camera">
-      <span class="app-icon gray">📷</span>
-      Camera
-    </button>
-
-    <button class="app" data-app="TikTok">
-      <span class="app-icon black">♪</span>
-      TikTok
-    </button>
-
-    <button class="app" data-app="Instagram">
-      <span class="app-icon pink">📸</span>
-      Instagram
-    </button>
-
-    <button class="app" data-app="Notes">
-      <span class="app-icon yellow">📝</span>
-      Notes
-    </button>
-
-    <button class="app" data-app="Settings">
-      <span class="app-icon gray">⚙️</span>
-      Settings
-    </button>
-
-  </div>
-
-  <div class="dock">
-    <button class="app" data-app="Phone">
-      <span class="app-icon green">📞</span>
-    </button>
-
-    <button class="app" data-app="Messages">
-      <span class="app-icon green">💬</span>
-    </button>
-
-    <button class="app" data-app="Photos">
-      <span class="app-icon white">🌈</span>
-    </button>
-
-    <button class="app" data-app="Music">
-      <span class="app-icon pink">🎵</span>
-    </button>
-  </div>
-
-</section>
-
-
-<section id="app-screen" class="app-screen hidden">
-
-  <button id="back-home">← Home</button>
-
-  <div id="generic-app">
-  <div id="phone-app" class="hidden">
-
-    <h2>Phone</h2>
-    <p class="message-subtitle">Recent Calls</p>
-
-    <div id="call-list"></div>
-
-    <button id="add-call">+ Add Call</button>
-
-  </div>
-
-  <div id="other-app">
-    <h2 id="app-title"></h2>
-    <p id="app-content"></p>
-  </div>
-</div>
-
-  <div id="messages-app" class="messages-app hidden">
-
-    <h2>Messages</h2>
-    <p class="message-subtitle">Your conversations</p>
-
-   <form id="add-contact-form">
-  <input id="contact-name" type="text"
-    placeholder="Person's name" required>
-
-  <label for="contact-photo">Choose a photo</label>
-
-  <input id="contact-photo" type="file"
-    accept="image/*">
-
-  <button type="submit">+ Add Contact</button>
-</form>
-
-    <div id="conversation-list"></div>
-
-    <div id="chat-view" class="hidden">
-      <button id="back-messages">← Conversations</button>
-
-      <h3 id="chat-name"></h3>
-
-      <div id="chat-messages"></div>
-
-      <form id="send-message-form">
-  <input id="message-input" type="text"
-    placeholder="iMessage" required>
-  <button type="submit">Send</button>
-</form>
-
-<form id="receive-message-form">
-  <input id="receive-input" type="text"
-    placeholder="Incoming message" required>
-  <button type="button" id="receive-button">Receive</button>
-</form>
+      <button class="app" data-app="Music">
+        <span class="app-icon pink">🎵</span>
+      </button>
     </div>
 
-  </div>
+  </section>
 
-</section>
+  <!-- APP SCREEN -->
+  <section id="app-screen" class="app-screen hidden">
 
+    <button id="back-home">← Home</button>
 
-    
-  </main>
+    <!-- PHONE -->
+    <div id="phone-app" class="hidden">
+      <h2>Phone</h2>
+      <p class="message-subtitle">Recent Calls</p>
+      <div id="call-list"></div>
+      <button id="add-call">+ Add Call</button>
+    </div>
 
-  <script src="script.js"></script>
+    <!-- MESSAGES -->
+    <div id="messages-app" class="messages-app hidden">
 
+      <h2>Messages</h2>
+      <p class="message-subtitle">Your conversations</p>
+
+      <form id="add-contact-form">
+        <input id="contact-name" type="text"
+          placeholder="Person's name" required>
+
+        <label for="contact-photo">Choose a photo</label>
+        <input id="contact-photo" type="file" accept="image/*">
+
+        <button type="submit">+ Add Contact</button>
+      </form>
+
+      <div id="conversation-list"></div>
+
+      <div id="chat-view" class="hidden">
+        <button id="back-messages">← Conversations</button>
+        <h3 id="chat-name"></h3>
+        <div id="chat-messages"></div>
+
+        <form id="send-message-form">
+          <input id="message-input" type="text"
+            placeholder="iMessage" required>
+          <button type="submit">Send</button>
+        </form>
+
+        <form id="receive-message-form">
+          <input id="receive-input" type="text"
+            placeholder="Incoming message" required>
+          <button type="button" id="receive-button">Receive</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div id="photos-app" class="hidden">
+      <h2>Photos</h2>
+      <p class="message-subtitle">Your Gallery</p>
+
+      <label for="gallery-upload">＋ Add Photos</label>
+      <input id="gallery-upload" type="file"
+        accept="image/*" multiple>
+
+      <div id="photo-gallery"></div>
+    </div>
+
+    <!-- CAMERA -->
+    <div id="camera-app" class="hidden">
+      <h2>Camera</h2>
+      <video id="camera-preview" autoplay playsinline></video>
+      <button id="start-camera">Open Camera</button>
+      <button id="take-photo">Take Photo</button>
+      <canvas id="camera-canvas" class="hidden"></canvas>
+      <p id="camera-message"></p>
+    </div>
+
+    <!-- NOTES -->
+    <div id="notes-app" class="hidden">
+      <h2>Notes</h2>
+      <input id="note-title" type="text"
+        placeholder="Note title">
+      <textarea id="note-content"
+        placeholder="Write something..."></textarea>
+      <button id="save-note">Save Note</button>
+      <div id="notes-list"></div>
+    </div>
+
+    <!-- TIKTOK -->
+    <div id="tiktok-app" class="hidden">
+      <h2>♪ TikTok</h2>
+      <div class="social-post">
+        <h3>For You</h3>
+        <div class="social-placeholder">🎬</div>
+        <p>Welcome to your feed!</p>
+        <button class="like-button">♡ Like</button>
+      </div>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div id="instagram-app" class="hidden">
+      <h2>Instagram</h2>
+      <p class="message-subtitle">Your Feed</p>
+
+      <div class="social-post">
+        <div class="social-placeholder">📸</div>
+        <p>Welcome to Instagram!</p>
+        <button class="like-button">♡ Like</button>
+      </div>
+    </div>
+
+    <!-- MUSIC -->
+    <div id="music-app" class="hidden">
+      <h2>Music</h2>
+      <div class="social-placeholder">🎵</div>
+      <p>Your music library</p>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings-app" class="hidden">
+      <h2>Settings</h2>
+      <p>My iPhone Settings</p>
+      <p>Software Version: 1.0</p>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
