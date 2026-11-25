@@ -2186,3 +2186,484 @@ body {
     #4f5bd5
   );
 }
+
+/* ===== NEW IPHONE APP DESIGN ===== */
+
+:root {
+  --app-bg: #f4f4f8;
+  --card-bg: #ffffff;
+  --main-text: #22222a;
+  --sub-text: #888895;
+  --accent: #8b83c9;
+  --soft-purple: #eeecfa;
+  --line: #e9e8ef;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* App Screen */
+
+#app-screen {
+  background: var(--app-bg);
+  color: var(--main-text);
+  padding: 22px 18px 35px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+#app-screen::-webkit-scrollbar {
+  display: none;
+}
+
+#back-home {
+  border: none;
+  background: var(--soft-purple);
+  color: var(--accent);
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+/* App Titles */
+
+#app-screen h2 {
+  font-size: 29px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+  margin: 8px 0;
+  color: var(--main-text);
+}
+
+#app-screen h3 {
+  color: var(--main-text);
+}
+
+.message-subtitle {
+  color: var(--sub-text);
+  font-size: 14px;
+  margin: 5px 0 22px;
+}
+
+/* General Buttons */
+
+#app-screen button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#app-screen button:active {
+  transform: scale(0.96);
+}
+
+/* Inputs */
+
+#app-screen input:not([type="file"]):not([type="checkbox"]),
+#app-screen textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  background: var(--card-bg);
+  color: var(--main-text);
+  border-radius: 15px;
+  padding: 13px;
+  margin: 7px 0;
+  font-size: 14px;
+  outline: none;
+}
+
+#app-screen input:focus,
+#app-screen textarea:focus {
+  border-color: var(--accent);
+}
+
+#app-screen textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+/* Form Buttons */
+
+#app-screen form button,
+#save-note,
+#add-call {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 7px 0;
+}
+
+/* Messages */
+
+#conversation-list,
+#call-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.conversation,
+.call-item {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 13px;
+  color: var(--main-text);
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  border-radius: 50%;
+  background: var(--soft-purple);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-weight: bold;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.conversation-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.conversation-info small,
+.call-item small {
+  color: var(--sub-text);
+  overflow-wrap: anywhere;
+}
+
+#chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px 0;
+  min-height: 180px;
+}
+
+.chat-bubble {
+  max-width: 78%;
+  padding: 11px 15px;
+  border-radius: 18px;
+  overflow-wrap: anywhere;
+}
+
+.chat-bubble.sent {
+  align-self: flex-end;
+  background: var(--accent);
+  color: white;
+}
+
+.chat-bubble.received {
+  align-self: flex-start;
+  background: var(--card-bg);
+  color: var(--main-text);
+  border: 1px solid var(--line);
+}
+
+/* Photos */
+
+#gallery-upload,
+#music-upload {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+}
+
+#photos-app > label,
+#music-app > label {
+  display: inline-block;
+  padding: 12px 17px;
+  background: var(--soft-purple);
+  color: var(--accent);
+  border-radius: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 18px;
+}
+
+#photo-gallery img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+#photo-viewer {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 12px;
+  margin-top: 15px;
+}
+
+#large-photo {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+
+#photo-viewer button {
+  background: var(--soft-purple);
+  color: var(--accent);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+/* Camera */
+
+#camera-app {
+  text-align: center;
+}
+
+#camera-preview {
+  width: 100%;
+  min-height: 250px;
+  max-height: 430px;
+  object-fit: cover;
+  border-radius: 22px;
+  background: #111;
+  margin: 15px 0;
+}
+
+#start-camera,
+#take-photo {
+  border: none;
+  border-radius: 30px;
+  padding: 13px 20px;
+  margin: 7px;
+  font-weight: 600;
+}
+
+#start-camera {
+  background: var(--soft-purple);
+  color: var(--accent);
+}
+
+#take-photo {
+  background: #25252d;
+  color: white;
+}
+
+/* Notes */
+
+#notes-app textarea {
+  min-height: 160px;
+}
+
+#notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.note-item {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 15px;
+  overflow-wrap: anywhere;
+}
+
+.note-item h3 {
+  margin-top: 0;
+}
+
+.note-item p {
+  color: var(--sub-text);
+  white-space: pre-wrap;
+}
+
+.note-item button {
+  border: none;
+  background: var(--soft-purple);
+  color: var(--accent);
+  border-radius: 10px;
+  padding: 8px 13px;
+  margin-right: 7px;
+}
+
+/* Music */
+
+#music-app {
+  text-align: left;
+}
+
+.music-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 8px;
+}
+
+.music-controls button {
+  border: none;
+  border-radius: 20px;
+  padding: 11px 15px;
+  background: var(--soft-purple);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.music-controls p {
+  display: none;
+}
+
+#music-player {
+  width: 100%;
+  margin: 12px 0 20px;
+}
+
+#music-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.music-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.music-track button:first-child {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+  background: transparent;
+  color: var(--main-text);
+  border: none;
+  padding: 8px;
+}
+
+.music-track button:last-child {
+  border: none;
+  background: #fff0f0;
+  color: #e36b78;
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+/* Settings */
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 10px 0;
+  color: var(--main-text);
+  font-size: 14px;
+}
+
+.setting-item strong {
+  color: var(--accent);
+  text-align: right;
+}
+
+#dark-mode {
+  accent-color: var(--accent);
+  width: 20px;
+  height: 20px;
+}
+
+/* Dark Mode */
+
+body.dark-mode {
+  --app-bg: #17171d;
+  --card-bg: #25252e;
+  --main-text: #f5f4fa;
+  --sub-text: #aaa8b5;
+  --accent: #aaa0ec;
+  --soft-purple: #343044;
+  --line: #393843;
+}
+
+body.dark-mode #app-screen {
+  background: var(--app-bg);
+  color: var(--main-text);
+}
+
+body.dark-mode #app-screen h2,
+body.dark-mode #app-screen h3 {
+  color: var(--main-text);
+}
+
+body.dark-mode #app-screen input,
+body.dark-mode #app-screen textarea {
+  background: var(--card-bg);
+  color: var(--main-text);
+  border-color: var(--line);
+}
+
+body.dark-mode .music-track button:last-child {
+  background: #493038;
+  color: #ff9eaa;
+}
+
+body.dark-mode #take-photo {
+  background: #eee;
+  color: #222;
+}
+
+/* Small Screens */
+
+@media (max-width: 380px) {
+  #app-screen {
+    padding: 17px 13px 25px;
+  }
+
+  #app-screen h2 {
+    font-size: 25px;
+  }
+
+  .setting-item {
+    padding: 13px;
+  }
+}
