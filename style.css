@@ -3048,3 +3048,42 @@ body.dark-mode #take-photo {
     height: 52px !important;
   }
 }
+
+/* New iPhone-style SVG icons */
+.app-icon svg {
+  width: 72%;
+  height: 72%;
+  display: block;
+  margin: auto;
+}
+
+.app-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.app[data-app="Photos"] .app-icon {
+  background: white !important;
+}
+
+.app[data-app="TikTok"] .app-icon {
+  background: #080808 !important;
+}
+
+.app[data-app="Instagram"] .app-icon {
+  background: linear-gradient(135deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5) !important;
+}
+
+.app[data-app="Notes"] .app-icon {
+  background: linear-gradient(#f8d96b 0 30%, #fff 30%) !important;
+}
+
+.app[data-app="Settings"] .app-icon {
+  background: linear-gradient(145deg, #d8d8df, #858590) !important;
+}
+
+.app[data-app="Music"] .app-icon {
+  background: linear-gradient(145deg, #ff829f, #e52c65) !important;
+}
