@@ -1446,3 +1446,131 @@ body {
   color: white;
   border-color: #44444c;
 }
+
+/* ===== IPHONE PHOTOS APP ===== */
+
+#photos-app {
+  background: #f7f7fa;
+  color: #1c1c1e;
+  min-height: 100%;
+  padding: 25px 16px;
+}
+
+#photos-app h2 {
+  font-size: 32px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin: 15px 0 5px;
+}
+
+#photos-app .message-subtitle {
+  color: #8e8e93;
+  margin-bottom: 22px;
+}
+
+/* UPLOAD BUTTON */
+
+#photos-app label {
+  display: inline-block;
+  background: #1688f8;
+  color: white;
+  padding: 11px 17px;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  cursor: pointer;
+}
+
+#gallery-upload {
+  display: none;
+}
+
+/* PHOTO GRID */
+
+#photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
+}
+
+#photo-gallery img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px !important;
+  cursor: pointer;
+  background: #e5e5ea;
+  transition: opacity .15s ease;
+}
+
+#photo-gallery img:active {
+  opacity: .7;
+}
+
+/* PHOTO VIEWER */
+
+#photo-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 25px;
+  background: #000;
+  box-sizing: border-box;
+}
+
+#photo-viewer.hidden {
+  display: none !important;
+}
+
+#large-photo {
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+#close-photo {
+  position: absolute;
+  top: 35px;
+  left: 20px;
+  background: #333 !important;
+  color: white !important;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+}
+
+#delete-photo {
+  background: #e5484d;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 22px;
+  font-weight: 600;
+}
+
+/* DARK MODE */
+
+.dark-mode #photos-app {
+  background: #17171c;
+  color: white;
+}
+
+.dark-mode #photo-gallery img {
+  background: #33333a;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 380px) {
+  #photo-gallery {
+    gap: 2px;
+  }
+}
