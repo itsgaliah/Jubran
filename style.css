@@ -1574,3 +1574,115 @@ body {
     gap: 2px;
   }
 }
+
+/* ===== IPHONE CAMERA APP ===== */
+
+#camera-app {
+  position: relative;
+  min-height: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 20px 15px 30px;
+  background: #080808;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+#camera-app h2 {
+  color: white;
+  font-size: 23px;
+  margin: 15px 0 20px;
+  font-weight: 600;
+}
+
+/* CAMERA PREVIEW */
+
+#camera-preview {
+  width: 100%;
+  height: min(58vh, 430px);
+  min-height: 220px;
+  object-fit: cover;
+  background: #202020;
+  border-radius: 17px;
+  transform: none;
+}
+
+/* CAMERA BUTTONS */
+
+#camera-app button {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#start-camera {
+  margin-top: 18px;
+  padding: 11px 22px;
+  border-radius: 25px;
+  background: #333;
+  color: white;
+  font-size: 14px;
+}
+
+#take-photo {
+  width: 68px;
+  height: 68px;
+  margin-top: 23px;
+  border-radius: 50%;
+  background: white;
+  border: 5px solid #999 !important;
+  box-shadow: 0 0 0 3px white;
+  font-size: 0;
+  position: relative;
+}
+
+#take-photo::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+}
+
+#take-photo:active {
+  transform: scale(.9);
+}
+
+/* CAMERA CANVAS */
+
+#camera-canvas {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+/* CAMERA MESSAGE */
+
+#camera-message {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* DARK CAMERA DETAILS */
+
+#camera-app label {
+  color: white;
+}
+
+/* CAMERA HOME INDICATOR */
+
+#camera-app::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 105px;
+  height: 4px;
+  border-radius: 10px;
+  background: white;
+}
