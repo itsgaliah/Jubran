@@ -226,7 +226,38 @@
     </div>
 
   </section>
+<!-- NOTIFICATION -->
+<div id="notification-banner" class="notification-banner hidden">
+  <div class="notification-icon">💬</div>
+  <div class="notification-content">
+    <strong id="notification-title">Messages</strong>
+    <p id="notification-text">New message</p>
+  </div>
+</div>
 
+<!-- INCOMING CALL -->
+<div id="incoming-call" class="incoming-call hidden">
+  <div class="incoming-call-top">
+    <p>iPhone Call</p>
+    <div class="caller-avatar">👤</div>
+    <h2 id="caller-name">Unknown</h2>
+    <p>Incoming call...</p>
+  </div>
+
+  <div class="call-actions">
+    <button id="decline-call" class="decline-call">
+      ✕
+      <span>Decline</span>
+    </button>
+
+    <button id="accept-call" class="accept-call">
+      ☎
+      <span>Accept</span>
+    </button>
+  </div>
+</div>
+
+<div class="app-home-indicator"></div>
 </main>
 
 <script src="script.js"></script>
