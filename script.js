@@ -1,7 +1,11 @@
 
+/* ===== IPHONE ELEMENTS ===== */
+
 const lockScreen = document.querySelector(".lock-screen");
 const homeScreen = document.getElementById("home-screen");
 const appScreen = document.getElementById("app-screen");
+
+/* ===== STORAGE ===== */
 
 function loadData(key) {
   try {
@@ -28,7 +32,11 @@ let activeContact = null;
 let cameraStream = null;
 let selectedPhoto = null;
 let editingNoteId = null;
+
 let musicFiles = [];
+let activeMusicIndex = -1;
+
+/* ===== GENERAL ===== */
 
 function makeId() {
   return Date.now().toString() + Math.random().toString(16).slice(2);
@@ -38,6 +46,8 @@ function unlockPhone() {
   lockScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
 }
+
+/* ===== APP NAVIGATION ===== */
 
 const appElements = {
   Phone: "phone-app",
@@ -54,6 +64,9 @@ const appElements = {
 document.querySelectorAll(".app").forEach(button => {
   button.addEventListener("click", () => {
     const name = button.dataset.app;
+    const appId = appElements[name];
+
+    if (!appId) return;
 
     Object.values(appElements).forEach(id => {
       document.getElementById(id).classList.add("hidden");
@@ -61,26 +74,31 @@ document.querySelectorAll(".app").forEach(button => {
 
     homeScreen.classList.add("hidden");
     appScreen.classList.remove("hidden");
-    document.getElementById(appElements[name]).classList.remove("hidden");
+
+    document.getElementById(appId).classList.remove("hidden");
 
     if (name === "Messages") renderContacts();
     if (name === "Phone") renderCalls();
     if (name === "Photos") renderPhotos();
     if (name === "Notes") renderNotes();
     if (name === "Music") renderMusic();
+
     if (name !== "Camera") stopCamera();
   });
 });
 
 document.getElementById("back-home").addEventListener("click", () => {
   stopCamera();
+
   appScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
+
   activeContact = null;
   closePhotoViewer();
 });
 
-// MESSAGES
+/* ===== MESSAGES ===== */
+
 const conversationList = document.getElementById("conversation-list");
 const chatView = document.getElementById("chat-view");
 const chatName = document.getElementById("chat-name");
@@ -116,13 +134,16 @@ function renderContacts() {
 
     const last = document.createElement("small");
     const messages = contact.messages || [];
+
     last.textContent = messages.length
       ? messages[messages.length - 1].text
       : "No messages yet";
 
     info.append(name, last);
     button.append(avatar, info);
+
     button.addEventListener("click", () => openChat(contact));
+
     conversationList.appendChild(button);
   });
 }
@@ -132,15 +153,22 @@ document.getElementById("add-contact-form").addEventListener("submit", event => 
 
   const nameInput = document.getElementById("contact-name");
   const photoInput = document.getElementById("contact-photo");
+
   const name = nameInput.value.trim();
   const file = photoInput.files[0];
 
   if (!name) return;
 
   function addContact(photo) {
-    contacts.push({ name, photo, messages: [] });
+    contacts.push({
+      name,
+      photo,
+      messages: []
+    });
+
     saveData("myPhoneContacts", contacts);
     renderContacts();
+
     nameInput.value = "";
     photoInput.value = "";
   }
@@ -152,6 +180,7 @@ document.getElementById("add-contact-form").addEventListener("submit", event => 
     }
 
     const reader = new FileReader();
+
     reader.onload = () => addContact(reader.result);
     reader.readAsDataURL(file);
   } else {
@@ -161,22 +190,28 @@ document.getElementById("add-contact-form").addEventListener("submit", event => 
 
 function openChat(contact) {
   activeContact = contact;
+
   chatName.textContent = contact.name;
+
   conversationList.classList.add("hidden");
   chatView.classList.remove("hidden");
+
   renderMessages();
 }
 
 function renderMessages() {
   chatMessages.replaceChildren();
+
   if (!activeContact) return;
 
   activeContact.messages = activeContact.messages || [];
 
   activeContact.messages.forEach(message => {
     const bubble = document.createElement("div");
+
     bubble.className = "chat-bubble " + message.type;
     bubble.textContent = message.text;
+
     chatMessages.appendChild(bubble);
   });
 
@@ -189,9 +224,15 @@ function addMessage(type, inputId) {
 
   if (!text || !activeContact) return;
 
-  activeContact.messages.push({ text, type });
+  activeContact.messages.push({
+    text,
+    type
+  });
+
   saveData("myPhoneContacts", contacts);
+
   input.value = "";
+
   renderMessages();
   renderContacts();
 }
@@ -208,13 +249,17 @@ document.getElementById("receive-button").addEventListener("click", () => {
 document.getElementById("back-messages").addEventListener("click", () => {
   chatView.classList.add("hidden");
   conversationList.classList.remove("hidden");
+
   activeContact = null;
+
   renderContacts();
 });
 
-// PHONE
+/* ===== PHONE ===== */
+
 function renderCalls() {
   const list = document.getElementById("call-list");
+
   list.replaceChildren();
 
   if (!calls.length) {
@@ -237,17 +282,22 @@ function renderCalls() {
     direction.className = "call-direction";
 
     const info = document.createElement("div");
+
     info.append(name, details, direction);
     item.appendChild(info);
+
     list.appendChild(item);
   });
 }
 
 document.getElementById("add-call").addEventListener("click", () => {
   const name = prompt("Enter the person's name:");
+
   if (!name || !name.trim()) return;
 
-  const incoming = confirm("Incoming call? OK = Incoming, Cancel = Outgoing");
+  const incoming = confirm(
+    "Incoming call? OK = Incoming, Cancel = Outgoing"
+  );
 
   calls.unshift({
     name: name.trim(),
@@ -259,7 +309,8 @@ document.getElementById("add-call").addEventListener("click", () => {
   renderCalls();
 });
 
-// PHOTOS
+/* ===== PHOTOS ===== */
+
 const galleryUpload = document.getElementById("gallery-upload");
 const photoGallery = document.getElementById("photo-gallery");
 const photoViewer = document.getElementById("photo-viewer");
@@ -270,9 +321,12 @@ function renderPhotos() {
 
   photos.forEach((photo, index) => {
     const img = document.createElement("img");
+
     img.src = photo;
     img.alt = "Saved photo";
+
     img.addEventListener("click", () => openPhoto(index));
+
     photoGallery.appendChild(img);
   });
 }
@@ -287,11 +341,14 @@ galleryUpload.addEventListener("change", () => {
     }
 
     const reader = new FileReader();
+
     reader.onload = () => {
       photos.push(reader.result);
+
       saveData("myPhonePhotos", photos);
       renderPhotos();
     };
+
     reader.readAsDataURL(file);
   });
 
@@ -300,6 +357,7 @@ galleryUpload.addEventListener("change", () => {
 
 function openPhoto(index) {
   selectedPhoto = index;
+
   largePhoto.src = photos[index];
   photoViewer.classList.remove("hidden");
 }
@@ -307,6 +365,7 @@ function openPhoto(index) {
 function closePhotoViewer() {
   photoViewer.classList.add("hidden");
   largePhoto.src = "";
+
   selectedPhoto = null;
 }
 
@@ -316,12 +375,15 @@ document.getElementById("delete-photo").addEventListener("click", () => {
   if (selectedPhoto === null) return;
 
   photos.splice(selectedPhoto, 1);
+
   saveData("myPhonePhotos", photos);
+
   closePhotoViewer();
   renderPhotos();
 });
 
-// CAMERA
+/* ===== CAMERA ===== */
+
 const cameraPreview = document.getElementById("camera-preview");
 const cameraCanvas = document.getElementById("camera-canvas");
 const cameraMessage = document.getElementById("camera-message");
@@ -336,11 +398,14 @@ document.getElementById("start-camera").addEventListener("click", async () => {
     stopCamera();
 
     cameraStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" },
+      video: {
+        facingMode: "environment"
+      },
       audio: false
     });
 
     cameraPreview.srcObject = cameraStream;
+
     cameraMessage.textContent = "Camera is ready!";
   } catch {
     cameraMessage.textContent = "Camera permission denied or unavailable.";
@@ -357,10 +422,17 @@ document.getElementById("take-photo").addEventListener("click", () => {
   cameraCanvas.height = cameraPreview.videoHeight;
 
   const context = cameraCanvas.getContext("2d");
-  context.drawImage(cameraPreview, 0, 0);
+
+  context.drawImage(
+    cameraPreview,
+    0,
+    0
+  );
 
   const photo = cameraCanvas.toDataURL("image/jpeg", 0.7);
+
   photos.push(photo);
+
   saveData("myPhonePhotos", photos);
 
   cameraMessage.textContent = "Photo saved to Photos!";
@@ -371,14 +443,18 @@ function stopCamera() {
     cameraStream.getTracks().forEach(track => track.stop());
     cameraStream = null;
   }
-  if (cameraPreview) cameraPreview.srcObject = null;
+
+  if (cameraPreview) {
+    cameraPreview.srcObject = null;
+  }
 }
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) stopCamera();
 });
 
-// NOTES
+/* ===== NOTES ===== */
+
 const noteTitle = document.getElementById("note-title");
 const noteContent = document.getElementById("note-content");
 const notesList = document.getElementById("notes-list");
@@ -399,23 +475,30 @@ function renderNotes() {
 
     const edit = document.createElement("button");
     edit.textContent = "Edit";
+
     edit.addEventListener("click", () => {
       editingNoteId = note.id;
+
       noteTitle.value = note.title || "";
       noteContent.value = note.content || "";
+
       cancelEdit.classList.remove("hidden");
+
       noteTitle.focus();
     });
 
     const remove = document.createElement("button");
     remove.textContent = "Delete";
+
     remove.addEventListener("click", () => {
       notes.splice(index, 1);
+
       saveData("myPhoneNotes", notes);
       renderNotes();
     });
 
     item.append(title, content, edit, remove);
+
     notesList.appendChild(item);
   });
 }
@@ -428,42 +511,80 @@ document.getElementById("save-note").addEventListener("click", () => {
 
   if (editingNoteId) {
     const note = notes.find(item => item.id === editingNoteId);
+
     if (note) {
       note.title = title;
       note.content = content;
     }
   } else {
-    notes.unshift({ id: makeId(), title, content });
+    notes.unshift({
+      id: makeId(),
+      title,
+      content
+    });
   }
 
   saveData("myPhoneNotes", notes);
+
   noteTitle.value = "";
   noteContent.value = "";
+
   editingNoteId = null;
+
   cancelEdit.classList.add("hidden");
+
   renderNotes();
 });
 
 cancelEdit.addEventListener("click", () => {
   editingNoteId = null;
+
   noteTitle.value = "";
   noteContent.value = "";
+
   cancelEdit.classList.add("hidden");
 });
 
-// SOCIAL APPS
+/* ===== TIKTOK & INSTAGRAM ===== */
+
 document.querySelectorAll(".like-button").forEach(button => {
   button.addEventListener("click", () => {
     const liked = button.dataset.liked === "true";
+
     button.dataset.liked = String(!liked);
+
     button.textContent = liked ? "♡ Like" : "♥ Liked";
   });
 });
 
-// MUSIC
+/* ===== MUSIC ===== */
+
 const musicUpload = document.getElementById("music-upload");
 const musicList = document.getElementById("music-list");
 const musicPlayer = document.getElementById("music-player");
+
+const musicControls = document.createElement("div");
+musicControls.className = "music-controls";
+
+const previousMusic = document.createElement("button");
+previousMusic.textContent = "⏮ Previous";
+
+const nextMusic = document.createElement("button");
+nextMusic.textContent = "Next ⏭";
+
+const currentMusic = document.createElement("p");
+currentMusic.textContent = "No song playing";
+
+musicControls.append(
+  previousMusic,
+  nextMusic,
+  currentMusic
+);
+
+musicPlayer.parentNode.insertBefore(
+  musicControls,
+  musicPlayer
+);
 
 musicUpload.addEventListener("change", () => {
   Array.from(musicUpload.files).forEach(file => {
@@ -476,46 +597,167 @@ musicUpload.addEventListener("change", () => {
   });
 
   musicUpload.value = "";
+
   renderMusic();
 });
+
+function playMusic(index) {
+  if (index < 0 || index >= musicFiles.length) return;
+
+  activeMusicIndex = index;
+
+  musicPlayer.src = musicFiles[index].url;
+
+  currentMusic.textContent =
+    "♪ " + musicFiles[index].name;
+
+  musicPlayer.play().catch(() => {
+    currentMusic.textContent = "Press play to start the song";
+  });
+
+  renderMusic();
+}
 
 function renderMusic() {
   musicList.replaceChildren();
 
   if (!musicFiles.length) {
     musicList.textContent = "No music added yet.";
+    currentMusic.textContent = "No song playing";
     return;
   }
 
-  musicFiles.forEach(track => {
-    const button = document.createElement("button");
-    button.className = "music-track";
-    button.textContent = "▶ " + track.name;
+  musicFiles.forEach((track, index) => {
+    const item = document.createElement("div");
+    item.className = "music-track";
 
-    button.addEventListener("click", () => {
-      musicPlayer.src = track.url;
-      musicPlayer.play();
+    const playButton = document.createElement("button");
+
+    playButton.textContent =
+      (index === activeMusicIndex ? "♪ " : "▶ ") +
+      track.name;
+
+    playButton.addEventListener("click", () => {
+      playMusic(index);
     });
 
-    musicList.appendChild(button);
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "✕";
+
+    deleteButton.addEventListener("click", () => {
+      const wasPlaying = activeMusicIndex === index;
+
+      URL.revokeObjectURL(track.url);
+
+      musicFiles.splice(index, 1);
+
+      if (wasPlaying) {
+        musicPlayer.pause();
+        musicPlayer.removeAttribute("src");
+
+        activeMusicIndex = -1;
+        currentMusic.textContent = "No song playing";
+      } else if (activeMusicIndex > index) {
+        activeMusicIndex--;
+      }
+
+      renderMusic();
+    });
+
+    item.append(playButton, deleteButton);
+
+    musicList.appendChild(item);
   });
 }
 
-// SETTINGS
+previousMusic.addEventListener("click", () => {
+  if (!musicFiles.length) return;
+
+  const index = activeMusicIndex <= 0
+    ? musicFiles.length - 1
+    : activeMusicIndex - 1;
+
+  playMusic(index);
+});
+
+nextMusic.addEventListener("click", () => {
+  if (!musicFiles.length) return;
+
+  const index = activeMusicIndex >= musicFiles.length - 1
+    ? 0
+    : activeMusicIndex + 1;
+
+  playMusic(index);
+});
+
+musicPlayer.addEventListener("ended", () => {
+  if (musicFiles.length) {
+    nextMusic.click();
+  }
+});
+
+/* ===== SETTINGS ===== */
+
 const darkMode = document.getElementById("dark-mode");
 
-darkMode.checked = localStorage.getItem("myPhoneDarkMode") === "true";
-document.body.classList.toggle("dark-mode", darkMode.checked);
+darkMode.checked =
+  localStorage.getItem("myPhoneDarkMode") === "true";
+
+document.body.classList.toggle(
+  "dark-mode",
+  darkMode.checked
+);
 
 darkMode.addEventListener("change", () => {
-  document.body.classList.toggle("dark-mode", darkMode.checked);
-  localStorage.setItem("myPhoneDarkMode", String(darkMode.checked));
+  document.body.classList.toggle(
+    "dark-mode",
+    darkMode.checked
+  );
+
+  localStorage.setItem(
+    "myPhoneDarkMode",
+    String(darkMode.checked)
+  );
 });
 
-// NOTES: support older saved notes
+// Change phone name
+
+const settingItems = document.querySelectorAll(".setting-item");
+const phoneNameItem = settingItems[1];
+
+if (phoneNameItem) {
+  const nameDisplay = phoneNameItem.querySelector("strong");
+
+  const savedName =
+    localStorage.getItem("myPhoneName") || "My iPhone";
+
+  nameDisplay.textContent = savedName;
+  nameDisplay.style.cursor = "pointer";
+
+  nameDisplay.addEventListener("click", () => {
+    const newName = prompt(
+      "Enter your phone name:",
+      localStorage.getItem("myPhoneName") || "My iPhone"
+    );
+
+    if (newName && newName.trim()) {
+      const cleanName = newName.trim();
+
+      nameDisplay.textContent = cleanName;
+
+      localStorage.setItem("myPhoneName", cleanName);
+    }
+  });
+}
+
+/* ===== OLD NOTES SUPPORT ===== */
+
 notes.forEach(note => {
-  if (!note.id) note.id = makeId();
+  if (!note.id) {
+    note.id = makeId();
+  }
 });
+
 saveData("myPhoneNotes", notes);
 
 /* ===== LIVE IPHONE CLOCK & STATUS BAR ===== */
@@ -531,7 +773,9 @@ saveData("myPhoneNotes", notes);
       hour: "numeric",
       minute: "2-digit",
       hour12: true
-    }).replace(" AM", "").replace(" PM", "");
+    })
+    .replace(" AM", "")
+    .replace(" PM", "");
 
     const date = now.toLocaleDateString("en-US", {
       weekday: "long",
@@ -539,14 +783,21 @@ saveData("myPhoneNotes", notes);
       day: "numeric"
     });
 
-    if (clock) clock.textContent = time;
-    if (day) day.textContent = date;
+    if (clock) {
+      clock.textContent = time;
+    }
+
+    if (day) {
+      day.textContent = date;
+    }
 
     document.querySelectorAll(".status-bar, .home-status")
       .forEach(bar => {
         const first = bar.querySelector("span");
 
-        if (first) first.textContent = time;
+        if (first) {
+          first.textContent = time;
+        }
 
         const second = bar.querySelectorAll("span")[1];
 
@@ -565,5 +816,6 @@ saveData("myPhoneNotes", notes);
   }
 
   updateDisplay();
+
   setInterval(updateDisplay, 1000);
 })();
