@@ -3,22 +3,19 @@ const lockScreen = document.querySelector(".lock-screen");
 const homeScreen = document.getElementById("home-screen");
 const appScreen = document.getElementById("app-screen");
 
-const appMessages = {
-  Photos: "Your photo gallery",
-  Camera: "Your camera",
-  Notes: "Your notes",
-  TikTok: "Your TikTok feed",
-  Instagram: "Your Instagram feed",
-  Music: "Your music library",
-  Settings: "Your phone settings"
-};
-
-// STORAGE
 function loadData(key) {
   try {
     return JSON.parse(localStorage.getItem(key) || "[]");
   } catch {
     return [];
+  }
+}
+
+function saveData(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {
+    alert("Storage is full. Please remove some saved items.");
   }
 }
 
@@ -29,38 +26,19 @@ let photos = loadData("myPhonePhotos");
 
 let activeContact = null;
 let cameraStream = null;
+let selectedPhoto = null;
+let editingNoteId = null;
+let musicFiles = [];
 
-function saveData(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch {
-    alert("Storage is full. Please remove some saved items.");
-  }
+function makeId() {
+  return Date.now().toString() + Math.random().toString(16).slice(2);
 }
 
-function saveContacts() {
-  saveData("myPhoneContacts", contacts);
-}
-
-function saveCalls() {
-  saveData("myPhoneCalls", calls);
-}
-
-function saveNotes() {
-  saveData("myPhoneNotes", notes);
-}
-
-function savePhotos() {
-  saveData("myPhonePhotos", photos);
-}
-
-// UNLOCK
 function unlockPhone() {
   lockScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
 }
 
-// APP NAVIGATION
 const appElements = {
   Phone: "phone-app",
   Messages: "messages-app",
@@ -77,33 +55,29 @@ document.querySelectorAll(".app").forEach(button => {
   button.addEventListener("click", () => {
     const name = button.dataset.app;
 
-    homeScreen.classList.add("hidden");
-    appScreen.classList.remove("hidden");
-
     Object.values(appElements).forEach(id => {
       document.getElementById(id).classList.add("hidden");
     });
 
-    const target = document.getElementById(appElements[name]);
-
-    if (target) {
-      target.classList.remove("hidden");
-    }
+    homeScreen.classList.add("hidden");
+    appScreen.classList.remove("hidden");
+    document.getElementById(appElements[name]).classList.remove("hidden");
 
     if (name === "Messages") renderContacts();
     if (name === "Phone") renderCalls();
     if (name === "Photos") renderPhotos();
     if (name === "Notes") renderNotes();
+    if (name === "Music") renderMusic();
+    if (name !== "Camera") stopCamera();
   });
 });
 
-// BACK HOME
 document.getElementById("back-home").addEventListener("click", () => {
+  stopCamera();
   appScreen.classList.add("hidden");
   homeScreen.classList.remove("hidden");
-
   activeContact = null;
-  stopCamera();
+  closePhotoViewer();
 });
 
 // MESSAGES
@@ -115,10 +89,8 @@ const chatMessages = document.getElementById("chat-messages");
 function renderContacts() {
   conversationList.replaceChildren();
 
-  if (contacts.length === 0) {
-    const empty = document.createElement("p");
-    empty.textContent = "No conversations yet. Add someone!";
-    conversationList.appendChild(empty);
+  if (!contacts.length) {
+    conversationList.textContent = "No conversations yet. Add someone!";
   }
 
   contacts.forEach(contact => {
@@ -142,83 +114,61 @@ function renderContacts() {
     const name = document.createElement("strong");
     name.textContent = contact.name;
 
-    const lastMessage = document.createElement("small");
+    const last = document.createElement("small");
     const messages = contact.messages || [];
-
-    lastMessage.textContent = messages.length
+    last.textContent = messages.length
       ? messages[messages.length - 1].text
       : "No messages yet";
 
-    info.append(name, lastMessage);
+    info.append(name, last);
     button.append(avatar, info);
-
     button.addEventListener("click", () => openChat(contact));
-
     conversationList.appendChild(button);
   });
 }
 
-// ADD CONTACT
-document.getElementById("add-contact-form")
-  .addEventListener("submit", event => {
-    event.preventDefault();
+document.getElementById("add-contact-form").addEventListener("submit", event => {
+  event.preventDefault();
 
-    const nameInput = document.getElementById("contact-name");
-    const photoInput = document.getElementById("contact-photo");
+  const nameInput = document.getElementById("contact-name");
+  const photoInput = document.getElementById("contact-photo");
+  const name = nameInput.value.trim();
+  const file = photoInput.files[0];
 
-    const name = nameInput.value.trim();
-    const file = photoInput.files[0];
+  if (!name) return;
 
-    if (!name) return;
+  function addContact(photo) {
+    contacts.push({ name, photo, messages: [] });
+    saveData("myPhoneContacts", contacts);
+    renderContacts();
+    nameInput.value = "";
+    photoInput.value = "";
+  }
 
-    function addContact(photo) {
-      contacts.push({
-        name,
-        photo,
-        messages: []
-      });
-
-      saveContacts();
-      renderContacts();
-
-      nameInput.value = "";
-      photoInput.value = "";
+  if (file) {
+    if (!file.type.startsWith("image/") || file.size > 1024 * 1024) {
+      alert("Choose an image smaller than 1 MB.");
+      return;
     }
 
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Please choose an image.");
-        return;
-      }
+    const reader = new FileReader();
+    reader.onload = () => addContact(reader.result);
+    reader.readAsDataURL(file);
+  } else {
+    addContact("");
+  }
+});
 
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Choose a photo smaller than 2 MB.");
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = () => addContact(reader.result);
-      reader.readAsDataURL(file);
-    } else {
-      addContact("");
-    }
-  });
-
-// OPEN CHAT
 function openChat(contact) {
   activeContact = contact;
   chatName.textContent = contact.name;
-
   conversationList.classList.add("hidden");
   chatView.classList.remove("hidden");
-
   renderMessages();
 }
 
 function renderMessages() {
   chatMessages.replaceChildren();
-
   if (!activeContact) return;
 
   activeContact.messages = activeContact.messages || [];
@@ -233,90 +183,48 @@ function renderMessages() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// SEND MESSAGE
-document.getElementById("send-message-form")
-  .addEventListener("submit", event => {
-    event.preventDefault();
+function addMessage(type, inputId) {
+  const input = document.getElementById(inputId);
+  const text = input.value.trim();
 
-    const input = document.getElementById("message-input");
-    const text = input.value.trim();
+  if (!text || !activeContact) return;
 
-    if (!text || !activeContact) return;
+  activeContact.messages.push({ text, type });
+  saveData("myPhoneContacts", contacts);
+  input.value = "";
+  renderMessages();
+  renderContacts();
+}
 
-    activeContact.messages.push({
-      text,
-      type: "sent"
-    });
+document.getElementById("send-message-form").addEventListener("submit", event => {
+  event.preventDefault();
+  addMessage("sent", "message-input");
+});
 
-    saveContacts();
-    input.value = "";
+document.getElementById("receive-button").addEventListener("click", () => {
+  addMessage("received", "receive-input");
+});
 
-    renderMessages();
-    renderContacts();
-  });
+document.getElementById("back-messages").addEventListener("click", () => {
+  chatView.classList.add("hidden");
+  conversationList.classList.remove("hidden");
+  activeContact = null;
+  renderContacts();
+});
 
-// RECEIVE MESSAGE
-document.getElementById("receive-button")
-  .addEventListener("click", () => {
-    const input = document.getElementById("receive-input");
-    const text = input.value.trim();
-
-    if (!text || !activeContact) return;
-
-    activeContact.messages.push({
-      text,
-      type: "received"
-    });
-
-    saveContacts();
-    input.value = "";
-
-    renderMessages();
-    renderContacts();
-  });
-
-// BACK TO CONVERSATIONS
-document.getElementById("back-messages")
-  .addEventListener("click", () => {
-    chatView.classList.add("hidden");
-    conversationList.classList.remove("hidden");
-
-    activeContact = null;
-    renderContacts();
-  });
-
-// PHONE CALLS
+// PHONE
 function renderCalls() {
-  const callList = document.getElementById("call-list");
-  callList.replaceChildren();
+  const list = document.getElementById("call-list");
+  list.replaceChildren();
 
-  if (calls.length === 0) {
-    const empty = document.createElement("p");
-    empty.textContent = "No recent calls";
-    callList.appendChild(empty);
+  if (!calls.length) {
+    list.textContent = "No recent calls";
     return;
   }
 
   calls.forEach(call => {
     const item = document.createElement("div");
     item.className = "call-item";
-
-    const contact = contacts.find(
-      person => person.name.toLowerCase() === call.name.toLowerCase()
-    );
-
-    const avatar = document.createElement("span");
-    avatar.className = "avatar";
-
-    if (contact && contact.photo) {
-      const img = document.createElement("img");
-      img.src = contact.photo;
-      avatar.appendChild(img);
-    } else {
-      avatar.textContent = call.name.charAt(0).toUpperCase();
-    }
-
-    const info = document.createElement("div");
 
     const name = document.createElement("strong");
     name.textContent = call.name;
@@ -325,77 +233,92 @@ function renderCalls() {
     details.textContent = call.time;
 
     const direction = document.createElement("span");
-    direction.className = "call-direction " +
-      (call.type === "Incoming call" ? "incoming" : "outgoing");
+    direction.textContent = call.type;
+    direction.className = "call-direction";
 
-    direction.textContent =
-      call.type === "Incoming call" ? "↙ Incoming" : "↗ Outgoing";
-
+    const info = document.createElement("div");
     info.append(name, details, direction);
-    item.append(avatar, info);
-    callList.appendChild(item);
+    item.appendChild(info);
+    list.appendChild(item);
   });
 }
 
-// ADD CALL
-document.getElementById("add-call")
-  .addEventListener("click", () => {
-    const name = prompt("Enter the person's name:");
+document.getElementById("add-call").addEventListener("click", () => {
+  const name = prompt("Enter the person's name:");
+  if (!name || !name.trim()) return;
 
-    if (!name || !name.trim()) return;
+  const incoming = confirm("Incoming call? OK = Incoming, Cancel = Outgoing");
 
-    const incoming = confirm(
-      "Incoming call? Press OK for Incoming or Cancel for Outgoing."
-    );
-
-    calls.unshift({
-      name: name.trim(),
-      type: incoming ? "Incoming call" : "Outgoing call",
-      time: new Date().toLocaleString()
-    });
-
-    saveCalls();
-    renderCalls();
+  calls.unshift({
+    name: name.trim(),
+    type: incoming ? "Incoming call" : "Outgoing call",
+    time: new Date().toLocaleString()
   });
+
+  saveData("myPhoneCalls", calls);
+  renderCalls();
+});
 
 // PHOTOS
 const galleryUpload = document.getElementById("gallery-upload");
 const photoGallery = document.getElementById("photo-gallery");
+const photoViewer = document.getElementById("photo-viewer");
+const largePhoto = document.getElementById("large-photo");
 
 function renderPhotos() {
   photoGallery.replaceChildren();
 
-  photos.forEach(photo => {
+  photos.forEach((photo, index) => {
     const img = document.createElement("img");
     img.src = photo;
     img.alt = "Saved photo";
+    img.addEventListener("click", () => openPhoto(index));
     photoGallery.appendChild(img);
   });
 }
 
 galleryUpload.addEventListener("change", () => {
-  const files = Array.from(galleryUpload.files);
-
-  files.forEach(file => {
+  Array.from(galleryUpload.files).forEach(file => {
     if (!file.type.startsWith("image/")) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Each photo must be smaller than 2 MB.");
+    if (file.size > 1024 * 1024) {
+      alert("Each photo must be smaller than 1 MB.");
       return;
     }
 
     const reader = new FileReader();
-
     reader.onload = () => {
       photos.push(reader.result);
-      savePhotos();
+      saveData("myPhonePhotos", photos);
       renderPhotos();
     };
-
     reader.readAsDataURL(file);
   });
 
   galleryUpload.value = "";
+});
+
+function openPhoto(index) {
+  selectedPhoto = index;
+  largePhoto.src = photos[index];
+  photoViewer.classList.remove("hidden");
+}
+
+function closePhotoViewer() {
+  photoViewer.classList.add("hidden");
+  largePhoto.src = "";
+  selectedPhoto = null;
+}
+
+document.getElementById("close-photo").addEventListener("click", closePhotoViewer);
+
+document.getElementById("delete-photo").addEventListener("click", () => {
+  if (selectedPhoto === null) return;
+
+  photos.splice(selectedPhoto, 1);
+  saveData("myPhonePhotos", photos);
+  closePhotoViewer();
+  renderPhotos();
 });
 
 // CAMERA
@@ -403,61 +326,52 @@ const cameraPreview = document.getElementById("camera-preview");
 const cameraCanvas = document.getElementById("camera-canvas");
 const cameraMessage = document.getElementById("camera-message");
 
-document.getElementById("start-camera")
-  .addEventListener("click", async () => {
-    try {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        cameraMessage.textContent = "Camera is not supported here.";
-        return;
-      }
-
-      cameraStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-        audio: false
-      });
-
-      cameraPreview.srcObject = cameraStream;
-      cameraMessage.textContent = "Camera is ready!";
-    } catch {
-      cameraMessage.textContent =
-        "Camera permission was denied or unavailable.";
-    }
-  });
-
-document.getElementById("take-photo")
-  .addEventListener("click", () => {
-    if (!cameraStream || !cameraPreview.videoWidth) {
-      cameraMessage.textContent = "Open the camera first.";
+document.getElementById("start-camera").addEventListener("click", async () => {
+  try {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      cameraMessage.textContent = "Camera is not supported here.";
       return;
     }
 
-    cameraCanvas.width = cameraPreview.videoWidth;
-    cameraCanvas.height = cameraPreview.videoHeight;
+    stopCamera();
 
-    const context = cameraCanvas.getContext("2d");
-    context.drawImage(
-      cameraPreview,
-      0,
-      0,
-      cameraCanvas.width,
-      cameraCanvas.height
-    );
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+      audio: false
+    });
 
-    const photo = cameraCanvas.toDataURL("image/jpeg");
+    cameraPreview.srcObject = cameraStream;
+    cameraMessage.textContent = "Camera is ready!";
+  } catch {
+    cameraMessage.textContent = "Camera permission denied or unavailable.";
+  }
+});
 
-    photos.push(photo);
-    savePhotos();
+document.getElementById("take-photo").addEventListener("click", () => {
+  if (!cameraStream || !cameraPreview.videoWidth) {
+    cameraMessage.textContent = "Open the camera first.";
+    return;
+  }
 
-    cameraMessage.textContent = "Photo saved to Photos!";
-  });
+  cameraCanvas.width = cameraPreview.videoWidth;
+  cameraCanvas.height = cameraPreview.videoHeight;
+
+  const context = cameraCanvas.getContext("2d");
+  context.drawImage(cameraPreview, 0, 0);
+
+  const photo = cameraCanvas.toDataURL("image/jpeg", 0.7);
+  photos.push(photo);
+  saveData("myPhonePhotos", photos);
+
+  cameraMessage.textContent = "Photo saved to Photos!";
+});
 
 function stopCamera() {
   if (cameraStream) {
     cameraStream.getTracks().forEach(track => track.stop());
     cameraStream = null;
   }
-
-  cameraPreview.srcObject = null;
+  if (cameraPreview) cameraPreview.srcObject = null;
 }
 
 document.addEventListener("visibilitychange", () => {
@@ -468,6 +382,7 @@ document.addEventListener("visibilitychange", () => {
 const noteTitle = document.getElementById("note-title");
 const noteContent = document.getElementById("note-content");
 const notesList = document.getElementById("notes-list");
+const cancelEdit = document.getElementById("cancel-edit");
 
 function renderNotes() {
   notesList.replaceChildren();
@@ -482,42 +397,123 @@ function renderNotes() {
     const content = document.createElement("p");
     content.textContent = note.content;
 
+    const edit = document.createElement("button");
+    edit.textContent = "Edit";
+    edit.addEventListener("click", () => {
+      editingNoteId = note.id;
+      noteTitle.value = note.title || "";
+      noteContent.value = note.content || "";
+      cancelEdit.classList.remove("hidden");
+      noteTitle.focus();
+    });
+
     const remove = document.createElement("button");
     remove.textContent = "Delete";
-
     remove.addEventListener("click", () => {
       notes.splice(index, 1);
-      saveNotes();
+      saveData("myPhoneNotes", notes);
       renderNotes();
     });
 
-    item.append(title, content, remove);
+    item.append(title, content, edit, remove);
     notesList.appendChild(item);
   });
 }
 
-document.getElementById("save-note")
-  .addEventListener("click", () => {
-    const title = noteTitle.value.trim();
-    const content = noteContent.value.trim();
+document.getElementById("save-note").addEventListener("click", () => {
+  const title = noteTitle.value.trim();
+  const content = noteContent.value.trim();
 
-    if (!title && !content) return;
+  if (!title && !content) return;
 
-    notes.unshift({ title, content });
+  if (editingNoteId) {
+    const note = notes.find(item => item.id === editingNoteId);
+    if (note) {
+      note.title = title;
+      note.content = content;
+    }
+  } else {
+    notes.unshift({ id: makeId(), title, content });
+  }
 
-    saveNotes();
-    renderNotes();
+  saveData("myPhoneNotes", notes);
+  noteTitle.value = "";
+  noteContent.value = "";
+  editingNoteId = null;
+  cancelEdit.classList.add("hidden");
+  renderNotes();
+});
 
-    noteTitle.value = "";
-    noteContent.value = "";
-  });
+cancelEdit.addEventListener("click", () => {
+  editingNoteId = null;
+  noteTitle.value = "";
+  noteContent.value = "";
+  cancelEdit.classList.add("hidden");
+});
 
-// LIKE BUTTONS
+// SOCIAL APPS
 document.querySelectorAll(".like-button").forEach(button => {
   button.addEventListener("click", () => {
     const liked = button.dataset.liked === "true";
-
     button.dataset.liked = String(!liked);
     button.textContent = liked ? "♡ Like" : "♥ Liked";
   });
 });
+
+// MUSIC
+const musicUpload = document.getElementById("music-upload");
+const musicList = document.getElementById("music-list");
+const musicPlayer = document.getElementById("music-player");
+
+musicUpload.addEventListener("change", () => {
+  Array.from(musicUpload.files).forEach(file => {
+    if (!file.type.startsWith("audio/")) return;
+
+    musicFiles.push({
+      name: file.name,
+      url: URL.createObjectURL(file)
+    });
+  });
+
+  musicUpload.value = "";
+  renderMusic();
+});
+
+function renderMusic() {
+  musicList.replaceChildren();
+
+  if (!musicFiles.length) {
+    musicList.textContent = "No music added yet.";
+    return;
+  }
+
+  musicFiles.forEach(track => {
+    const button = document.createElement("button");
+    button.className = "music-track";
+    button.textContent = "▶ " + track.name;
+
+    button.addEventListener("click", () => {
+      musicPlayer.src = track.url;
+      musicPlayer.play();
+    });
+
+    musicList.appendChild(button);
+  });
+}
+
+// SETTINGS
+const darkMode = document.getElementById("dark-mode");
+
+darkMode.checked = localStorage.getItem("myPhoneDarkMode") === "true";
+document.body.classList.toggle("dark-mode", darkMode.checked);
+
+darkMode.addEventListener("change", () => {
+  document.body.classList.toggle("dark-mode", darkMode.checked);
+  localStorage.setItem("myPhoneDarkMode", String(darkMode.checked));
+});
+
+// NOTES: support older saved notes
+notes.forEach(note => {
+  if (!note.id) note.id = makeId();
+});
+saveData("myPhoneNotes", notes);
