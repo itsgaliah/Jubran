@@ -12,7 +12,6 @@
 <main class="phone">
 
   <div class="lock-screen">
-
     <div class="dynamic-island"></div>
 
     <div class="status-bar">
@@ -37,7 +36,6 @@
 
     <div class="swipe">Swipe up to unlock</div>
     <button class="unlock" onclick="unlockPhone()">Unlock</button>
-
   </div>
 
   <section id="home-screen" class="home-screen hidden">
@@ -147,13 +145,13 @@
         <div class="social-placeholder">🎬</div>
         <p>Welcome to your feed!</p>
         <a
-  class="social-link tiktok-link"
-  href="https://www.tiktok.com/@fttir?_r=1&_t=ZS-9BhYxdOP8xI"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Open My TikTok ↗
-</a>
+          class="social-link tiktok-link"
+          href="https://www.tiktok.com/@fttir?_r=1&_t=ZS-9BhYxdOP8xI"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open My TikTok ↗
+        </a>
         <button class="like-button">♡ Like</button>
       </div>
 
@@ -164,33 +162,30 @@
       </div>
     </div>
 
-    
-<div id="instagram-app" class="hidden">
-  <h2>Instagram</h2>
-  <p class="message-subtitle">Your Feed</p>
+    <div id="instagram-app" class="hidden">
+      <h2>Instagram</h2>
+      <p class="message-subtitle">Your Feed</p>
 
-  <div class="social-post">
-    <div class="social-placeholder">📸</div>
-    <p>Welcome to Instagram!</p>
-    <a
-  class="social-link instagram-link"
-  href="https://www.instagram.com/_fttir?dmpr=cG91c3hrZ3BiMTB4"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Open My Instagram ↗
-</a>
-    <button class="like-button">♡ Like</button>
-  </div>
+      <div class="social-post">
+        <div class="social-placeholder">📸</div>
+        <p>Welcome to Instagram!</p>
+        <a
+          class="social-link instagram-link"
+          href="https://www.instagram.com/_fttir?dmpr=cG91c3hrZ3BiMTB4"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open My Instagram ↗
+        </a>
+        <button class="like-button">♡ Like</button>
+      </div>
 
-  <div class="social-post">
-    <div class="social-placeholder">🌷</div>
-    <p>Beautiful moments</p>
-    <button class="like-button">♡ Like</button>
-  </div>
-
-</div>
-
+      <div class="social-post">
+        <div class="social-placeholder">🌷</div>
+        <p>Beautiful moments</p>
+        <button class="like-button">♡ Like</button>
+      </div>
+    </div>
 
     <div id="music-app" class="hidden">
       <h2>Music</h2>
@@ -223,41 +218,64 @@
         <span>About</span>
         <strong>My Phone</strong>
       </div>
+
+      <!-- CUSTOM WALLPAPER -->
+      <div class="setting-item wallpaper-setting">
+        <strong>Wallpaper</strong>
+        <p>Choose your own wallpaper</p>
+
+        <label for="wallpaper-upload" class="wallpaper-button">
+          Choose Photo
+        </label>
+
+        <input
+          type="file"
+          id="wallpaper-upload"
+          accept="image/*"
+          hidden
+        >
+
+        <button id="reset-wallpaper" type="button">
+          Reset Wallpaper
+        </button>
+      </div>
+
     </div>
 
   </section>
-<!-- NOTIFICATION -->
-<div id="notification-banner" class="notification-banner hidden">
-  <div class="notification-icon">💬</div>
-  <div class="notification-content">
-    <strong id="notification-title">Messages</strong>
-    <p id="notification-text">New message</p>
-  </div>
-</div>
 
-<!-- INCOMING CALL -->
-<div id="incoming-call" class="incoming-call hidden">
-  <div class="incoming-call-top">
-    <p>iPhone Call</p>
-    <div class="caller-avatar">👤</div>
-    <h2 id="caller-name">Unknown</h2>
-    <p>Incoming call...</p>
+  <!-- NOTIFICATION -->
+  <div id="notification-banner" class="notification-banner hidden">
+    <div class="notification-icon">💬</div>
+    <div class="notification-content">
+      <strong id="notification-title">Messages</strong>
+      <p id="notification-text">New message</p>
+    </div>
   </div>
 
-  <div class="call-actions">
-    <button id="decline-call" class="decline-call">
-      ✕
-      <span>Decline</span>
-    </button>
+  <!-- INCOMING CALL -->
+  <div id="incoming-call" class="incoming-call hidden">
+    <div class="incoming-call-top">
+      <p>iPhone Call</p>
+      <div class="caller-avatar">👤</div>
+      <h2 id="caller-name">Unknown</h2>
+      <p>Incoming call...</p>
+    </div>
 
-    <button id="accept-call" class="accept-call">
-      ☎
-      <span>Accept</span>
-    </button>
+    <div class="call-actions">
+      <button id="decline-call" class="decline-call">
+        ✕
+        <span>Decline</span>
+      </button>
+
+      <button id="accept-call" class="accept-call">
+        ☎
+        <span>Accept</span>
+      </button>
+    </div>
   </div>
-</div>
 
-<div class="app-home-indicator"></div>
+  <div class="app-home-indicator"></div>
 </main>
 
 <script src="script.js"></script>
