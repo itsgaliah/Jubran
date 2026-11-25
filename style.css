@@ -2858,3 +2858,38 @@ body.dark-mode #take-photo {
 .dark-mode .app-home-indicator {
   background: white;
 }
+/* ===== WALLPAPER SETTINGS ===== */
+
+.wallpaper-setting {
+  padding: 16px;
+}
+
+.wallpaper-setting p {
+  color: var(--sub-text);
+  font-size: 13px;
+  margin: 6px 0 14px;
+}
+
+.wallpaper-button,
+#reset-wallpaper {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wallpaper-button {
+  background: #5478a8;
+  color: white;
+}
+
+#reset-wallpaper {
+  background: var(--card-bg);
+  color: var(--main-text);
+}
