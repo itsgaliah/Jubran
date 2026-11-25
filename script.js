@@ -1013,3 +1013,113 @@ if (notificationBanner) {
     }
   });
 }
+/* ===== CUSTOM WALLPAPER ===== */
+
+const wallpaperUpload = document.getElementById("wallpaper-upload");
+const resetWallpaper = document.getElementById("reset-wallpaper");
+
+function applyWallpaper(image) {
+  const screens = [
+    lockScreen,
+    homeScreen
+  ];
+
+  screens.forEach(screen => {
+    if (image) {
+      screen.style.backgroundImage =
+        `linear-gradient(#00000020, #00000020), url("${image}")`;
+
+      screen.style.backgroundSize = "cover";
+      screen.style.backgroundPosition = "center";
+      screen.style.backgroundRepeat = "no-repeat";
+    } else {
+      screen.style.backgroundImage = "";
+      screen.style.backgroundSize = "";
+      screen.style.backgroundPosition = "";
+      screen.style.backgroundRepeat = "";
+    }
+  });
+}
+
+/* Load saved wallpaper */
+
+const savedWallpaper = localStorage.getItem("myPhoneWallpaper");
+
+if (savedWallpaper) {
+  applyWallpaper(savedWallpaper);
+}
+
+/* Upload new wallpaper */
+
+if (wallpaperUpload) {
+  wallpaperUpload.addEventListener("change", () => {
+    const file = wallpaperUpload.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please choose an image.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+
+        const maxWidth = 1200;
+        const scale = Math.min(1, maxWidth / image.width);
+
+        canvas.width = image.width * scale;
+        canvas.height = image.height * scale;
+
+        const context = canvas.getContext("2d");
+
+        context.drawImage(
+          image,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        const compressedImage = canvas.toDataURL(
+          "image/jpeg",
+          0.75
+        );
+
+        try {
+          localStorage.setItem(
+            "myPhoneWallpaper",
+            compressedImage
+          );
+
+          applyWallpaper(compressedImage);
+          alert("Wallpaper updated!");
+        } catch {
+          alert("Image is too large. Try another photo.");
+        }
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+    wallpaperUpload.value = "";
+  });
+}
+
+/* Reset wallpaper */
+
+if (resetWallpaper) {
+  resetWallpaper.addEventListener("click", () => {
+    localStorage.removeItem("myPhoneWallpaper");
+
+    applyWallpaper(null);
+
+    alert("Wallpaper reset!");
+  });
+}
