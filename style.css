@@ -1039,3 +1039,198 @@ body {
   max-height: none !important;
   box-sizing: border-box !important;
 }
+
+/* ===== REALISTIC IPHONE HOME SCREEN ===== */
+
+.home-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 25px 20px 35px !important;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* STATUS BAR */
+
+.home-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px;
+  margin-bottom: 38px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+}
+
+/* APP GRID */
+
+.app-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+  align-items: start;
+  column-gap: 8px;
+  row-gap: 27px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #222;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+}
+
+.app-icon {
+  width: 59px;
+  height: 59px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  font-size: 30px;
+  box-shadow:
+    0 3px 7px #0002,
+    inset 0 1px 2px #ffffff60;
+  transition: transform .15s ease;
+}
+
+.app:active .app-icon {
+  transform: scale(.88);
+}
+
+/* APP COLORS */
+
+.app-icon.green {
+  background: linear-gradient(145deg, #64e98a, #16a34a);
+}
+
+.app-icon.white {
+  background: linear-gradient(145deg, #ffffff, #e4e4eb);
+}
+
+.app-icon.gray {
+  background: linear-gradient(145deg, #d8dbe2, #9299a8);
+}
+
+.app-icon.black {
+  background: linear-gradient(145deg, #292929, #050505);
+  color: white;
+}
+
+.app-icon.pink {
+  background: linear-gradient(145deg, #ffb8d6, #d94d91);
+}
+
+.app-icon.yellow {
+  background: linear-gradient(145deg, #fff3b0, #efc34c);
+}
+
+/* DOCK */
+
+.dock {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: auto 0 25px !important;
+  padding: 13px 8px !important;
+  border: 1px solid #ffffff75;
+  border-radius: 29px;
+  background: #ffffff55;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 8px 25px #0002;
+}
+
+.dock .app {
+  gap: 0;
+}
+
+.dock .app-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 16px;
+}
+
+/* HOME PAGE DOTS */
+
+.home-screen::before {
+  content: "● ○";
+  position: absolute;
+  bottom: 112px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: #333;
+}
+
+/* HOME INDICATOR */
+
+.home-screen::after {
+  content: "";
+  position: absolute;
+  bottom: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 108px;
+  height: 4px;
+  border-radius: 10px;
+  background: #222;
+}
+
+/* DARK MODE */
+
+.dark-mode .home-status,
+.dark-mode .app {
+  color: white;
+}
+
+.dark-mode .home-screen::before {
+  color: white;
+}
+
+.dark-mode .home-screen::after {
+  background: white;
+}
+
+.dark-mode .dock {
+  background: #ffffff25;
+  border-color: #ffffff30;
+}
+
+/* MOBILE */
+
+@media (max-width: 380px) {
+  .app-icon {
+    width: 54px;
+    height: 54px;
+  }
+
+  .dock .app-icon {
+    width: 51px;
+    height: 51px;
+  }
+
+  .app-grid {
+    row-gap: 23px;
+  }
+}
