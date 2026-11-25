@@ -1686,3 +1686,77 @@ body {
   border-radius: 10px;
   background: white;
 }
+
+/* ===== CAMERA FINAL DESIGN ===== */
+
+#app-screen:has(#camera-app:not(.hidden)) {
+  background: #000 !important;
+  color: white !important;
+  padding: 15px !important;
+}
+
+#camera-app:not(.hidden) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 75vh;
+  padding: 15px 0 25px;
+  background: #000 !important;
+  color: white !important;
+}
+
+#camera-app h2 {
+  color: white !important;
+  font-size: 22px !important;
+  margin: 15px 0 25px !important;
+}
+
+#camera-preview {
+  display: block;
+  width: 100% !important;
+  height: 55vh !important;
+  min-height: 280px;
+  max-height: 480px;
+  object-fit: cover;
+  background: #181818 !important;
+  border-radius: 20px !important;
+}
+
+#camera-app button {
+  border: none !important;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+#start-camera {
+  background: #333 !important;
+  color: white !important;
+  border-radius: 25px !important;
+  padding: 13px 25px !important;
+  margin-top: 22px;
+}
+
+#take-photo {
+  width: 75px !important;
+  height: 75px !important;
+  min-width: 75px;
+  padding: 0 !important;
+  margin-top: 20px;
+  border-radius: 50% !important;
+  background: white !important;
+  border: 5px solid #999 !important;
+  box-shadow: 0 0 0 3px white;
+  color: transparent !important;
+}
+
+#camera-message {
+  color: #aaa !important;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 18px;
+}
+
+#camera-canvas {
+  max-width: 100%;
+}
