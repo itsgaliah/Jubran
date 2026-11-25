@@ -1234,3 +1234,215 @@ body {
     row-gap: 23px;
   }
 }
+
+/* ===== IPHONE IMESSAGE DESIGN ===== */
+
+#messages-app {
+  background: #f7f7fa;
+  color: #111;
+  min-height: 100%;
+  padding: 25px 16px;
+}
+
+#messages-app h2 {
+  font-size: 32px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin: 15px 0 5px;
+}
+
+#messages-app .message-subtitle {
+  color: #8e8e93;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* ADD CONTACT */
+
+#add-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 14px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #ededf1;
+}
+
+#add-contact-form input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  background: #f2f2f7;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+#add-contact-form button {
+  background: #1688f8;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 600;
+}
+
+/* CONVERSATION LIST */
+
+#conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.conversation {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 5px;
+  border-bottom: 1px solid #e5e5ea;
+  background: transparent;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 49px;
+  height: 49px;
+  min-width: 49px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e3e3e8;
+}
+
+.conversation img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* CHAT VIEW */
+
+#chat-view {
+  background: #f7f7fa;
+}
+
+#chat-name {
+  font-size: 19px;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px;
+}
+
+#chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 15px 3px;
+  min-height: 250px;
+}
+
+.chat-bubble {
+  max-width: 76%;
+  width: fit-content;
+  padding: 10px 15px;
+  border-radius: 19px;
+  font-size: 15px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* SENT MESSAGES */
+
+.chat-bubble.sent,
+.chat-bubble.outgoing,
+.chat-bubble.mine {
+  align-self: flex-end;
+  background: #1688f8;
+  color: white;
+  border-bottom-right-radius: 5px;
+}
+
+/* RECEIVED MESSAGES */
+
+.chat-bubble.received,
+.chat-bubble.incoming,
+.chat-bubble.theirs {
+  align-self: flex-start;
+  background: #e5e5ea;
+  color: #111;
+  border-bottom-left-radius: 5px;
+}
+
+/* MESSAGE INPUT */
+
+#send-message-form,
+#receive-message-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#send-message-form input,
+#receive-message-form input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #dedee3;
+  border-radius: 22px;
+  padding: 12px 15px;
+  background: white;
+  font-size: 14px;
+}
+
+#send-message-form button,
+#receive-message-form button {
+  border: none;
+  border-radius: 20px;
+  padding: 11px 15px;
+  background: #1688f8;
+  color: white;
+  font-weight: 600;
+}
+
+/* BACK BUTTON */
+
+#back-messages {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #e9e9ef;
+  color: #1688f8;
+  font-weight: 600;
+}
+
+/* DARK MODE */
+
+.dark-mode #messages-app,
+.dark-mode #chat-view {
+  background: #17171c;
+  color: white;
+}
+
+.dark-mode .conversation {
+  border-color: #33333a;
+}
+
+.dark-mode #add-contact-form {
+  background: #25252c;
+  border-color: #38383f;
+}
+
+.dark-mode .chat-bubble.received,
+.dark-mode .chat-bubble.incoming,
+.dark-mode .chat-bubble.theirs {
+  background: #393941;
+  color: white;
+}
+
+.dark-mode #send-message-form input,
+.dark-mode #receive-message-form input {
+  background: #292930;
+  color: white;
+  border-color: #44444c;
+}
