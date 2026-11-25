@@ -531,3 +531,320 @@ body.dark-mode {
     border-radius: 0;
   }
 }
+
+/* ===== IPHONE DESIGN UPDATE ===== */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Segoe UI", sans-serif;
+  background: #dce1eb;
+}
+
+.phone {
+  border: 7px solid #171717;
+  border-radius: 48px;
+  box-shadow: 0 25px 70px #0003;
+  background: #f5f5f7;
+}
+
+/* LOCK SCREEN */
+
+.lock-screen {
+  background:
+    radial-gradient(ellipse at 20% 20%, #b7c9e8 0%, transparent 40%),
+    radial-gradient(ellipse at 85% 45%, #b9a9d0 0%, transparent 45%),
+    linear-gradient(155deg, #526b91, #283754 65%, #171e32);
+  padding: 28px 23px 25px;
+}
+
+.status-bar {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+.lock-content {
+  margin-top: 35px;
+}
+
+.day {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: .2px;
+}
+
+#clock {
+  font-size: 82px;
+  font-weight: 300;
+  letter-spacing: -4px;
+  margin: 5px 0;
+}
+
+.lock-content p:last-child {
+  font-size: 14px;
+  opacity: .85;
+}
+
+.widget {
+  background: #ffffff25;
+  border: 1px solid #ffffff30;
+  backdrop-filter: blur(15px);
+  border-radius: 22px;
+  padding: 17px 8px;
+  font-size: 13px;
+}
+
+.bottom-icons button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #ffffff40;
+  background: #ffffff30;
+  color: white;
+  backdrop-filter: blur(12px);
+}
+
+.swipe {
+  opacity: .85;
+}
+
+.unlock {
+  width: 100%;
+  padding: 13px;
+  border-radius: 25px;
+  font-weight: 600;
+  background: #ffffffeb;
+}
+
+/* HOME SCREEN */
+
+.home-screen {
+  background:
+    radial-gradient(ellipse at 15% 20%, #f4c8d9 0%, transparent 38%),
+    radial-gradient(ellipse at 85% 40%, #b8c8e8 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 95%, #d8c4df 0%, transparent 45%),
+    linear-gradient(145deg, #e7dce9, #b9c9df);
+  padding: 27px 19px;
+}
+
+.home-status {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 42px;
+}
+
+.app-grid {
+  gap: 27px 12px;
+}
+
+.app {
+  font-size: 11px;
+  font-weight: 500;
+  color: #222;
+}
+
+.app-icon {
+  width: 59px;
+  height: 59px;
+  border-radius: 17px;
+  font-size: 30px;
+  box-shadow: 0 5px 12px #0002;
+  transition: transform .15s ease;
+}
+
+.app:active .app-icon {
+  transform: scale(.88);
+}
+
+.green {
+  background: linear-gradient(145deg, #5ce58a, #16a94c);
+}
+
+.white {
+  background: linear-gradient(145deg, #fff, #e9e9ef);
+}
+
+.gray {
+  background: linear-gradient(145deg, #d4d7df, #9299a8);
+}
+
+.black {
+  background: linear-gradient(145deg, #333, #050505);
+}
+
+.pink {
+  background: linear-gradient(145deg, #ffc2df, #e76ba9);
+}
+
+.yellow {
+  background: linear-gradient(145deg, #fff0a8, #f3c94c);
+}
+
+.dock {
+  margin: auto -2px 2px;
+  padding: 12px 7px;
+  border: 1px solid #ffffff70;
+  border-radius: 27px;
+  background: #ffffff55;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 8px 25px #0001;
+}
+
+.dock .app-icon {
+  width: 55px;
+  height: 55px;
+}
+
+/* APP SCREENS */
+
+.app-screen {
+  padding: 28px 20px;
+  background: #f5f5f9;
+  color: #1c1c1e;
+}
+
+.app-screen h2 {
+  font-size: 29px;
+  font-weight: 750;
+  letter-spacing: -.7px;
+  margin: 12px 0;
+}
+
+.message-subtitle {
+  font-size: 14px;
+  color: #8e8e93;
+}
+
+#back-home,
+#back-messages,
+#close-photo {
+  border-radius: 20px;
+  background: #e7e7ec;
+  color: #1688f8;
+  font-weight: 600;
+}
+
+.app-screen input,
+.app-screen textarea {
+  border: 1px solid #dedee3;
+  border-radius: 13px;
+  background: #fff;
+  padding: 13px;
+  outline: none;
+}
+
+.app-screen input:focus,
+.app-screen textarea:focus {
+  border-color: #1688f8;
+}
+
+.app-screen button {
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.app-screen button:active {
+  transform: scale(.97);
+  opacity: .8;
+}
+
+.conversation {
+  border-bottom: 1px solid #e5e5ea;
+  padding: 15px 5px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.chat-bubble {
+  padding: 11px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.note-item,
+.social-post,
+.setting-item,
+.music-track {
+  border-radius: 17px;
+  box-shadow: 0 3px 12px #0000000a;
+}
+
+.note-item {
+  padding: 16px;
+}
+
+.social-post {
+  padding: 16px;
+}
+
+.social-placeholder {
+  border-radius: 16px;
+}
+
+.like-button {
+  color: #e34b79;
+  font-weight: 600;
+}
+
+#photo-gallery img {
+  border-radius: 10px;
+}
+
+#camera-preview {
+  border-radius: 20px;
+}
+
+.setting-item {
+  padding: 17px;
+}
+
+/* DARK MODE */
+
+.dark-mode .home-screen {
+  background:
+    radial-gradient(ellipse at 15% 20%, #57445f, transparent 42%),
+    radial-gradient(ellipse at 85% 45%, #344768, transparent 45%),
+    linear-gradient(145deg, #252538, #171b2b);
+}
+
+.dark-mode .app {
+  color: white;
+}
+
+.dark-mode .dock {
+  background: #ffffff20;
+  border-color: #ffffff20;
+}
+
+.dark-mode .app-screen {
+  background: #17171c;
+}
+
+.dark-mode #back-home,
+.dark-mode #back-messages {
+  background: #33333d;
+  color: #69aaff;
+}
+
+/* SMALL SCREENS */
+
+@media (max-width: 400px) {
+  .phone {
+    border-radius: 0;
+  }
+
+  .app-grid {
+    gap: 26px 10px;
+  }
+
+  .app-icon {
+    width: 57px;
+    height: 57px;
+  }
+}
