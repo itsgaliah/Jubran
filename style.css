@@ -3210,3 +3210,120 @@ body.dark-mode #take-photo {
     min-width: 52px;
   }
 }
+
+/* ===== IPHONE STYLE APP ICONS ===== */
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px 12px;
+  padding: 25px 15px;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: none;
+  background: transparent;
+  color: var(--main-text);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.app-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow:
+    0 2px 5px rgba(0,0,0,.16),
+    inset 0 1px 1px rgba(255,255,255,.3);
+}
+
+.app-icon svg {
+  width: 75%;
+  height: 75%;
+  display: block;
+}
+
+/* Messages */
+.app[data-app="Messages"] .app-icon {
+  background: linear-gradient(145deg,#65e878,#16b94c);
+}
+
+/* Phone */
+.app[data-app="Phone"] .app-icon {
+  background: linear-gradient(145deg,#65e878,#16b94c);
+}
+
+/* Photos */
+.app[data-app="Photos"] .app-icon {
+  background: linear-gradient(145deg,#ffffff,#f0f0f0);
+}
+
+/* Camera */
+.app[data-app="Camera"] .app-icon {
+  background: linear-gradient(145deg,#c9cbd1,#858995);
+}
+
+/* TikTok */
+.app[data-app="TikTok"] .app-icon {
+  background: #080808;
+}
+
+/* Instagram */
+.app[data-app="Instagram"] .app-icon {
+  background: linear-gradient(45deg,#ffd776,#ff754d,#df3290,#7845c8);
+}
+
+/* Notes */
+.app[data-app="Notes"] .app-icon {
+  background: linear-gradient(180deg,#fff 0%,#fff 35%,#f5c94c 36%,#f5c94c 100%);
+}
+
+/* Settings */
+.app[data-app="Settings"] .app-icon {
+  background: linear-gradient(145deg,#c9cbd1,#777b85);
+}
+
+/* Music */
+.app[data-app="Music"] .app-icon {
+  background: linear-gradient(145deg,#fa668e,#d92d68);
+}
+
+/* Dock */
+.dock {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 15px 12px 20px;
+  padding: 12px 8px;
+  border-radius: 25px;
+  background: rgba(220,220,225,.35);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.dock .app {
+  gap: 0;
+}
+
+.dock .app-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 14px;
+}
+
+/* Touch feedback */
+.app:active .app-icon {
+  transform: scale(.88);
+  transition: transform .12s ease;
+}
