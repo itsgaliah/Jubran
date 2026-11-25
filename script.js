@@ -517,3 +517,53 @@ notes.forEach(note => {
   if (!note.id) note.id = makeId();
 });
 saveData("myPhoneNotes", notes);
+
+/* ===== LIVE IPHONE CLOCK & STATUS BAR ===== */
+
+(function updateIPhoneDisplay() {
+  const clock = document.getElementById("clock");
+  const day = document.querySelector(".day");
+
+  function updateDisplay() {
+    const now = new Date();
+
+    const time = now.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    }).replace(" AM", "").replace(" PM", "");
+
+    const date = now.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric"
+    });
+
+    if (clock) clock.textContent = time;
+    if (day) day.textContent = date;
+
+    document.querySelectorAll(".status-bar, .home-status")
+      .forEach(bar => {
+        const first = bar.querySelector("span");
+
+        if (first) first.textContent = time;
+
+        const second = bar.querySelectorAll("span")[1];
+
+        if (second) {
+          second.innerHTML = `
+            <span class="status-icons">
+              <span>▂▄▆</span>
+              <span>◉</span>
+              <span class="battery-icon">
+                <span class="battery-level"></span>
+              </span>
+            </span>
+          `;
+        }
+      });
+  }
+
+  updateDisplay();
+  setInterval(updateDisplay, 1000);
+})();
