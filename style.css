@@ -948,3 +948,51 @@ body {
   border: 1px solid #252525;
   box-shadow: 0 0 3px #526c91;
 }
+
+/* ===== FIX IPHONE SCREEN SIZE ===== */
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.phone {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.lock-screen,
+.home-screen,
+.app-screen {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.home-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden {
+  display: none !important;
+}
