@@ -1,4 +1,3 @@
-
 /* ===== IPHONE ELEMENTS ===== */
 
 const lockScreen = document.querySelector(".lock-screen");
@@ -731,23 +730,25 @@ if (phoneNameItem) {
   const savedName =
     localStorage.getItem("myPhoneName") || "My iPhone";
 
-  nameDisplay.textContent = savedName;
-  nameDisplay.style.cursor = "pointer";
+  if (nameDisplay) {
+    nameDisplay.textContent = savedName;
+    nameDisplay.style.cursor = "pointer";
 
-  nameDisplay.addEventListener("click", () => {
-    const newName = prompt(
-      "Enter your phone name:",
-      localStorage.getItem("myPhoneName") || "My iPhone"
-    );
+    nameDisplay.addEventListener("click", () => {
+      const newName = prompt(
+        "Enter your phone name:",
+        localStorage.getItem("myPhoneName") || "My iPhone"
+      );
 
-    if (newName && newName.trim()) {
-      const cleanName = newName.trim();
+      if (newName && newName.trim()) {
+        const cleanName = newName.trim();
 
-      nameDisplay.textContent = cleanName;
+        nameDisplay.textContent = cleanName;
 
-      localStorage.setItem("myPhoneName", cleanName);
-    }
-  });
+        localStorage.setItem("myPhoneName", cleanName);
+      }
+    });
+  }
 }
 
 /* ===== OLD NOTES SUPPORT ===== */
@@ -819,6 +820,7 @@ saveData("myPhoneNotes", notes);
 
   setInterval(updateDisplay, 1000);
 })();
+
 /* ===== IPHONE NOTIFICATIONS ===== */
 
 const notificationBanner = document.getElementById("notification-banner");
@@ -891,10 +893,7 @@ function finishCall(type) {
 
   incomingCallScreen.classList.add("hidden");
 
-  if (!homeScreen.classList.contains("hidden") ||
-      !appScreen.classList.contains("hidden")) {
-    renderCalls();
-  }
+  renderCalls();
 
   if (type === "Incoming call") {
     showNotification("Phone", "Call with " + currentCaller);
@@ -903,19 +902,35 @@ function finishCall(type) {
   currentCaller = "";
 }
 
+/* Choose who is calling */
+
 simulateCallButton.addEventListener("click", () => {
-  const name = contacts.length
-    ? contacts[Math.floor(Math.random() * contacts.length)].name
-    : prompt("Enter caller name:");
+  const names = contacts.map(contact => contact.name);
+
+  let name;
+
+  if (names.length > 0) {
+    name = prompt(
+      "Who is calling you?\n\nSaved contacts:\n" +
+      names.join("\n") +
+      "\n\nType the caller's name:"
+    );
+  } else {
+    name = prompt("Enter caller name:");
+  }
 
   if (name && name.trim()) {
     startIncomingCall(name.trim());
   }
 });
 
+/* Accept call */
+
 document.getElementById("accept-call").addEventListener("click", () => {
   finishCall("Incoming call");
 });
+
+/* Decline call */
 
 document.getElementById("decline-call").addEventListener("click", () => {
   finishCall("Missed call");
@@ -972,17 +987,29 @@ document.addEventListener("click", event => {
 
 /* ===== NOTIFICATION TAP ===== */
 
-notificationBanner.addEventListener("click", () => {
-  notificationBanner.classList.add("hidden");
+if (notificationBanner) {
+  notificationBanner.addEventListener("click", () => {
+    const title = notificationTitle.textContent;
 
-  Object.values(appElements).forEach(id => {
-    document.getElementById(id).classList.add("hidden");
+    notificationBanner.classList.add("hidden");
+
+    Object.values(appElements).forEach(id => {
+      document.getElementById(id).classList.add("hidden");
+    });
+
+    homeScreen.classList.add("hidden");
+    appScreen.classList.remove("hidden");
+
+    const targetApp = title === "Phone"
+      ? "phone-app"
+      : "messages-app";
+
+    document.getElementById(targetApp).classList.remove("hidden");
+
+    if (targetApp === "phone-app") {
+      renderCalls();
+    } else {
+      renderContacts();
+    }
   });
-
-  homeScreen.classList.add("hidden");
-  appScreen.classList.remove("hidden");
-
-  document.getElementById("messages-app").classList.remove("hidden");
-
-  renderContacts();
-});
+}
