@@ -3087,3 +3087,126 @@ body.dark-mode #take-photo {
 .app[data-app="Music"] .app-icon {
   background: linear-gradient(145deg, #ff829f, #e52c65) !important;
 }
+
+/* ===== IPHONE HOME SCREEN LAYOUT ===== */
+
+/* Home screen layout */
+.home-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 55px 20px 25px !important;
+  box-sizing: border-box;
+}
+
+/* Apps grid */
+.app-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  column-gap: 12px !important;
+  row-gap: 25px !important;
+  width: 100% !important;
+  margin: 35px auto 0 !important;
+  justify-items: center;
+  align-items: start;
+}
+
+/* Each app */
+.home-screen .app {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 7px !important;
+  width: 100% !important;
+  min-width: 0;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: white !important;
+  text-align: center;
+}
+
+/* App icons */
+.home-screen .app-icon {
+  width: 61px !important;
+  height: 61px !important;
+  min-width: 61px;
+  border-radius: 14px !important;
+  margin: 0 !important;
+  box-shadow:
+    0 3px 8px #0003,
+    inset 0 1px 2px #ffffff55;
+}
+
+/* App names */
+.home-screen .app {
+  text-shadow: 0 1px 3px #0009;
+  white-space: nowrap;
+}
+
+/* Dock */
+.home-screen .dock {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  align-items: center;
+  justify-items: center;
+  gap: 10px !important;
+  width: 100% !important;
+  min-height: 90px;
+  margin: auto 0 5px !important;
+  padding: 12px 10px !important;
+  box-sizing: border-box;
+  border-radius: 28px !important;
+  background: rgba(255,255,255,.28) !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 8px 25px #0002;
+}
+
+/* Dock icons */
+.home-screen .dock .app {
+  width: auto !important;
+  gap: 0 !important;
+}
+
+.home-screen .dock .app-icon {
+  width: 57px !important;
+  height: 57px !important;
+  min-width: 57px;
+  border-radius: 14px !important;
+}
+
+/* Tap animation */
+.home-screen .app:active .app-icon {
+  transform: scale(.9);
+  transition: transform .12s ease;
+}
+
+/* Small screens */
+@media (max-width: 380px) {
+  .home-screen {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+  }
+
+  .app-grid {
+    column-gap: 5px !important;
+  }
+
+  .home-screen .app-icon {
+    width: 55px !important;
+    height: 55px !important;
+    min-width: 55px;
+  }
+
+  .home-screen .dock .app-icon {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px;
+  }
+}
