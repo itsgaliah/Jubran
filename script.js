@@ -819,3 +819,170 @@ saveData("myPhoneNotes", notes);
 
   setInterval(updateDisplay, 1000);
 })();
+/* ===== IPHONE NOTIFICATIONS ===== */
+
+const notificationBanner = document.getElementById("notification-banner");
+const notificationTitle = document.getElementById("notification-title");
+const notificationText = document.getElementById("notification-text");
+
+let notificationTimer;
+
+function showNotification(title, message) {
+  if (!notificationBanner) return;
+
+  notificationTitle.textContent = title;
+  notificationText.textContent = message;
+
+  notificationBanner.classList.remove("hidden");
+
+  clearTimeout(notificationTimer);
+
+  notificationTimer = setTimeout(() => {
+    notificationBanner.classList.add("hidden");
+  }, 3500);
+}
+
+/* Show notification when receiving a message */
+
+const originalAddMessage = addMessage;
+
+addMessage = function(type, inputId) {
+  const messageText = document.getElementById(inputId)?.value.trim();
+  const senderName = activeContact?.name || "Messages";
+
+  originalAddMessage(type, inputId);
+
+  if (type === "received" && messageText) {
+    showNotification(senderName, messageText);
+  }
+};
+
+/* ===== INCOMING CALL SCREEN ===== */
+
+const incomingCallScreen = document.getElementById("incoming-call");
+const callerNameDisplay = document.getElementById("caller-name");
+
+const simulateCallButton = document.createElement("button");
+simulateCallButton.id = "simulate-incoming-call";
+simulateCallButton.textContent = "☎ Simulate Incoming Call";
+
+document.getElementById("add-call").after(simulateCallButton);
+
+let currentCaller = "";
+
+function startIncomingCall(name) {
+  currentCaller = name;
+
+  callerNameDisplay.textContent = name;
+
+  incomingCallScreen.classList.remove("hidden");
+}
+
+function finishCall(type) {
+  if (!currentCaller) return;
+
+  calls.unshift({
+    name: currentCaller,
+    type: type,
+    time: new Date().toLocaleString()
+  });
+
+  saveData("myPhoneCalls", calls);
+
+  incomingCallScreen.classList.add("hidden");
+
+  if (!homeScreen.classList.contains("hidden") ||
+      !appScreen.classList.contains("hidden")) {
+    renderCalls();
+  }
+
+  if (type === "Incoming call") {
+    showNotification("Phone", "Call with " + currentCaller);
+  }
+
+  currentCaller = "";
+}
+
+simulateCallButton.addEventListener("click", () => {
+  const name = contacts.length
+    ? contacts[Math.floor(Math.random() * contacts.length)].name
+    : prompt("Enter caller name:");
+
+  if (name && name.trim()) {
+    startIncomingCall(name.trim());
+  }
+});
+
+document.getElementById("accept-call").addEventListener("click", () => {
+  finishCall("Incoming call");
+});
+
+document.getElementById("decline-call").addEventListener("click", () => {
+  finishCall("Missed call");
+});
+
+/* ===== TOUCH SOUNDS ===== */
+
+let audioContext;
+
+function playTouchSound() {
+  try {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) return;
+
+    if (!audioContext) {
+      audioContext = new AudioContextClass();
+    }
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = 650;
+
+    gain.gain.setValueAtTime(0.035, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + 0.06
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.06);
+  } catch (error) {
+    // Sound is optional.
+  }
+}
+
+document.addEventListener("click", event => {
+  const target = event.target.closest("button, .app");
+
+  if (target && !target.disabled) {
+    playTouchSound();
+  }
+});
+
+/* ===== NOTIFICATION TAP ===== */
+
+notificationBanner.addEventListener("click", () => {
+  notificationBanner.classList.add("hidden");
+
+  Object.values(appElements).forEach(id => {
+    document.getElementById(id).classList.add("hidden");
+  });
+
+  homeScreen.classList.add("hidden");
+  appScreen.classList.remove("hidden");
+
+  document.getElementById("messages-app").classList.remove("hidden");
+
+  renderContacts();
+});
