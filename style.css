@@ -2893,3 +2893,158 @@ body.dark-mode #take-photo {
   background: var(--card-bg);
   color: var(--main-text);
 }
+
+/* ===== REAL IPHONE APP ICONS ===== */
+
+/* ICON SIZE & SHAPE */
+
+.app-grid .app-icon,
+.dock .app-icon {
+  width: 61px !important;
+  height: 61px !important;
+  border-radius: 14px !important;
+  font-size: 31px !important;
+  box-shadow:
+    0 3px 8px #0002,
+    inset 0 1px 2px #ffffff70;
+  border: 0.5px solid #ffffff35;
+}
+
+/* MESSAGES */
+
+.app[data-app="Messages"] .app-icon {
+  background: linear-gradient(145deg, #65e878, #20b84b) !important;
+  color: white;
+}
+
+/* PHONE */
+
+.app[data-app="Phone"] .app-icon {
+  background: linear-gradient(145deg, #5ce879, #18ad48) !important;
+  color: white;
+}
+
+/* PHOTOS */
+
+.app[data-app="Photos"] .app-icon {
+  background: linear-gradient(145deg, #ffffff, #e9e9f0) !important;
+  color: #fff;
+}
+
+/* CAMERA */
+
+.app[data-app="Camera"] .app-icon {
+  background: linear-gradient(145deg, #e5e5e8, #92939b) !important;
+  color: white;
+}
+
+/* TIKTOK */
+
+.app[data-app="TikTok"] .app-icon {
+  background: #080808 !important;
+  color: white;
+  font-size: 38px !important;
+}
+
+/* INSTAGRAM */
+
+.app[data-app="Instagram"] .app-icon {
+  background: linear-gradient(
+    135deg,
+    #feda75,
+    #fa7e1e,
+    #d62976,
+    #962fbf,
+    #4f5bd5
+  ) !important;
+  color: white;
+}
+
+/* NOTES */
+
+.app[data-app="Notes"] .app-icon {
+  background: linear-gradient(145deg, #fff, #f4d66f) !important;
+  color: #555;
+}
+
+/* SETTINGS */
+
+.app[data-app="Settings"] .app-icon {
+  background: linear-gradient(145deg, #d8d8df, #858590) !important;
+  color: white;
+}
+
+/* MUSIC */
+
+.app[data-app="Music"] .app-icon {
+  background: linear-gradient(145deg, #ff829f, #e52c65) !important;
+  color: white;
+}
+
+/* APP LABELS */
+
+.home-screen .app {
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 500;
+  text-shadow: 0 1px 4px #0008;
+  gap: 6px;
+}
+
+/* ICON ANIMATION */
+
+.home-screen .app:active .app-icon {
+  transform: scale(.88);
+  filter: brightness(.9);
+}
+
+/* IPHONE DOCK */
+
+.home-screen .dock {
+  padding: 14px 9px !important;
+  margin-bottom: 25px !important;
+  border-radius: 28px !important;
+  background: #ffffff45 !important;
+  border: 1px solid #ffffff60;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 0 8px 25px #0002;
+}
+
+.home-screen .dock .app-icon {
+  width: 57px !important;
+  height: 57px !important;
+  border-radius: 14px !important;
+}
+
+/* STATUS BAR */
+
+.home-screen .home-status {
+  color: white !important;
+  text-shadow: 0 1px 4px #0008;
+}
+
+/* PAGE DOTS */
+
+.home-screen::before {
+  color: white !important;
+  text-shadow: 0 1px 4px #0008;
+}
+
+/* DARK MODE */
+
+.dark-mode .home-screen .app {
+  color: white !important;
+}
+
+@media (max-width: 380px) {
+  .app-grid .app-icon {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .home-screen .dock .app-icon {
+    width: 52px !important;
+    height: 52px !important;
+  }
+}
