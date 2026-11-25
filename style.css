@@ -996,3 +996,46 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* ===== FINAL FULL SCREEN FIX ===== */
+
+html,
+body {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body {
+  display: block !important;
+  overflow-x: hidden;
+}
+
+.phone {
+  width: 100% !important;
+  max-width: 430px !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  max-height: none !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+  aspect-ratio: auto !important;
+  overflow: hidden !important;
+}
+
+.lock-screen,
+#home-screen,
+#app-screen {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  box-sizing: border-box !important;
+}
