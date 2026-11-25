@@ -1123,3 +1123,7 @@ if (resetWallpaper) {
     alert("Wallpaper reset!");
   });
 }
+/* CLEAR ALL TEST CONTACTS, MESSAGES AND CALLS */
+
+localStorage.removeItem("myPhoneContacts");
+localStorage.removeItem("myPhoneCalls");
