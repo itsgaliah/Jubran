@@ -1921,3 +1921,64 @@ body {
   background: #38383f;
   color: #69aaff;
 }
+
+/* ===== NOTES DARK MODE FIX ===== */
+
+#notes-app #note-title,
+#notes-app #note-content {
+  background: #25252c !important;
+  color: #fff !important;
+  border: 1px solid #41414a !important;
+  border-radius: 14px !important;
+  padding: 15px !important;
+  box-sizing: border-box;
+}
+
+#notes-app #note-title {
+  height: 65px;
+  font-size: 19px;
+}
+
+#notes-app #note-content {
+  min-height: 180px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+#notes-app #note-title::placeholder,
+#notes-app #note-content::placeholder {
+  color: #aaa !important;
+}
+
+#notes-app #save-note {
+  background: #f5c542 !important;
+  color: #222 !important;
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 14px 22px !important;
+}
+
+#notes-app #cancel-edit {
+  background: #45454e !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 14px 22px !important;
+}
+
+#notes-app .note-item {
+  background: #303039 !important;
+  color: white !important;
+  border: 1px solid #41414a !important;
+}
+
+#notes-app .note-item h3,
+#notes-app .note-item p {
+  color: white !important;
+}
+
+#notes-app .note-item button {
+  background: #45454e !important;
+  color: #8ab8ff !important;
+  border: none !important;
+}
