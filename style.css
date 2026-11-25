@@ -1982,3 +1982,171 @@ body {
   color: #8ab8ff !important;
   border: none !important;
 }
+
+/* =================================
+   TIKTOK & INSTAGRAM IPHONE DESIGN
+================================= */
+
+/* SHARED APP DESIGN */
+
+#tiktok-app,
+#instagram-app {
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 22px 15px;
+  background: #f7f7fa;
+  color: #1c1c1e;
+}
+
+#tiktok-app h2,
+#instagram-app h2 {
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -.8px;
+  margin: 15px 0 8px;
+}
+
+#tiktok-app .message-subtitle,
+#instagram-app .message-subtitle {
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* SOCIAL POSTS */
+
+.social-post {
+  background: white !important;
+  border-radius: 17px !important;
+  padding: 14px !important;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  box-shadow: 0 3px 12px #0000000a !important;
+  overflow: hidden;
+}
+
+.social-post p {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+/* POST PLACEHOLDER */
+
+.social-placeholder {
+  width: 100%;
+  height: 310px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 13px !important;
+  background: linear-gradient(145deg, #d8d9ed, #f3cbdc);
+  font-size: 65px;
+  color: white;
+}
+
+/* LIKE BUTTON */
+
+.like-button {
+  border: none;
+  background: transparent;
+  color: #e84b73;
+  font-size: 16px;
+  font-weight: 650;
+  padding: 9px 3px;
+  cursor: pointer;
+}
+
+.like-button:active {
+  transform: scale(.94);
+}
+
+/* TIKTOK DESIGN */
+
+#tiktok-app h2 {
+  color: #111;
+}
+
+#tiktok-app .social-post {
+  background: #fff !important;
+}
+
+#tiktok-app .social-placeholder {
+  background: linear-gradient(145deg, #242424, #555);
+  color: white;
+  height: 340px;
+  font-size: 75px;
+}
+
+#tiktok-app .like-button {
+  color: #fe2c55;
+}
+
+/* INSTAGRAM DESIGN */
+
+#instagram-app h2 {
+  color: #c13584;
+}
+
+#instagram-app .social-post {
+  border-radius: 14px !important;
+}
+
+#instagram-app .social-placeholder {
+  background: linear-gradient(
+    135deg,
+    #feda75,
+    #fa7e1e,
+    #d62976,
+    #962fbf,
+    #4f5bd5
+  );
+  height: 320px;
+}
+
+#instagram-app .like-button {
+  color: #ed4956;
+}
+
+/* DARK MODE */
+
+.dark-mode #tiktok-app,
+.dark-mode #instagram-app {
+  background: #17171c;
+  color: white;
+}
+
+.dark-mode #tiktok-app h2,
+.dark-mode #instagram-app h2 {
+  color: white;
+}
+
+.dark-mode #tiktok-app .social-post,
+.dark-mode #instagram-app .social-post {
+  background: #292930 !important;
+  border-color: #3b3b44;
+}
+
+.dark-mode #tiktok-app .social-post p,
+.dark-mode #instagram-app .social-post p {
+  color: white;
+}
+
+.dark-mode #tiktok-app .message-subtitle,
+.dark-mode #instagram-app .message-subtitle {
+  color: #aaa;
+}
+
+/* MOBILE */
+
+@media (max-width: 380px) {
+  .social-placeholder {
+    height: 270px;
+  }
+
+  #tiktok-app,
+  #instagram-app {
+    padding: 18px 12px;
+  }
+}
