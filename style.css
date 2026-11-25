@@ -2150,3 +2150,39 @@ body {
     padding: 18px 12px;
   }
 }
+/* REAL SOCIAL MEDIA PROFILE BUTTONS */
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  margin: 15px 0 25px;
+  border-radius: 15px;
+  text-decoration: none;
+  color: white !important;
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform .2s;
+}
+
+.social-link:active {
+  transform: scale(.96);
+}
+
+.tiktok-link {
+  background: linear-gradient(110deg, #111, #fe2c55);
+}
+
+.instagram-link {
+  background: linear-gradient(
+    110deg,
+    #feda75,
+    #fa7e1e,
+    #d62976,
+    #962fbf,
+    #4f5bd5
+  );
+}
