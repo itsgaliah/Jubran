@@ -1,404 +1,3110 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My iPhone</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>جوال جبران المفقود | iPhone RP Studio</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Arabic Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      --font-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-arabic);
+      background: radial-gradient(circle at 50% 20%, #151821 0%, #07080b 100%);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      height: 100dvh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Desktop iPhone Chassis vs Mobile Fullscreen */
+    .iphone-chassis {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      background: #000000;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background-size: cover;
+      background-position: center;
+    }
+
+    @media (min-width: 640px) {
+      .iphone-chassis {
+        width: 393px;
+        height: 852px;
+        max-height: 94dvh;
+        border-radius: 54px;
+        border: 11px solid #1f2128;
+        box-shadow:
+          0 0 0 2px #363945,
+          0 30px 80px rgba(0, 0, 0, 0.85),
+          inset 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .default-ios-wallpaper {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(30, 58, 138, 0.35), transparent 45%),
+        radial-gradient(circle at 80% 75%, rgba(16, 185, 129, 0.18), transparent 50%),
+        radial-gradient(circle at 50% 50%, #0c0e14 0%, #030406 100%);
+    }
+
+    .ios-glass {
+      background: rgba(28, 28, 32, 0.76);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+    }
+
+    .ios-dock-glass {
+      background: rgba(34, 34, 40, 0.72);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .app-view {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      background: #000000;
+      transform: scale(0.92);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+    }
+
+    .app-view.active {
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #lock-screen {
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+      background-size: cover;
+      background-position: center;
+    }
+
+    #lock-screen.unlocked {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0); opacity: 0.75; }
+      50% { transform: translateY(-6px); opacity: 1; }
+    }
+    .animate-swipe-hint {
+      animation: floatUp 2s infinite ease-in-out;
+    }
+
+    .wa-bg {
+      background-color: #0b141a;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 0);
+      background-size: 20px 20px;
+    }
+
+    .app-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+      transition: transform 0.15s ease;
+    }
+    .app-icon:active {
+      transform: scale(0.9);
+    }
+
+    /* Snapchat Story Progress Bar Animation */
+    @keyframes storyFill {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+    .story-progress-active {
+      animation: storyFill 5s linear forwards;
+    }
+  </style>
 </head>
 <body>
 
-<main class="phone">
-
-  <div class="lock-screen">
-    <div class="dynamic-island"></div>
-
-    <div class="status-bar">
-      <span>9:41</span><span>●●● WiFi ▰</span>
+  <!-- Floating Side Controls for Desktop / Tablet -->
+  <div class="hidden md:flex flex-col gap-2.5 fixed bottom-6 right-8 text-right z-40">
+    <div class="bg-zinc-900/90 backdrop-blur-md border border-zinc-800 p-3.5 rounded-2xl shadow-2xl space-y-2.5 max-w-[240px]">
+      <div>
+        <span class="text-[11px] text-emerald-400 font-semibold block">وضع الرول بلاي • iPhone RP</span>
+        <span id="side-owner-label" class="text-sm font-bold text-zinc-100">iPhone — جبران</span>
+      </div>
+      <button onclick="openStudio()" class="w-full bg-gradient-to-l from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+        <i class="fa-solid fa-sliders"></i>
+        <span>استوديو التخصيص المباشر</span>
+      </button>
+      <button onclick="exportGitHubHtml()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-xs font-semibold px-3.5 py-2 rounded-xl border border-zinc-700 flex items-center justify-center gap-2 transition active:scale-95">
+        <i class="fa-brands fa-github text-emerald-400"></i>
+        <span>تصدير index.html جاهز</span>
+      </button>
+      <div class="text-[10px] text-zinc-400 leading-relaxed pt-1 border-t border-zinc-800">
+        اختصار الفتح: <kbd class="bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-200">Space</kbd> أو <kbd class="bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-200">Enter</kbd>
+      </div>
     </div>
-
-    <div class="lock-content">
-      <p class="day">Tuesday, November 24</p>
-      <h1 id="clock">9:41</h1>
-      <p>Welcome to my phone</p>
-    </div>
-
-    <div class="widgets">
-      <div class="widget">☁️<br>Weather</div>
-      <div class="widget">📅<br>Calendar</div>
-    </div>
-
-    <div class="bottom-icons">
-      <button>🔦</button>
-      <button>📷</button>
-    </div>
-
-    <div class="swipe">Swipe up to unlock</div>
-    <button class="unlock" onclick="unlockPhone()">Unlock</button>
   </div>
 
-  <section id="home-screen" class="home-screen hidden">
+  <!-- Main iPhone Container -->
+  <main id="iphone" class="iphone-chassis default-ios-wallpaper">
 
-    <div class="home-status">
-      <span>9:41</span><span>●●● WiFi ▰</span>
-    </div>
+    <!-- iOS Status Bar + Dynamic Island -->
+    <header id="status-bar" class="relative z-50 flex items-center justify-between px-6 pt-3 pb-2 text-xs font-semibold text-white select-none">
+      <div class="w-16 text-right tracking-tight" id="status-time">11:42</div>
 
- 
-<div class="app-grid">
-
-  <button class="app" data-app="Messages">
-    <span class="app-icon green">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M50 17C28 17 12 31 12 49c0 11 6 21 17 27l-4 13 19-8c2 1 4 1 6 1 22 0 38-14 38-33S72 17 50 17Z"/>
-      </svg>
-    </span>
-    Messages
-  </button>
-
-  <button class="app" data-app="Phone">
-    <span class="app-icon green">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M29 13 17 25c-5 5 2 22 18 40s35 27 40 21l12-12-19-18-12 11c-8-4-17-13-21-21l11-12-17-21Z"/>
-      </svg>
-    </span>
-    Phone
-  </button>
-
-  <button class="app" data-app="Photos">
-    <span class="app-icon white">
-      <svg viewBox="0 0 100 100">
-        <g transform="translate(50 50)">
-          <ellipse fill="#ff4b55" cx="0" cy="-22" rx="12" ry="23"/>
-          <ellipse fill="#ff9d35" cx="19" cy="-10" rx="12" ry="23" transform="rotate(60 19 -10)"/>
-          <ellipse fill="#ffdb35" cx="19" cy="12" rx="12" ry="23" transform="rotate(120 19 12)"/>
-          <ellipse fill="#45c86b" cx="0" cy="22" rx="12" ry="23"/>
-          <ellipse fill="#38a5ed" cx="-19" cy="10" rx="12" ry="23" transform="rotate(60 -19 10)"/>
-          <ellipse fill="#a66be0" cx="-19" cy="-12" rx="12" ry="23" transform="rotate(120 -19 -12)"/>
-          <circle r="9" fill="white"/>
-        </g>
-      </svg>
-    </span>
-    Photos
-  </button>
-
-  <button class="app" data-app="Camera">
-    <span class="app-icon gray">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M34 23 27 34H17c-5 0-8 4-8 9v34c0 5 3 8 8 8h66c5 0 8-3 8-8V43c0-5-3-9-8-9H73l-7-11H34Z"/>
-        <circle cx="50" cy="59" r="19" fill="#85858b"/>
-        <circle cx="50" cy="59" r="13" fill="#d9d9df"/>
-        <circle cx="50" cy="59" r="8" fill="#85858b"/>
-      </svg>
-    </span>
-    Camera
-  </button>
-
-  <button class="app" data-app="TikTok">
-    <span class="app-icon black">
-      <svg viewBox="0 0 100 100">
-        <path fill="#25f4ee" d="M57 13h15c1 12 7 19 19 21v15c-8 0-15-3-21-8v29c0 17-12 27-28 27-15 0-26-10-26-24 0-16 14-27 30-24v16c-8-2-14 2-14 9 0 5 4 8 10 8 7 0 11-4 11-12V13Z" transform="translate(-4 0)"/>
-        <path fill="#fe2c55" d="M57 13h15c1 12 7 19 19 21v15c-8 0-15-3-21-8v29c0 17-12 27-28 27-15 0-26-10-26-24 0-16 14-27 30-24v16c-8-2-14 2-14 9 0 5 4 8 10 8 7 0 11-4 11-12V13Z" transform="translate(4 0)"/>
-        <path fill="white" d="M57 13h15c1 12 7 19 19 21v15c-8 0-15-3-21-8v29c0 17-12 27-28 27-15 0-26-10-26-24 0-16 14-27 30-24v16c-8-2-14 2-14 9 0 5 4 8 10 8 7 0 11-4 11-12V13Z"/>
-      </svg>
-    </span>
-    TikTok
-  </button>
-
-  <button class="app" data-app="Instagram">
-    <span class="app-icon pink">
-      <svg viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="7">
-        <rect x="17" y="17" width="66" height="66" rx="19"/>
-        <circle cx="50" cy="50" r="16"/>
-        <circle cx="70" cy="30" r="4" fill="white" stroke="none"/>
-      </svg>
-    </span>
-    Instagram
-  </button>
-
-  <button class="app" data-app="Notes">
-    <span class="app-icon yellow">
-      <svg viewBox="0 0 100 100">
-        <rect x="21" y="13" width="58" height="74" rx="8" fill="white"/>
-        <path d="M21 34h58" stroke="#f5c84c" stroke-width="9"/>
-        <path d="M31 49h38M31 61h38M31 73h28" stroke="#c7c7c7" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-    </span>
-    Notes
-  </button>
-
-  <button class="app" data-app="Settings">
-    <span class="app-icon gray">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M44 9h12l3 10 9 4 9-5 9 9-5 9 4 9 10 3v12l-10 3-4 9 5 9-9 9-9-5-9 4-3 10H44l-3-10-9-4-9 5-9-9 5-9-4-9-10-3V44l10-3 4-9-5-9 9-9 9 5 9-4 3-10Z"/>
-        <circle cx="50" cy="50" r="15" fill="#92939b"/>
-      </svg>
-    </span>
-    Settings
-  </button>
-
-</div>
-
-<div class="dock">
-
-  <button class="app" data-app="Phone">
-    <span class="app-icon green">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M29 13 17 25c-5 5 2 22 18 40s35 27 40 21l12-12-19-18-12 11c-8-4-17-13-21-21l11-12-17-21Z"/>
-      </svg>
-    </span>
-  </button>
-
-  <button class="app" data-app="Messages">
-    <span class="app-icon green">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M50 17C28 17 12 31 12 49c0 11 6 21 17 27l-4 13 19-8c2 1 4 1 6 1 22 0 38-14 38-33S72 17 50 17Z"/>
-      </svg>
-    </span>
-  </button>
-
-  <button class="app" data-app="Photos">
-    <span class="app-icon white">
-      <svg viewBox="0 0 100 100">
-        <g transform="translate(50 50)">
-          <ellipse fill="#ff4b55" cy="-22" rx="12" ry="23"/>
-          <ellipse fill="#ff9d35" cx="19" cy="-10" rx="12" ry="23" transform="rotate(60 19 -10)"/>
-          <ellipse fill="#ffdb35" cx="19" cy="12" rx="12" ry="23" transform="rotate(120 19 12)"/>
-          <ellipse fill="#45c86b" cy="22" rx="12" ry="23"/>
-          <ellipse fill="#38a5ed" cx="-19" cy="10" rx="12" ry="23" transform="rotate(60 -19 10)"/>
-          <ellipse fill="#a66be0" cx="-19" cy="-12" rx="12" ry="23" transform="rotate(120 -19 -12)"/>
-          <circle r="9" fill="white"/>
-        </g>
-      </svg>
-    </span>
-  </button>
-
-  <button class="app" data-app="Music">
-    <span class="app-icon pink">
-      <svg viewBox="0 0 100 100">
-        <path fill="white" d="M65 17v49c0 11-9 18-21 18-10 0-17-5-17-13 0-9 9-15 21-15 3 0 6 1 8 2V30l30-7v37c0 11-9 18-21 18-4 0-7-1-10-3V25l10-8Z"/>
-      </svg>
-    </span>
-  </button>
-
-</div>
-
-  </section>
-
-  <section id="app-screen" class="app-screen hidden">
-
-    <button id="back-home">← Home</button>
-
-    <div id="phone-app" class="hidden">
-      <h2>Phone</h2>
-      <p class="message-subtitle">Recent Calls</p>
-      <div id="call-list"></div>
-      <button id="add-call">＋ Add Call</button>
-    </div>
-
-    <div id="messages-app" class="hidden">
-      <h2>Messages</h2>
-      <p class="message-subtitle">Your conversations</p>
-
-      <form id="add-contact-form">
-        <input id="contact-name" placeholder="Person's name" required>
-        <label for="contact-photo">Choose a photo</label>
-        <input id="contact-photo" type="file" accept="image/*">
-        <button type="submit">＋ Add Contact</button>
-      </form>
-
-      <div id="conversation-list"></div>
-
-      <div id="chat-view" class="hidden">
-        <button id="back-messages">← Conversations</button>
-        <h3 id="chat-name"></h3>
-        <div id="chat-messages"></div>
-
-        <form id="send-message-form">
-          <input id="message-input" placeholder="iMessage" required>
-          <button type="submit">Send</button>
-        </form>
-
-        <form id="receive-message-form">
-          <input id="receive-input" placeholder="Incoming message">
-          <button type="button" id="receive-button">Receive</button>
-        </form>
-      </div>
-    </div>
-
-    <div id="photos-app" class="hidden">
-      <h2>Photos</h2>
-      <p class="message-subtitle">Your Gallery</p>
-      <label for="gallery-upload">＋ Add Photos</label>
-      <input id="gallery-upload" type="file" accept="image/*" multiple>
-      <div id="photo-gallery"></div>
-
-      <div id="photo-viewer" class="hidden">
-        <button id="close-photo">✕ Close</button>
-        <img id="large-photo" alt="Selected photo">
-        <button id="delete-photo">Delete Photo</button>
-      </div>
-    </div>
-
-    <div id="camera-app" class="hidden">
-      <h2>Camera</h2>
-      <video id="camera-preview" autoplay playsinline></video>
-      <button id="start-camera">Open Camera</button>
-      <button id="take-photo">Take Photo</button>
-      <canvas id="camera-canvas" class="hidden"></canvas>
-      <p id="camera-message"></p>
-    </div>
-
-    <div id="notes-app" class="hidden">
-      <h2>Notes</h2>
-      <input id="note-title" placeholder="Note title">
-      <textarea id="note-content" placeholder="Write something..."></textarea>
-      <button id="save-note">Save Note</button>
-      <button id="cancel-edit" class="hidden">Cancel Edit</button>
-      <div id="notes-list"></div>
-    </div>
-
-    <div id="tiktok-app" class="hidden">
-      <h2>♪ TikTok</h2>
-      <p class="message-subtitle">For You</p>
-
-      <div class="social-post">
-        <div class="social-placeholder">🎬</div>
-        <p>Welcome to your feed!</p>
-        <a
-          class="social-link tiktok-link"
-          href="https://www.tiktok.com/@fttir?_r=1&_t=ZS-9BhYxdOP8xI"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Open My TikTok ↗
-        </a>
-        <button class="like-button">♡ Like</button>
+      <!-- Dynamic Island -->
+      <div onclick="openStudio()" title="اضغط لفتح استوديو التخصيص" class="cursor-pointer w-28 h-7 bg-black rounded-full flex items-center justify-between px-3 shadow-inner border border-zinc-900 hover:border-zinc-700 transition">
+        <span class="w-2 h-2 rounded-full bg-emerald-500/80 animate-pulse"></span>
+        <div class="w-3 h-3 rounded-full bg-[#111524] border border-zinc-800"></div>
       </div>
 
-      <div class="social-post">
-        <div class="social-placeholder">🌸</div>
-        <p>Enjoy your day!</p>
-        <button class="like-button">♡ Like</button>
+      <div class="w-16 flex items-center justify-end gap-1.5 text-[11px]">
+        <i class="fa-solid fa-signal"></i>
+        <i class="fa-solid fa-wifi"></i>
+        <div class="flex items-center">
+          <div class="w-5 h-2.5 border border-white/60 rounded-[3px] p-[1px] flex items-center">
+            <div id="battery-bar" class="w-2/3 h-full bg-red-500 rounded-[1px]"></div>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div id="instagram-app" class="hidden">
-      <h2>Instagram</h2>
-      <p class="message-subtitle">Your Feed</p>
-
-      <div class="social-post">
-        <div class="social-placeholder">📸</div>
-        <p>Welcome to Instagram!</p>
-        <a
-          class="social-link instagram-link"
-          href="https://www.instagram.com/_fttir?dmpr=cG91c3hrZ3BiMTB4"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Open My Instagram ↗
-        </a>
-        <button class="like-button">♡ Like</button>
-      </div>
-
-      <div class="social-post">
-        <div class="social-placeholder">🌷</div>
-        <p>Beautiful moments</p>
-        <button class="like-button">♡ Like</button>
-      </div>
-    </div>
-
-    <div id="music-app" class="hidden">
-      <h2>Music</h2>
-      <p class="message-subtitle">Your Music Library</p>
-      <label for="music-upload">＋ Add Music</label>
-      <input id="music-upload" type="file" accept="audio/*" multiple>
-      <div id="music-list"></div>
-      <audio id="music-player" controls></audio>
-    </div>
-
-    <div id="settings-app" class="hidden">
-      <h2>Settings</h2>
-
-      <div class="setting-item">
-        <span>Dark Mode</span>
-        <input id="dark-mode" type="checkbox">
+    <!-- =========================================================
+         1. LOCK SCREEN (شاشة القفل)
+    ========================================================== -->
+    <section id="lock-screen" class="absolute inset-0 z-40 default-ios-wallpaper flex flex-col justify-between pt-14 pb-4 px-5 cursor-grab active:cursor-grabbing">
+      <div class="flex flex-col items-center text-center mt-2">
+        <button onclick="unlockPhone()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center mb-3 backdrop-blur-md transition active:scale-90" title="انقر لفتح القفل">
+          <i class="fa-solid fa-lock text-xs text-white"></i>
+        </button>
+        <p id="lock-date" class="text-base font-medium text-zinc-200 tracking-wide drop-shadow">الأربعاء، ٢٥ نوفمبر</p>
+        <h1 id="lock-clock" class="text-[76px] leading-none font-bold tracking-tight text-white mt-1 drop-shadow-lg">11:42</h1>
+        <p id="lock-owner-badge" class="text-[11px] text-zinc-200 mt-2 bg-black/45 backdrop-blur-md px-3.5 py-0.5 rounded-full border border-white/10">جوال جبران</p>
       </div>
 
-      <div class="setting-item">
-        <span>Phone Name</span>
-        <strong>My iPhone</strong>
+      <!-- Notifications Area -->
+      <div id="lock-notifications" class="w-full my-auto pt-4 space-y-2.5">
+        <div onclick="unlockPhone()" class="ios-glass rounded-2xl p-3.5 shadow-2xl active:scale-[0.98] transition cursor-pointer">
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-center gap-2">
+              <div id="notif-icon-bg" class="w-6 h-6 rounded-lg bg-emerald-800 flex items-center justify-center text-emerald-200 text-xs shadow">
+                <i class="fa-solid fa-mug-hot"></i>
+              </div>
+              <span id="notif-app-name" class="text-xs font-bold text-emerald-300 tracking-wide">so matcha</span>
+            </div>
+            <span id="notif-time" class="text-[11px] text-zinc-400">الآن</span>
+          </div>
+          <p id="notif-body" class="text-sm font-medium text-white leading-snug">
+            لديك عرض 15% من so matcha 🍵✨
+          </p>
+        </div>
       </div>
 
-      <div class="setting-item">
-        <span>Software Version</span>
-        <strong>1.0</strong>
+      <!-- Bottom Controls -->
+      <div class="flex flex-col items-center">
+        <div class="w-full flex items-center justify-between px-4 mb-4">
+          <button onclick="showToast('تم تشغيل / إيقاف الكشاف 🔦')" class="w-11 h-11 rounded-full ios-glass flex items-center justify-center text-white/90 active:scale-90 transition" title="الكشاف">
+            <i class="fa-solid fa-flashlight text-sm"></i>
+          </button>
+
+          <button onclick="unlockPhone()" class="ios-glass px-4 py-2 rounded-full text-xs font-bold text-white flex items-center gap-2 active:scale-95 transition shadow-lg">
+            <i class="fa-solid fa-unlock text-emerald-400 text-xs"></i>
+            <span>فتح القفل</span>
+          </button>
+
+          <button onclick="unlockAndOpen('photos')" class="w-11 h-11 rounded-full ios-glass flex items-center justify-center text-white/90 active:scale-90 transition" title="الكاميرا">
+            <i class="fa-solid fa-camera text-sm"></i>
+          </button>
+        </div>
+
+        <button onclick="unlockPhone()" class="flex flex-col items-center gap-1 animate-swipe-hint py-1.5 px-6">
+          <i class="fa-solid fa-chevron-up text-xs text-zinc-200"></i>
+          <span class="text-xs font-medium text-zinc-100 tracking-wide drop-shadow">اسحب للأعلى أو انقر للفتح</span>
+        </button>
+
+        <div onclick="unlockPhone()" class="w-32 h-1.5 bg-white/85 rounded-full mt-2 cursor-pointer"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         2. HOME SCREEN (الشاشة الرئيسية)
+    ========================================================== -->
+    <section id="home-screen" class="relative flex-1 flex flex-col justify-between px-6 pt-4 pb-3 z-10">
+
+      <div class="space-y-5">
+        <!-- Dark Minimalist Widget -->
+        <div class="ios-glass rounded-3xl p-4 flex items-center justify-between shadow-lg">
+          <div>
+            <div class="flex items-center gap-1.5 text-zinc-300 text-xs">
+              <i class="fa-solid fa-location-dot text-sky-400"></i>
+              <span id="widget-city">الرياض</span>
+            </div>
+            <div id="widget-temp" class="text-3xl font-bold mt-0.5">21°</div>
+            <div id="widget-desc" class="text-xs text-zinc-300 mt-0.5">صافي غالباً • الليل</div>
+          </div>
+          <div class="text-left flex flex-col items-end">
+            <i class="fa-solid fa-moon text-2xl text-indigo-300 mb-2"></i>
+            <span id="widget-status-pill" class="text-[11px] px-2.5 py-1 rounded-full bg-white/10 text-zinc-200 border border-white/10">وضع عدم الإزعاج</span>
+          </div>
+        </div>
+
+        <!-- Apps Grid -->
+        <div class="grid grid-cols-4 gap-y-5 gap-x-4 text-center">
+
+          <!-- WhatsApp -->
+          <button onclick="openApp('whatsapp')" class="flex flex-col items-center gap-1.5 group">
+            <div class="relative app-icon bg-gradient-to-b from-[#25D366] to-[#128C7E]">
+              <i class="fa-brands fa-whatsapp text-3xl text-white"></i>
+              <span id="wa-home-badge" class="absolute -top-1.5 -left-1.5 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow border border-black">4</span>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">واتساب</span>
+          </button>
+
+          <!-- Snapchat (تطبيق سناب شات الجديد) -->
+          <button onclick="openApp('snapchat')" class="flex flex-col items-center gap-1.5 group">
+            <div class="relative app-icon bg-[#FFFC00] border border-yellow-300/40">
+              <i class="fa-brands fa-snapchat text-3xl text-black drop-shadow-sm"></i>
+              <span id="snap-home-badge" class="hidden absolute -top-1.5 -left-1.5 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow border border-black">1</span>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">سناب شات</span>
+          </button>
+
+          <!-- Photos -->
+          <button onclick="openApp('photos')" class="flex flex-col items-center gap-1.5 group">
+            <div class="app-icon bg-zinc-900 border border-white/10 relative overflow-hidden">
+              <svg viewBox="0 0 100 100" class="w-11 h-11">
+                <rect x="43" y="10" width="14" height="32" rx="7" fill="#FF9500" opacity="0.9"/>
+                <rect x="43" y="58" width="14" height="32" rx="7" fill="#007AFF" opacity="0.9"/>
+                <rect x="10" y="43" width="32" height="14" rx="7" fill="#FF2D55" opacity="0.9"/>
+                <rect x="58" y="43" width="32" height="14" rx="7" fill="#4CD964" opacity="0.9"/>
+                <rect x="20" y="20" width="26" height="14" rx="7" transform="rotate(45 33 27)" fill="#FF3B30" opacity="0.85"/>
+                <rect x="54" y="66" width="26" height="14" rx="7" transform="rotate(45 67 73)" fill="#5AC8FA" opacity="0.85"/>
+                <rect x="54" y="20" width="26" height="14" rx="7" transform="rotate(-45 67 27)" fill="#FFCC00" opacity="0.85"/>
+                <rect x="20" y="66" width="26" height="14" rx="7" transform="rotate(-45 33 73)" fill="#AF52DE" opacity="0.85"/>
+              </svg>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">الصور</span>
+          </button>
+
+          <!-- Notes (تطبيق الملاحظات) -->
+          <button onclick="openApp('notes')" class="flex flex-col items-center gap-1.5 group">
+            <div class="app-icon bg-zinc-900 border border-white/10 flex-col overflow-hidden p-0">
+              <div class="w-full h-4 bg-gradient-to-r from-amber-400 to-yellow-500"></div>
+              <div class="flex-1 w-full bg-zinc-100 flex flex-col justify-center px-2 gap-1">
+                <div class="w-full h-[2px] bg-zinc-300"></div>
+                <div class="w-4/5 h-[2px] bg-zinc-300"></div>
+                <div class="w-3/5 h-[2px] bg-zinc-300"></div>
+              </div>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">الملاحظات</span>
+          </button>
+
+          <!-- Instagram -->
+          <button onclick="openApp('instagram')" class="flex flex-col items-center gap-1.5 group">
+            <div class="app-icon bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]">
+              <i class="fa-brands fa-instagram text-3xl text-white"></i>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">انستقرام</span>
+          </button>
+
+          <!-- Twitter / X -->
+          <button onclick="openApp('twitter')" class="flex flex-col items-center gap-1.5 group">
+            <div class="app-icon bg-zinc-950 border border-zinc-800">
+              <i class="fa-brands fa-x-twitter text-2xl text-white"></i>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">تويتر</span>
+          </button>
+
+          <!-- Phone -->
+          <button onclick="openApp('phone')" class="flex flex-col items-center gap-1.5 group">
+            <div class="relative app-icon bg-gradient-to-b from-[#34C759] to-[#248A3D]">
+              <i class="fa-solid fa-phone text-2xl text-white"></i>
+              <span id="phone-home-badge" class="absolute -top-1.5 -left-1.5 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow border border-black">3</span>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">الهاتف</span>
+          </button>
+
+          <!-- Customization Studio Icon -->
+          <button onclick="openStudio()" class="flex flex-col items-center gap-1.5 group">
+            <div class="app-icon bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 border border-white/15">
+              <i class="fa-solid fa-gear text-2xl text-zinc-200 animate-[spin_14s_linear_infinite]"></i>
+            </div>
+            <span class="text-[11px] font-medium text-zinc-100 drop-shadow">التخصيص</span>
+          </button>
+
+        </div>
       </div>
 
-      <div class="setting-item">
-        <span>About</span>
-        <strong>My Phone</strong>
+      <!-- Bottom Quick Pills & Dock -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-center gap-2 flex-wrap">
+          <button onclick="lockPhone()" class="ios-glass px-3 py-1 rounded-full text-[11px] text-zinc-200 flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-lock text-[10px]"></i>
+            <span>قفل</span>
+          </button>
+          <button onclick="openStudio()" class="ios-glass px-3 py-1 rounded-full text-[11px] text-sky-300 flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-sliders text-[10px]"></i>
+            <span>لوحة التخصيص</span>
+          </button>
+          <button onclick="exportGitHubHtml()" class="ios-glass px-3 py-1 rounded-full text-[11px] text-emerald-300 flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-download text-[10px]"></i>
+            <span>تصدير index.html</span>
+          </button>
+        </div>
+
+        <!-- iOS Dock -->
+        <div class="ios-dock-glass rounded-[28px] p-3 flex items-center justify-around">
+          <button onclick="openApp('phone')" class="relative app-icon !w-14 !h-14 bg-gradient-to-b from-[#34C759] to-[#248A3D]">
+            <i class="fa-solid fa-phone text-xl text-white"></i>
+            <span id="phone-dock-badge" class="absolute -top-1 -left-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">3</span>
+          </button>
+
+          <button onclick="openApp('whatsapp')" class="relative app-icon !w-14 !h-14 bg-gradient-to-b from-[#25D366] to-[#128C7E]">
+            <i class="fa-brands fa-whatsapp text-2xl text-white"></i>
+            <span id="wa-dock-badge" class="absolute -top-1 -left-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">4</span>
+          </button>
+
+          <button onclick="openApp('snapchat')" class="app-icon !w-14 !h-14 bg-[#FFFC00]">
+            <i class="fa-brands fa-snapchat text-2xl text-black"></i>
+          </button>
+
+          <button onclick="openApp('notes')" class="app-icon !w-14 !h-14 bg-zinc-100 border border-amber-400">
+            <i class="fa-solid fa-note-sticky text-xl text-amber-500"></i>
+          </button>
+        </div>
+
+        <div class="flex justify-center pt-1">
+          <div class="w-32 h-1.5 bg-white/50 rounded-full"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         APP 1: WHATSAPP (واتساب - فردي وقروبات متعددة المتحدثين)
+    ========================================================== -->
+    <section id="app-whatsapp" class="app-view flex flex-col bg-[#0b141a]">
+      <div class="h-11 bg-[#111b21] shrink-0"></div>
+
+      <!-- WhatsApp Chat List View -->
+      <div id="wa-list-view" class="flex-1 flex flex-col overflow-hidden">
+        <div class="bg-[#111b21] px-4 pt-2 pb-3 border-b border-zinc-800/80">
+          <div class="flex items-center justify-between mb-3">
+            <button onclick="closeAllApps()" class="text-[#00a884] text-sm font-medium flex items-center gap-1">
+              <i class="fa-solid fa-chevron-right text-xs"></i>
+              <span>الرئيسية</span>
+            </button>
+            <div class="flex items-center gap-3 text-[#00a884]">
+              <button onclick="openNewWaChatModal(true)" class="bg-[#00a884]/15 border border-[#00a884]/40 text-[#00a884] text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 active:scale-95">
+                <i class="fa-solid fa-users text-[10px]"></i>
+                <span>+ قروب</span>
+              </button>
+              <button onclick="openNewWaChatModal(false)" class="bg-[#202c33] text-[#00a884] text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 active:scale-95">
+                <i class="fa-solid fa-user-plus text-[10px]"></i>
+                <span>+ محادثة</span>
+              </button>
+            </div>
+          </div>
+          <h2 class="text-2xl font-bold text-white">الدردشات</h2>
+          <div class="mt-2.5 bg-[#202c33] rounded-xl px-3 py-1.5 flex items-center gap-2 text-zinc-400 text-xs">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="wa-search-input" oninput="renderWaChatList()" type="text" placeholder="بحث في الدردشات والقروبات..." class="bg-transparent text-white w-full outline-none placeholder:text-zinc-500" />
+          </div>
+        </div>
+
+        <div id="wa-chats-list" class="flex-1 overflow-y-auto no-scrollbar divide-y divide-zinc-800/60"></div>
       </div>
 
-      <!-- CUSTOM WALLPAPER -->
-      <div class="setting-item wallpaper-setting">
-        <strong>Wallpaper</strong>
-        <p>Choose your own wallpaper</p>
+      <!-- WhatsApp Single / Group Chat Conversation View -->
+      <div id="wa-chat-view" class="hidden flex-1 flex flex-col overflow-hidden">
+        <div class="bg-[#111b21] px-3 py-2.5 flex items-center justify-between border-b border-zinc-800">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <button onclick="backToWaList()" class="text-[#00a884] p-1 shrink-0">
+              <i class="fa-solid fa-arrow-right text-base"></i>
+            </button>
+            <div id="wa-active-avatar" class="w-9 h-9 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-sm text-white shrink-0"></div>
+            <div class="min-w-0">
+              <h3 id="wa-active-name" class="text-sm font-bold text-white leading-tight truncate"></h3>
+              <p id="wa-active-status" class="text-[11px] text-zinc-400 truncate"></p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-[#00a884] text-xs shrink-0">
+            <button onclick="openWaChatSettings()" class="bg-[#202c33] hover:bg-zinc-700 text-zinc-200 px-2.5 py-1.5 rounded-lg flex items-center gap-1" title="إدارة المحادثة أو القروب">
+              <i class="fa-solid fa-sliders text-[11px] text-[#00a884]"></i>
+              <span>إدارة</span>
+            </button>
+          </div>
+        </div>
 
-        <label for="wallpaper-upload" class="wallpaper-button">
-          Choose Photo
-        </label>
+        <div id="wa-messages-box" class="flex-1 wa-bg overflow-y-auto no-scrollbar p-3.5 space-y-2.5 flex flex-col"></div>
 
-        <input
-          type="file"
-          id="wallpaper-upload"
-          accept="image/*"
-          hidden
-        >
+        <!-- Speaker Selector Bar (for both Group & Individual RP) -->
+        <div id="wa-speaker-bar" class="bg-[#182229] px-3 py-1.5 border-t border-zinc-800/80 flex items-center gap-2 overflow-x-auto no-scrollbar text-[11px]"></div>
 
-        <button id="reset-wallpaper" type="button">
-          Reset Wallpaper
+        <div id="wa-bottom-area" class="bg-[#111b21] p-2.5 border-t border-zinc-800"></div>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-[#111b21] py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         APP: SNAPCHAT (سناب شات - الستوري، الذكريات، المحادثات، الملف الشخصي)
+    ========================================================== -->
+    <section id="app-snapchat" class="app-view flex flex-col bg-[#0d0d0f]">
+      <div class="h-11 bg-[#0d0d0f] shrink-0"></div>
+
+      <!-- Snapchat Top Header -->
+      <div class="px-4 py-2 bg-[#0d0d0f] border-b border-zinc-900 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <button onclick="switchSnapTab('profile')" class="w-9 h-9 rounded-full bg-[#FFFC00] text-black flex items-center justify-center font-bold overflow-hidden border-2 border-yellow-300 shadow">
+            <img id="snap-header-avatar" src="" class="hidden w-full h-full object-cover" />
+            <i id="snap-header-icon" class="fa-brands fa-snapchat text-lg"></i>
+          </button>
+          <button onclick="closeAllApps()" class="w-8 h-8 rounded-full bg-zinc-900 text-zinc-300 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-house"></i>
+          </button>
+        </div>
+
+        <h2 id="snap-header-title" class="text-base font-bold text-white">القصص والذكريات</h2>
+
+        <!-- Quick Add Snap / Story Button -->
+        <button onclick="openSnapComposer()" class="bg-[#FFFC00] hover:bg-yellow-300 text-black text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow active:scale-95 transition">
+          <i class="fa-solid fa-camera"></i>
+          <span>+ إضافة صورة</span>
         </button>
       </div>
 
+      <!-- Tab 1: Stories & Memories (القصص والذكريات) -->
+      <div id="snap-tab-stories" class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-5">
+        <!-- My Story & Friends Stories Row -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="text-xs font-bold text-zinc-300">القصص (Stories)</h3>
+            <span class="text-[10px] text-zinc-500">اضغط للمشاهدة</span>
+          </div>
+          <div id="snap-stories-row" class="flex items-center gap-3.5 overflow-x-auto no-scrollbar pb-1"></div>
+        </div>
+
+        <!-- Memories / Camera Roll inside Snapchat -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="text-xs font-bold text-zinc-300">الذكريات والسنابات المحفوظة</h3>
+            <button onclick="openSnapComposer()" class="text-[11px] text-[#FFFC00] font-semibold">+ رفع صورة جديدة</button>
+          </div>
+          <div id="snap-memories-grid" class="grid grid-cols-2 gap-2.5"></div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Snapchat Chats (محادثات سناب) -->
+      <div id="snap-tab-chats" class="hidden flex-1 flex flex-col overflow-hidden">
+        <div id="snap-chats-list" class="flex-1 overflow-y-auto no-scrollbar divide-y divide-zinc-900"></div>
+      </div>
+
+      <!-- Tab 3: Snapchat Profile (الملف الشخصي لسناب شات) -->
+      <div id="snap-tab-profile" class="hidden flex-1 overflow-y-auto no-scrollbar p-4 space-y-4">
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-5 flex flex-col items-center text-center relative">
+          <label class="relative w-24 h-24 rounded-3xl bg-[#FFFC00] flex items-center justify-center overflow-hidden shadow-xl cursor-pointer group border-4 border-zinc-800">
+            <img id="snap-profile-avatar" src="" class="hidden w-full h-full object-cover" />
+            <i id="snap-profile-icon" class="fa-brands fa-snapchat text-5xl text-black"></i>
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+              <i class="fa-solid fa-camera text-white text-sm"></i>
+            </div>
+            <input type="file" accept="image/*" class="hidden" onchange="handleSnapAvatarUpload(event)" />
+          </label>
+
+          <h3 id="snap-profile-name" class="text-lg font-bold text-white mt-3">جبران</h3>
+          <p id="snap-profile-username" class="text-xs text-zinc-400" dir="ltr">jbran_rp</p>
+
+          <div class="mt-3 flex items-center gap-2 bg-black/50 px-4 py-1.5 rounded-full border border-zinc-800">
+            <i class="fa-solid fa-ghost text-[#FFFC00] text-xs"></i>
+            <span class="text-xs font-bold text-white" id="snap-profile-score">84,920</span>
+            <span class="text-[10px] text-zinc-400">نقاط سناب</span>
+          </div>
+        </div>
+
+        <!-- Edit Snapchat Profile Fields -->
+        <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 space-y-3 text-xs">
+          <h4 class="font-bold text-zinc-200">تعديل بيانات سناب شات</h4>
+          <div>
+            <label class="block text-zinc-400 mb-1">الاسم الظاهر</label>
+            <input id="snap-edit-name" type="text" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-zinc-400 mb-1">اليوزر</label>
+              <input id="snap-edit-user" type="text" dir="ltr" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none text-left" />
+            </div>
+            <div>
+              <label class="block text-zinc-400 mb-1">السكور (Snap Score)</label>
+              <input id="snap-edit-score" type="text" dir="ltr" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none text-center" />
+            </div>
+          </div>
+          <button onclick="saveSnapProfile()" class="w-full bg-[#FFFC00] text-black font-bold py-2.5 rounded-xl active:scale-95 transition">
+            حفظ بيانات سناب شات
+          </button>
+        </div>
+      </div>
+
+      <!-- Snapchat Bottom Navigation -->
+      <div class="bg-[#0d0d0f] border-t border-zinc-900 px-6 py-2.5 flex items-center justify-around text-xs">
+        <button onclick="switchSnapTab('chats')" id="snap-nav-chats" class="flex flex-col items-center gap-1 text-zinc-500">
+          <i class="fa-regular fa-message text-lg"></i>
+          <span class="text-[10px]">المحادثات</span>
+        </button>
+        <button onclick="openSnapComposer()" class="w-11 h-11 rounded-full border-2 border-[#FFFC00] flex items-center justify-center text-[#FFFC00] active:scale-90 transition" title="التقاط / إضافة صورة">
+          <i class="fa-solid fa-camera text-base"></i>
+        </button>
+        <button onclick="switchSnapTab('stories')" id="snap-nav-stories" class="flex flex-col items-center gap-1 text-[#FFFC00]">
+          <i class="fa-solid fa-users-viewfinder text-lg"></i>
+          <span class="text-[10px]">القصص</span>
+        </button>
+        <button onclick="switchSnapTab('profile')" id="snap-nav-profile" class="flex flex-col items-center gap-1 text-zinc-500">
+          <i class="fa-regular fa-user text-lg"></i>
+          <span class="text-[10px]">حسابي</span>
+        </button>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-[#0d0d0f] py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- Fullscreen Snapchat Story Viewer -->
+    <div id="snap-story-viewer" class="hidden absolute inset-0 z-50 bg-black flex flex-col justify-between">
+      <!-- Top Progress & Info -->
+      <div class="p-4 pt-12 bg-gradient-to-b from-black/80 to-transparent z-10 space-y-2.5">
+        <div id="snap-viewer-progress-bars" class="flex gap-1"></div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-[#FFFC00] text-black flex items-center justify-center font-bold text-xs">
+              <i class="fa-brands fa-snapchat"></i>
+            </div>
+            <div>
+              <div id="snap-viewer-author" class="text-xs font-bold text-white">قصتي</div>
+              <div id="snap-viewer-time" class="text-[10px] text-zinc-300">منذ قليل</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="snap-viewer-delete" class="w-8 h-8 rounded-full bg-red-950/80 text-red-400 flex items-center justify-center text-xs" title="حذف السنابة">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            <button onclick="closeSnapViewer()" class="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center text-sm">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Media Display -->
+      <div onclick="nextSnapStory()" class="absolute inset-0 flex items-center justify-center bg-zinc-950 cursor-pointer">
+        <img id="snap-viewer-img" src="" class="hidden w-full h-full object-contain" />
+        <video id="snap-viewer-video" src="" class="hidden w-full h-full object-contain" playsinline></video>
+      </div>
+
+      <!-- Snapchat Classic Caption Strip -->
+      <div id="snap-viewer-caption-wrap" class="relative z-10 mb-16">
+        <div id="snap-viewer-caption" class="w-full bg-black/65 backdrop-blur-sm text-white text-center py-2.5 px-4 text-sm font-medium"></div>
+      </div>
     </div>
 
-  </section>
+    <!-- Modal: Add Photo/Snap to Snapchat -->
+    <div id="snap-composer-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="closeSnapComposer()" class="text-xs text-zinc-400">إلغاء</button>
+        <h3 class="text-sm font-bold text-white">إضافة صورة في سناب شات</h3>
+        <button onclick="submitNewSnap()" class="bg-[#FFFC00] text-black text-xs font-bold px-3.5 py-1.5 rounded-full">نشر</button>
+      </div>
 
-  <!-- NOTIFICATION -->
-  <div id="notification-banner" class="notification-banner hidden">
-    <div class="notification-icon">💬</div>
-    <div class="notification-content">
-      <strong id="notification-title">Messages</strong>
-      <p id="notification-text">New message</p>
+      <div class="p-4 space-y-3.5 text-xs overflow-y-auto no-scrollbar">
+        <label class="bg-zinc-900 border-2 border-dashed border-yellow-400/50 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-zinc-800/80 text-center">
+          <i class="fa-solid fa-camera-retro text-[#FFFC00] text-3xl"></i>
+          <span id="snap-upload-label" class="text-white font-bold">اختر صورة أو فيديو من جهازك</span>
+          <span class="text-[11px] text-zinc-400">ستظهر كستوري وداخل الذكريات</span>
+          <input type="file" accept="image/*,video/*" class="hidden" onchange="handleSnapMediaSelect(event)" />
+        </label>
+
+        <div id="snap-preview-box" class="hidden rounded-2xl overflow-hidden border border-zinc-800 max-h-48 flex items-center justify-center bg-zinc-950"></div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">اسم صاحب الستوري</label>
+          <input id="snap-author-input" type="text" value="قصتي (جبران)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">النص / التعليق على السنابة (شريط سناب شات)</label>
+          <input id="snap-caption-input" type="text" placeholder="مثال: أجواء الرياض الليلة ✨..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">الوقت</label>
+          <input id="snap-time-input" type="text" value="الآن" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- INCOMING CALL -->
-  <div id="incoming-call" class="incoming-call hidden">
-    <div class="incoming-call-top">
-      <p>iPhone Call</p>
-      <div class="caller-avatar">👤</div>
-      <h2 id="caller-name">Unknown</h2>
-      <p>Incoming call...</p>
+    <!-- =========================================================
+         APP: NOTES (تطبيق الملاحظات)
+    ========================================================== -->
+    <section id="app-notes" class="app-view flex flex-col bg-[#111113]">
+      <div class="h-11 bg-[#111113] shrink-0"></div>
+
+      <!-- Notes List View -->
+      <div id="notes-list-view" class="flex-1 flex flex-col overflow-hidden">
+        <div class="px-4 pt-2 pb-3 border-b border-zinc-800/80">
+          <div class="flex items-center justify-between mb-2">
+            <button onclick="closeAllApps()" class="text-amber-400 text-sm font-medium flex items-center gap-1">
+              <i class="fa-solid fa-chevron-right text-xs"></i>
+              <span>الرئيسية</span>
+            </button>
+            <button onclick="openNoteEditor(null)" class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 active:scale-95">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>ملاحظة جديدة</span>
+            </button>
+          </div>
+          <h2 class="text-2xl font-bold text-white">الملاحظات</h2>
+          <div class="mt-2 bg-zinc-900 rounded-xl px-3 py-1.5 flex items-center gap-2 text-zinc-400 text-xs">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="notes-search-input" oninput="renderNotesList()" type="text" placeholder="بحث في الملاحظات..." class="bg-transparent text-white w-full outline-none" />
+          </div>
+        </div>
+
+        <div id="notes-list-container" class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-2.5"></div>
+      </div>
+
+      <!-- Note Editor View -->
+      <div id="note-editor-view" class="hidden flex-1 flex flex-col overflow-hidden p-4">
+        <div class="flex items-center justify-between pb-3 border-b border-zinc-800">
+          <button onclick="saveAndCloseNote()" class="text-amber-400 text-xs font-bold flex items-center gap-1">
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>الملاحظات</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <button id="note-delete-btn" onclick="deleteCurrentNote()" class="text-red-400 bg-red-950/60 px-2.5 py-1 rounded-lg text-xs">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            <button onclick="saveAndCloseNote()" class="bg-amber-500 text-black text-xs font-bold px-3.5 py-1 rounded-full">
+              تم
+            </button>
+          </div>
+        </div>
+        <input id="note-title-input" type="text" placeholder="عنوان الملاحظة..." class="bg-transparent text-lg font-bold text-white pt-3 pb-2 outline-none border-b border-zinc-900" />
+        <textarea id="note-content-input" placeholder="اكتب تفاصيل الملاحظة هنا..." class="flex-1 bg-transparent text-xs text-zinc-200 pt-3 leading-relaxed outline-none resize-none"></textarea>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-[#111113] py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         APP 2: PHOTOS (الصور - إضافة صور ومقاطع من جهازك)
+    ========================================================== -->
+    <section id="app-photos" class="app-view flex flex-col bg-black">
+      <div class="h-11 bg-black shrink-0"></div>
+
+      <div class="px-4 py-2.5 flex items-center justify-between border-b border-zinc-900">
+        <div>
+          <h2 class="text-xl font-bold text-white">المكتبة</h2>
+          <p id="photos-count-label" class="text-[11px] text-zinc-400">ألبوم جبران الخاص</p>
+        </div>
+
+        <label class="bg-sky-600 hover:bg-sky-500 active:scale-95 transition text-white text-xs font-semibold px-3.5 py-2 rounded-full flex items-center gap-1.5 cursor-pointer shadow-lg">
+          <i class="fa-solid fa-plus"></i>
+          <span>إضافة صور ومقاطع</span>
+          <input id="photos-upload-input" type="file" accept="image/*,video/*" multiple class="hidden" onchange="handlePhotosUpload(event)">
+        </label>
+      </div>
+
+      <div id="photos-grid-container" class="flex-1 overflow-y-auto no-scrollbar p-1">
+        <div id="photos-empty-state" class="h-full flex flex-col items-center justify-center text-center px-6">
+          <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-3 text-sky-400 text-2xl">
+            <i class="fa-regular fa-images"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">لا توجد صور أو مقاطع حالياً</h3>
+          <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">
+            اضغط على زر <span class="text-sky-400 font-semibold">+ إضافة صور ومقاطع</span> بالأعلى لرفع صورك ومقاطع الفيديو الخاصة بك.
+          </p>
+          <label class="mt-4 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium px-4 py-2.5 rounded-xl cursor-pointer border border-zinc-700">
+            اختيار من الجهاز
+            <input type="file" accept="image/*,video/*" multiple class="hidden" onchange="handlePhotosUpload(event)">
+          </label>
+        </div>
+
+        <div id="photos-grid" class="hidden grid grid-cols-3 gap-1"></div>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-zinc-950 py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- Fullscreen Media Lightbox Modal -->
+    <div id="media-lightbox" class="hidden absolute inset-0 z-50 bg-black/95 flex flex-col justify-between p-4 pt-12">
+      <div class="flex items-center justify-between">
+        <button onclick="closeLightbox()" class="w-9 h-9 rounded-full bg-zinc-800 text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <span id="lightbox-title" class="text-xs text-zinc-400 truncate max-w-[180px]">معاينة</span>
+        <button id="lightbox-delete-btn" class="w-9 h-9 rounded-full bg-red-950/80 text-red-400 flex items-center justify-center" title="حذف">
+          <i class="fa-solid fa-trash text-xs"></i>
+        </button>
+      </div>
+      <div id="lightbox-content" class="flex-1 flex items-center justify-center overflow-hidden my-3"></div>
+      <div class="h-4"></div>
     </div>
 
-    <div class="call-actions">
-      <button id="decline-call" class="decline-call">
-        ✕
-        <span>Decline</span>
-      </button>
+    <!-- =========================================================
+         APP 3: PHONE (الهاتف وسجل المكالمات القابل للتعديل)
+    ========================================================== -->
+    <section id="app-phone" class="app-view flex flex-col bg-black">
+      <div class="h-11 bg-black shrink-0"></div>
 
-      <button id="accept-call" class="accept-call">
-        ☎
-        <span>Accept</span>
-      </button>
+      <div class="px-4 pt-2 pb-3 border-b border-zinc-900">
+        <div class="flex items-center justify-between mb-3">
+          <button onclick="openCallModal(null)" class="bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-plus text-[10px]"></i>
+            <span>إضافة مكالمة</span>
+          </button>
+          <div class="bg-zinc-900 p-0.5 rounded-lg flex text-xs">
+            <button id="call-filter-all" onclick="setCallFilter('all')" class="px-3 py-1 rounded-md bg-zinc-700 text-white font-semibold">الكل</button>
+            <button id="call-filter-missed" onclick="setCallFilter('missed')" class="px-3 py-1 rounded-md text-zinc-400">فائتة</button>
+          </div>
+        </div>
+        <h2 class="text-2xl font-bold text-white">الحديثة</h2>
+      </div>
+
+      <div id="calls-list-container" class="flex-1 overflow-y-auto no-scrollbar divide-y divide-zinc-900 px-4"></div>
+
+      <div class="bg-zinc-950 border-t border-zinc-900 px-3 py-2 flex items-center justify-around text-[10px] text-zinc-500">
+        <div class="flex flex-col items-center">
+          <i class="fa-solid fa-star text-base mb-0.5"></i>
+          <span>المفضلة</span>
+        </div>
+        <div class="flex flex-col items-center text-sky-500 relative">
+          <i class="fa-solid fa-clock text-base mb-0.5"></i>
+          <span>الحديثة</span>
+          <span id="phone-tab-badge" class="absolute -top-1 -right-2 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">3</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <i class="fa-solid fa-address-book text-base mb-0.5"></i>
+          <span>جهات الاتصال</span>
+        </div>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-zinc-950 py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         APP 4: TWITTER / X
+    ========================================================== -->
+    <section id="app-twitter" class="app-view flex flex-col bg-black">
+      <div class="h-11 bg-black shrink-0"></div>
+
+      <div class="px-3 py-2 bg-black/90 backdrop-blur border-b border-zinc-900 flex items-center justify-between gap-2 z-20">
+        <button onclick="closeAllApps()" class="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-white text-xs shrink-0">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button onclick="openProfileEditor('x')" class="flex-1 bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-sky-300 text-xs font-bold py-1.5 px-3 rounded-full flex items-center justify-center gap-1.5 transition active:scale-95">
+          <span>✏️ تخصيص وتعديل الحساب</span>
+        </button>
+
+        <button onclick="openNewTweetModal()" class="bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold py-1.5 px-3 rounded-full flex items-center gap-1 shrink-0 transition active:scale-95">
+          <i class="fa-solid fa-plus text-[10px]"></i>
+          <span>تغريدة</span>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto no-scrollbar">
+        <label class="block relative h-28 bg-gradient-to-l from-zinc-900 via-slate-900 to-zinc-950 border-b border-zinc-800 cursor-pointer group overflow-hidden" title="اضغط لتغيير صورة الغلاف">
+          <img id="x-cover-img" src="" alt="غلاف" class="hidden w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+            <span class="bg-black/70 text-white text-[11px] px-3 py-1 rounded-full border border-white/20">
+              <i class="fa-solid fa-camera ml-1"></i> تغيير الغلاف
+            </span>
+          </div>
+          <input type="file" accept="image/*" class="hidden" onchange="handleDirectMediaUpdate(event, 'x', 'cover')" />
+        </label>
+
+        <div class="px-4 pb-3">
+          <div class="flex items-end justify-between -mt-10 mb-2.5">
+            <label class="relative w-20 h-20 rounded-full bg-zinc-900 border-4 border-black flex items-center justify-center overflow-hidden shadow-xl cursor-pointer group" title="اضغط لتغيير صورة الحساب">
+              <img id="x-avatar-img" src="" alt="avatar" class="hidden w-full h-full object-cover" />
+              <div id="x-avatar-fallback" class="w-full h-full bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center text-2xl font-bold text-white">F</div>
+              <input type="file" accept="image/*" class="hidden" onchange="handleDirectMediaUpdate(event, 'x', 'avatar')" />
+            </label>
+
+            <div class="flex items-center gap-2">
+              <a id="x-external-link" href="https://twitter.com/fttir?s=11" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-200 hover:bg-zinc-900 transition">
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+              </a>
+              <button onclick="toggleFollowX(this)" class="bg-white text-black font-bold text-xs px-4 py-1.5 rounded-full transition active:scale-95">متابعة</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-1">
+              <h2 id="x-display-name" class="text-lg font-bold text-white">fttir</h2>
+              <i id="x-verified-badge" class="fa-solid fa-circle-check text-sky-500 text-xs"></i>
+            </div>
+            <p id="x-handle" class="text-xs text-zinc-500" dir="ltr">@fttir</p>
+          </div>
+
+          <p id="x-bio" class="text-xs text-zinc-200 mt-2 leading-relaxed whitespace-pre-line">🎮 • RP &amp; Gaming | الحساب الرسمي</p>
+
+          <a id="x-bio-link" href="https://twitter.com/fttir?s=11" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-sky-400 hover:underline mt-1.5" dir="ltr">
+            <i class="fa-solid fa-link text-[10px] text-zinc-500"></i>
+            <span id="x-bio-link-text">twitter.com/fttir?s=11</span>
+          </a>
+
+          <div class="flex items-center gap-4 text-xs mt-2.5">
+            <div><span id="x-following-count" class="font-bold text-white">148</span> <span class="text-zinc-500">متابَعاً</span></div>
+            <div><span id="x-followers-count" class="font-bold text-white">12.4K</span> <span class="text-zinc-500">متابِع</span></div>
+          </div>
+        </div>
+
+        <div class="flex border-b border-zinc-800 text-xs font-semibold text-zinc-500">
+          <div class="flex-1 text-center py-2.5 text-white border-b-2 border-sky-500">المنشورات</div>
+          <div class="flex-1 text-center py-2.5">الردود</div>
+          <div class="flex-1 text-center py-2.5">الوسائط</div>
+          <div class="flex-1 text-center py-2.5">الإعجابات</div>
+        </div>
+
+        <div id="x-tweets-feed" class="divide-y divide-zinc-800/80"></div>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-black border-t border-zinc-900 py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         APP 5: INSTAGRAM
+    ========================================================== -->
+    <section id="app-instagram" class="app-view flex flex-col bg-black">
+      <div class="h-11 bg-black shrink-0"></div>
+
+      <div class="px-3 py-2 flex items-center justify-between gap-2 border-b border-zinc-900 z-20">
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="closeAllApps()" class="text-white">
+            <i class="fa-solid fa-arrow-right text-base"></i>
+          </button>
+          <span id="ig-top-handle" class="font-bold text-sm text-white tracking-tight" dir="ltr">_fttir</span>
+          <i id="ig-verified-badge" class="fa-solid fa-circle-check text-sky-500 text-xs"></i>
+        </div>
+
+        <button onclick="openProfileEditor('ig')" class="flex-1 bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/40 text-pink-200 text-[11px] font-bold py-1.5 px-2.5 rounded-full flex items-center justify-center gap-1 transition active:scale-95">
+          <span>✏️ تخصيص وتعديل الحساب</span>
+        </button>
+
+        <button onclick="openNewIgPostModal()" class="text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 px-2.5 py-1.5 rounded-lg border border-zinc-800 flex items-center gap-1 shrink-0 active:scale-95">
+          <i class="fa-regular fa-square-plus text-sm text-pink-400"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto no-scrollbar">
+        <div class="px-4 pt-4 pb-3">
+          <div class="flex items-center justify-between">
+            <label class="relative w-20 h-20 rounded-full p-[2.5px] bg-gradient-to-tr from-amber-500 via-pink-600 to-purple-600 cursor-pointer group shrink-0">
+              <div class="w-full h-full rounded-full bg-zinc-950 border-2 border-black flex items-center justify-center overflow-hidden relative">
+                <img id="ig-avatar-img" src="" alt="_fttir" class="hidden w-full h-full object-cover" />
+                <span id="ig-avatar-fallback" class="text-xl font-bold text-white">_F</span>
+              </div>
+              <input type="file" accept="image/*" class="hidden" onchange="handleDirectMediaUpdate(event, 'ig', 'avatar')" />
+            </label>
+
+            <div class="flex-1 flex justify-around text-center pr-4">
+              <div>
+                <div id="ig-posts-count" class="font-bold text-sm text-white">6</div>
+                <div class="text-[11px] text-zinc-400">منشورات</div>
+              </div>
+              <div>
+                <div id="ig-followers-count" class="font-bold text-sm text-white">18.2K</div>
+                <div class="text-[11px] text-zinc-400">متابعون</div>
+              </div>
+              <div>
+                <div id="ig-following-count" class="font-bold text-sm text-white">94</div>
+                <div class="text-[11px] text-zinc-400">أتابع</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <h3 id="ig-display-name" class="font-bold text-xs text-white">fttir</h3>
+            <p id="ig-bio" class="text-xs text-zinc-300 mt-0.5 leading-relaxed whitespace-pre-line">منشئ محتوى • قيمنق &amp; رول بلاي 🖤</p>
+            <a id="ig-bio-link" href="https://www.instagram.com/_fttir?bqrl=cG91c3hrZ3BiMTB4" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-sky-400 hover:underline mt-1" dir="ltr">
+              <i class="fa-solid fa-link text-[10px]"></i>
+              <span id="ig-bio-link-text">instagram.com/_fttir?bqrl=cG91c3hrZ3BiMTB4</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-3.5">
+            <button onclick="toggleFollowIG(this)" class="bg-sky-500 text-white font-semibold text-xs py-1.5 rounded-lg transition active:scale-95">متابعة</button>
+            <button onclick="openNewIgPostModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-xs py-1.5 rounded-lg border border-zinc-800 text-center transition">+ إضافة منشور / فيديو</button>
+          </div>
+        </div>
+
+        <div class="flex border-t border-b border-zinc-900 text-zinc-500">
+          <div class="flex-1 py-2.5 text-center text-white border-b border-white"><i class="fa-solid fa-table-cells text-sm"></i></div>
+          <div class="flex-1 py-2.5 text-center"><i class="fa-solid fa-clapperboard text-sm"></i></div>
+          <div class="flex-1 py-2.5 text-center"><i class="fa-regular fa-id-badge text-sm"></i></div>
+        </div>
+
+        <div id="ig-posts-grid" class="grid grid-cols-3 gap-0.5 bg-zinc-950"></div>
+      </div>
+
+      <div onclick="closeAllApps()" class="bg-black border-t border-zinc-900 py-2 flex justify-center cursor-pointer shrink-0">
+        <div class="w-32 h-1.5 bg-white/60 rounded-full"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CUSTOMIZATION STUDIO MODAL (لوحة التخصيص الشاملة)
+    ========================================================== -->
+    <div id="studio-modal" class="hidden absolute inset-0 z-50 bg-[#0b0c10]/98 backdrop-blur-xl flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="closeStudio()" class="text-xs text-zinc-400 hover:text-white">إغلاق</button>
+        <div class="flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-sky-400 text-xs"></i>
+          <h3 class="text-sm font-bold text-white">استوديو التخصيص المباشر</h3>
+        </div>
+        <button onclick="exportGitHubHtml()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
+          <i class="fa-solid fa-download"></i>
+          <span>تصدير</span>
+        </button>
+      </div>
+
+      <!-- Studio Tabs -->
+      <div class="flex border-b border-zinc-800 bg-zinc-950 text-[11px] font-bold overflow-x-auto no-scrollbar shrink-0">
+        <button onclick="switchStudioTab('wallpapers')" id="st-tab-wallpapers" class="px-3.5 py-2.5 text-sky-400 border-b-2 border-sky-400 shrink-0">الخلفيات والنظام</button>
+        <button onclick="switchStudioTab('whatsapp')" id="st-tab-whatsapp" class="px-3.5 py-2.5 text-zinc-400 shrink-0">واتساب والقروبات</button>
+        <button onclick="switchStudioTab('snapchat')" id="st-tab-snapchat" class="px-3.5 py-2.5 text-zinc-400 shrink-0">سناب شات</button>
+        <button onclick="switchStudioTab('calls')" id="st-tab-calls" class="px-3.5 py-2.5 text-zinc-400 shrink-0">المكالمات</button>
+        <button onclick="switchStudioTab('notes')" id="st-tab-notes" class="px-3.5 py-2.5 text-zinc-400 shrink-0">الملاحظات</button>
+      </div>
+
+      <!-- Studio Content Body -->
+      <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 text-xs">
+
+        <!-- TAB 1: Wallpapers & System Info -->
+        <div id="st-panel-wallpapers" class="space-y-4">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-3.5 space-y-3">
+            <h4 class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-image text-sky-400"></i> خلفيات شاشة القفل والشاشة الرئيسية</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl p-2.5 text-center cursor-pointer">
+                <i class="fa-solid fa-lock text-sky-400 block mb-1"></i>
+                <span class="font-semibold text-white">صورة شاشة القفل</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleWallpaperUpload(event, 'lock')" />
+              </label>
+              <label class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl p-2.5 text-center cursor-pointer">
+                <i class="fa-solid fa-mobile-screen text-emerald-400 block mb-1"></i>
+                <span class="font-semibold text-white">صورة الشاشة الرئيسية</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleWallpaperUpload(event, 'home')" />
+              </label>
+            </div>
+
+            <!-- Preset Gradients -->
+            <div>
+              <span class="text-[11px] text-zinc-400 block mb-1.5">أو اختر خلفية جاهزة:</span>
+              <div class="grid grid-cols-4 gap-2">
+                <button onclick="applyPresetWallpaper('default')" class="h-10 rounded-xl border border-white/20 default-ios-wallpaper" title="الافتراضي"></button>
+                <button onclick="applyPresetWallpaper('linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #090d16 100%)')" class="h-10 rounded-xl border border-white/20" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #090d16 100%);"></button>
+                <button onclick="applyPresetWallpaper('linear-gradient(135deg, #064e3b 0%, #022c22 50%, #030712 100%)')" class="h-10 rounded-xl border border-white/20" style="background: linear-gradient(135deg, #064e3b 0%, #022c22 50%, #030712 100%);"></button>
+                <button onclick="applyPresetWallpaper('linear-gradient(135deg, #4c0519 0%, #1f1124 60%, #09090b 100%)')" class="h-10 rounded-xl border border-white/20" style="background: linear-gradient(135deg, #4c0519 0%, #1f1124 60%, #09090b 100%);"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Owner, Lock Screen Notification & Widget -->
+          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-3.5 space-y-2.5">
+            <h4 class="font-bold text-white">بيانات صاحب الجوال والإشعار والويدجت</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-zinc-400 block mb-1">اسم صاحب الجوال</label>
+                <input id="st-owner-name" type="text" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-2 text-white" />
+              </div>
+              <div>
+                <label class="text-zinc-400 block mb-1">المدينة في الويدجت</label>
+                <input id="st-widget-city" type="text" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-2 text-white" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-zinc-400 block mb-1">درجة الحرارة</label>
+                <input id="st-widget-temp" type="text" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-2 text-white" />
+              </div>
+              <div>
+                <label class="text-zinc-400 block mb-1">اسم تطبيق الإشعار</label>
+                <input id="st-notif-app" type="text" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-2 text-white" />
+              </div>
+            </div>
+            <div>
+              <label class="text-zinc-400 block mb-1">نص إشعار شاشة القفل</label>
+              <input id="st-notif-body" type="text" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-2 text-white" />
+            </div>
+            <button onclick="saveSystemSettings()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-xl">
+              حفظ إعدادات الشاشة والنظام
+            </button>
+          </div>
+
+          <button onclick="resetToFactoryDefaults()" class="w-full bg-red-950/60 border border-red-800/50 text-red-300 font-semibold py-2.5 rounded-xl">
+            استعادة البيانات الافتراضية لجوال جبران
+          </button>
+        </div>
+
+        <!-- TAB 2: WhatsApp & Groups Quick Access -->
+        <div id="st-panel-whatsapp" class="hidden space-y-3">
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="closeStudio(); openApp('whatsapp'); openNewWaChatModal(false);" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>محادثة فردية جديدة</span>
+            </button>
+            <button onclick="closeStudio(); openApp('whatsapp'); openNewWaChatModal(true);" class="bg-sky-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-users"></i>
+              <span>إنشاء قروب جديد</span>
+            </button>
+          </div>
+          <p class="text-zinc-400 text-[11px]">اختر أي محادثة أو قروب لتعديله أو إضافة رسائل بأكثر من متحدث:</p>
+          <div id="st-wa-list" class="space-y-2"></div>
+        </div>
+
+        <!-- TAB 3: Snapchat Quick Access -->
+        <div id="st-panel-snapchat" class="hidden space-y-3">
+          <button onclick="closeStudio(); openApp('snapchat'); openSnapComposer();" class="w-full bg-[#FFFC00] text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2">
+            <i class="fa-solid fa-camera"></i>
+            <span>إضافة صورة / ستوري جديدة في سناب شات</span>
+          </button>
+          <button onclick="closeStudio(); openApp('snapchat'); switchSnapTab('profile');" class="w-full bg-zinc-800 text-white font-semibold py-2.5 rounded-xl">
+            تعديل حساب سناب شات (الاسم، اليوزر، السكور)
+          </button>
+        </div>
+
+        <!-- TAB 4: Calls Quick Access -->
+        <div id="st-panel-calls" class="hidden space-y-3">
+          <button onclick="closeStudio(); openApp('phone'); openCallModal(null);" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl">
+            + إضافة مكالمة جديدة للسجل
+          </button>
+          <div id="st-calls-list" class="space-y-2"></div>
+        </div>
+
+        <!-- TAB 5: Notes Quick Access -->
+        <div id="st-panel-notes" class="hidden space-y-3">
+          <button onclick="closeStudio(); openApp('notes'); openNoteEditor(null);" class="w-full bg-amber-500 text-black font-bold py-2.5 rounded-xl">
+            + إنشاء ملاحظة جديدة
+          </button>
+          <div id="st-notes-list" class="space-y-2"></div>
+        </div>
+
+      </div>
     </div>
-  </div>
 
-  <div class="app-home-indicator"></div>
-</main>
+    <!-- =========================================================
+         MODALS FOR WHATSAPP GROUPS & CALLS
+    ========================================================== -->
+    <!-- New WhatsApp Chat / Group Modal -->
+    <div id="wa-new-chat-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="document.getElementById('wa-new-chat-modal').classList.add('hidden')" class="text-xs text-zinc-400">إلغاء</button>
+        <h3 id="wa-new-chat-title" class="text-sm font-bold text-white">محادثة جديدة</h3>
+        <button onclick="createNewWaChat()" class="bg-[#00a884] text-black text-xs font-bold px-3.5 py-1.5 rounded-full">إنشاء</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <div>
+          <label class="block text-zinc-400 mb-1">اسم جهة الاتصال أو اسم القروب</label>
+          <input id="wa-create-name" type="text" placeholder="مثال: قروب الشباب / الوالد..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+        <div id="wa-create-members-box" class="hidden">
+          <label class="block text-zinc-400 mb-1">أسماء أعضاء القروب (افصل بينهم بفاصلة ،)</label>
+          <input id="wa-create-members" type="text" placeholder="مثال: ابو عزوز، عجمي، راكان، جبران" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+        <div>
+          <label class="block text-zinc-400 mb-1">الحالة / الوصف</label>
+          <input id="wa-create-status" type="text" value="متصل الآن" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+      </div>
+    </div>
 
-<script src="script.js"></script>
+    <!-- WhatsApp Chat / Group Settings Modal (Add Speakers, Block, Delete) -->
+    <div id="wa-chat-settings-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="document.getElementById('wa-chat-settings-modal').classList.add('hidden')" class="text-xs text-zinc-400">إغلاق</button>
+        <h3 class="text-sm font-bold text-white">إدارة المحادثة / القروب</h3>
+        <button onclick="saveWaChatSettings()" class="bg-[#00a884] text-black text-xs font-bold px-3.5 py-1.5 rounded-full">حفظ</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs overflow-y-auto no-scrollbar">
+        <div>
+          <label class="block text-zinc-400 mb-1">الاسم</label>
+          <input id="wa-edit-chat-name" type="text" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-zinc-400 mb-1">الحالة</label>
+          <input id="wa-edit-chat-status" type="text" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-zinc-400 mb-1">أعضاء / متحدثون إضافيون (افصل بفاصلة ،)</label>
+          <input id="wa-edit-chat-members" type="text" placeholder="أضف أسماء المتحدثين في القروب..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white" />
+        </div>
+        <div class="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl p-3">
+          <span class="text-white font-semibold">حظر جهة الاتصال (بلوك)</span>
+          <input id="wa-edit-chat-blocked" type="checkbox" class="w-4 h-4 accent-red-500" />
+        </div>
+        <button onclick="deleteCurrentWaChat()" class="w-full bg-red-950/70 border border-red-800 text-red-300 font-bold py-2.5 rounded-xl mt-2">
+          حذف المحادثة بالكامل
+        </button>
+      </div>
+    </div>
+
+    <!-- Call Log Add / Edit Modal -->
+    <div id="call-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="document.getElementById('call-modal').classList.add('hidden')" class="text-xs text-zinc-400">إلغاء</button>
+        <h3 id="call-modal-title" class="text-sm font-bold text-white">إضافة سجل مكالمة</h3>
+        <button onclick="saveCallEntry()" class="bg-emerald-500 text-black text-xs font-bold px-3.5 py-1.5 rounded-full">حفظ</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <div>
+          <label class="block text-zinc-400 mb-1">الاسم أو الرقم</label>
+          <input id="call-name-input" type="text" placeholder="مثال: الوالد" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white" />
+        </div>
+        <div>
+          <label class="block text-zinc-400 mb-1">نوع المكالمة</label>
+          <select id="call-type-input" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+            <option value="missed">مكالمة فائتة (أحمر)</option>
+            <option value="incoming">مكالمة واردة</option>
+            <option value="outgoing">مكالمة صادرة</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-zinc-400 mb-1">الوقت</label>
+            <input id="call-time-input" type="text" value="11:40 م" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 mb-1">التسمية</label>
+            <input id="call-label-input" type="text" value="جوال" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL: UNIFIED PROFILE CUSTOMIZER (تويتر وانستقرام)
+    ========================================================== -->
+    <div id="profile-editor-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="closeProfileEditor()" class="text-xs text-zinc-400 hover:text-white">إلغاء</button>
+        <h3 id="editor-modal-title" class="text-sm font-bold text-white">تعديل الحساب</h3>
+        <button onclick="saveProfileEditor()" class="bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold px-3.5 py-1.5 rounded-full">حفظ</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-3.5 text-xs">
+        <div class="grid grid-cols-2 gap-2.5">
+          <label class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:bg-zinc-800/80 text-center">
+            <i class="fa-solid fa-user-circle text-sky-400 text-lg"></i>
+            <span class="font-semibold text-white">رفع صورة الحساب</span>
+            <input type="file" accept="image/*" class="hidden" onchange="handleEditorImageUpload(event, 'avatar')" />
+          </label>
+
+          <label id="editor-cover-upload-box" class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:bg-zinc-800/80 text-center">
+            <i class="fa-solid fa-panorama text-emerald-400 text-lg"></i>
+            <span class="font-semibold text-white">رفع صورة الغلاف</span>
+            <input type="file" accept="image/*" class="hidden" onchange="handleEditorImageUpload(event, 'cover')" />
+          </label>
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">الاسم الظاهر</label>
+          <input id="edit-display-name" type="text" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">اسم المستخدم (@username)</label>
+          <input id="edit-handle" type="text" dir="ltr" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none text-left" />
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">البايو</label>
+          <textarea id="edit-bio" rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">الرابط</label>
+          <input id="edit-link" type="text" dir="ltr" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white outline-none text-left" />
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-zinc-400 mb-1">المتابِعون</label>
+            <input id="edit-followers" type="text" dir="ltr" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white text-center" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 mb-1">المتابَعون</label>
+            <input id="edit-following" type="text" dir="ltr" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white text-center" />
+          </div>
+          <div id="editor-posts-count-box">
+            <label class="block text-zinc-400 mb-1">المنشورات</label>
+            <input id="edit-posts-count" type="text" dir="ltr" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white text-center" />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5">
+          <span class="text-white font-medium">علامة التوثيق</span>
+          <input id="edit-verified" type="checkbox" class="w-4 h-4 accent-sky-500" />
+        </div>
+      </div>
+    </div>
+
+    <!-- New Tweet Modal -->
+    <div id="new-tweet-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="closeNewTweetModal()" class="text-xs text-zinc-400">إلغاء</button>
+        <h3 class="text-sm font-bold text-white">تغريدة جديدة</h3>
+        <button onclick="submitNewTweet()" class="bg-sky-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-full">نشر</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <textarea id="tweet-text-input" rows="3" placeholder="اكتب نص التغريدة..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-white outline-none"></textarea>
+        <label class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer">
+          <i class="fa-regular fa-image text-sky-400"></i>
+          <span id="tweet-img-label" class="text-white">إرفاق صورة (اختياري)</span>
+          <input type="file" accept="image/*" class="hidden" onchange="handleNewTweetImage(event)" />
+        </label>
+        <div class="grid grid-cols-3 gap-2">
+          <input id="tweet-likes-input" type="text" value="240" dir="ltr" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white text-center" />
+          <input id="tweet-retweets-input" type="text" value="35" dir="ltr" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white text-center" />
+          <input id="tweet-time-input" type="text" value="الآن" class="bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-white text-center" />
+        </div>
+      </div>
+    </div>
+
+    <!-- New IG Post Modal -->
+    <div id="new-ig-modal" class="hidden absolute inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col pt-11">
+      <div class="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        <button onclick="closeNewIgModal()" class="text-xs text-zinc-400">إلغاء</button>
+        <h3 class="text-sm font-bold text-white">منشور انستقرام جديد</h3>
+        <button onclick="submitNewIgPost()" class="bg-pink-600 text-white text-xs font-bold px-3.5 py-1.5 rounded-full">نشر</button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <label class="bg-zinc-900 border border-dashed border-zinc-700 rounded-2xl p-5 flex flex-col items-center justify-center gap-2 cursor-pointer text-center">
+          <i class="fa-solid fa-photo-film text-pink-400 text-2xl"></i>
+          <span id="ig-media-label" class="text-white font-semibold">اختر صورة أو فيديو</span>
+          <input type="file" accept="image/*,video/*" class="hidden" onchange="handleNewIgMedia(event)" />
+        </label>
+        <textarea id="ig-caption-input" rows="2" placeholder="الوصف (اختياري)..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-white outline-none"></textarea>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="ios-toast" class="pointer-events-none opacity-0 transition-opacity duration-300 absolute top-14 left-1/2 -translate-x-1/2 z-50 ios-glass px-4 py-2 rounded-full text-xs text-white shadow-xl whitespace-nowrap">
+      تم الحفظ
+    </div>
+
+  </main>
+
+  <script>
+    // =========================================================
+    // STORAGE KEY & DEFAULT STATE
+    // =========================================================
+    const STORAGE_KEY = 'jubran_iphone_rp_studio_v3';
+
+    const speakerColors = [
+      'text-amber-400',
+      'text-sky-400',
+      'text-emerald-400',
+      'text-pink-400',
+      'text-purple-400',
+      'text-orange-400'
+    ];
+
+    const defaultState = {
+      system: {
+        ownerName: 'جبران',
+        lockWallpaper: '',
+        homeWallpaper: '',
+        widgetCity: 'الرياض',
+        widgetTemp: '21°',
+        notifApp: 'so matcha',
+        notifBody: 'لديك عرض 15% من so matcha 🍵✨'
+      },
+      waChats: [
+        {
+          id: 'nabaa',
+          name: 'نبع الحنان',
+          isGroup: false,
+          members: ['نبع الحنان'],
+          avatarText: 'ن',
+          avatarBg: 'bg-rose-800',
+          status: 'تم الحظر',
+          blocked: true,
+          time: '11:15 م',
+          messages: [
+            { id: 1, sender: 'them', senderName: 'نبع الحنان', text: 'محمد وينك؟', time: '11:15 م' }
+          ]
+        },
+        {
+          id: 'abu_azoz',
+          name: 'ابو عزوز',
+          isGroup: false,
+          members: ['ابو عزوز'],
+          avatarText: 'ع',
+          avatarBg: 'bg-amber-700',
+          status: 'متصل الآن',
+          blocked: false,
+          time: '10:48 م',
+          messages: [
+            { id: 2, sender: 'me', senderName: 'جبران', text: 'سعد انت ماخذ اخر 15 بالمحفظه ؟', time: '10:47 م' },
+            { id: 3, sender: 'them', senderName: 'ابو عزوز', text: 'ايه كنت جوعان', time: '10:48 م' }
+          ]
+        },
+        {
+          id: 'ajmi',
+          name: 'عجمي',
+          isGroup: false,
+          members: ['عجمي'],
+          avatarText: 'ع',
+          avatarBg: 'bg-indigo-700',
+          status: 'متصل الآن',
+          blocked: false,
+          time: '10:12 م',
+          messages: [
+            { id: 4, sender: 'them', senderName: 'عجمي', text: 'قطوتي متى بتبث ؟', time: '10:10 م' },
+            { id: 5, sender: 'me', senderName: 'جبران', text: 'مييياااوو', time: '10:11 م' },
+            { id: 6, sender: 'me', senderName: 'جبران', text: 'شويات', time: '10:12 م' }
+          ]
+        },
+        {
+          id: 'rakan',
+          name: 'راكان',
+          isGroup: false,
+          members: ['راكان'],
+          avatarText: 'ر',
+          avatarBg: 'bg-emerald-800',
+          status: 'تم الحظر',
+          blocked: true,
+          time: '9:30 م',
+          messages: [
+            { id: 7, sender: 'them', senderName: 'راكان', text: 'ابي حسابك بكود', time: '9:30 م' }
+          ]
+        },
+        {
+          id: 'shabab_group',
+          name: 'قروب الشباب 🔥',
+          isGroup: true,
+          members: ['ابو عزوز', 'عجمي', 'راكان'],
+          avatarText: 'ش',
+          avatarBg: 'bg-sky-800',
+          status: 'جبران، ابو عزوز، عجمي، راكان',
+          blocked: false,
+          time: '11:30 م',
+          messages: [
+            { id: 8, sender: 'them', senderName: 'ابو عزوز', text: 'وينكم يا عيال التجمع عند الكوفي', time: '11:28 م' },
+            { id: 9, sender: 'them', senderName: 'عجمي', text: 'مسافة الطريق وجاي', time: '11:29 م' },
+            { id: 10, sender: 'me', senderName: 'جبران', text: 'تم دقايق والحقكم', time: '11:30 م' }
+          ]
+        }
+      ],
+      snapProfile: {
+        displayName: 'جبران',
+        username: 'jbran_rp',
+        score: '84,920',
+        avatarUrl: '',
+        stories: [
+          {
+            id: 501,
+            author: 'قصتي (جبران)',
+            time: 'منذ ١٥ دقيقة',
+            caption: 'ماتشا آخر الليل من so matcha 🍵✨',
+            mediaType: 'gradient',
+            gradient: 'linear-gradient(135deg, #065f46 0%, #022c22 100%)'
+          }
+        ],
+        chats: [
+          { id: 'sc1', name: 'ابو عزوز', status: 'سناب جديد • منذ ٥ د', type: 'snap', avatarBg: 'bg-amber-600' },
+          { id: 'sc2', name: 'عجمي', status: 'تم الفتح • منذ ٢٠ د', type: 'chat', avatarBg: 'bg-indigo-600' }
+        ]
+      },
+      notes: [
+        {
+          id: 901,
+          title: 'رمز الخزنة',
+          content: 'الرقم السري: 4920\nملاحظة: لا أحد يدري عن المكان.',
+          date: 'اليوم، 10:15 م'
+        },
+        {
+          id: 902,
+          title: 'طلبات المقاضي',
+          content: '- ماتشا باردة\n- شاحن آيفون أصلي\n- قهوة سوداء',
+          date: 'أمس'
+        }
+      ],
+      calls: [
+        { id: 301, name: 'الوالد', type: 'missed', label: 'جوال', time: '11:38 م' },
+        { id: 302, name: 'الوالد', type: 'missed', label: 'جوال', time: '11:24 م' },
+        { id: 303, name: 'الوالد', type: 'missed', label: 'جوال', time: '11:05 م' }
+      ],
+      photos: [],
+      xProfile: {
+        displayName: 'fttir',
+        handle: '@fttir',
+        bio: '🎮 • RP & Gaming | الحساب الرسمي',
+        link: 'https://twitter.com/fttir?s=11',
+        followers: '12.4K',
+        following: '148',
+        verified: true,
+        avatarUrl: '',
+        coverUrl: '',
+        tweets: [
+          { id: 1, text: 'الوضع اليوم بالسيرفر مو طبيعي أبداً 🔥👀', time: '٢ س', likes: '215', retweets: '29', replies: '14', views: '4.1K', imageUrl: '' },
+          { id: 2, text: 'ماتشا آخر الليل تعدل المزاج 🍵✨', time: '١ ي', likes: '184', retweets: '12', replies: '8', views: '2.8K', imageUrl: '' }
+        ]
+      },
+      igProfile: {
+        displayName: 'fttir',
+        handle: '_fttir',
+        bio: 'منشئ محتوى • قيمنق & رول بلاي 🖤',
+        link: 'https://www.instagram.com/_fttir?bqrl=cG91c3hrZ3BiMTB4',
+        followers: '18.2K',
+        following: '94',
+        postsCount: '6',
+        verified: true,
+        avatarUrl: '',
+        posts: [
+          { id: 101, type: 'placeholder', icon: 'fa-gamepad', label: 'Night Session', caption: 'Night Session 🎮' },
+          { id: 102, type: 'placeholder', icon: 'fa-mug-hot', label: 'so matcha', caption: 'so matcha 🍵' },
+          { id: 103, type: 'placeholder', icon: 'fa-headset', label: 'Live Stream', caption: 'Live Stream' },
+          { id: 104, type: 'placeholder', icon: 'fa-car-side', label: 'City RP', caption: 'City RP' },
+          { id: 105, type: 'placeholder', icon: 'fa-moon', label: 'Late Night', caption: 'Late Night' },
+          { id: 106, type: 'placeholder', icon: 'fa-camera', label: '_fttir', caption: '_fttir' }
+        ]
+      }
+    };
+
+    let appState = loadAppState();
+
+    function loadAppState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return { ...JSON.parse(JSON.stringify(defaultState)), ...parsed };
+        }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(defaultState));
+    }
+
+    function persistState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        showToast('تنبيه: مساحة التخزين ممتلئة، استخدم زر تصدير index.html');
+      }
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Runtime Variables
+    let activeChatId = null;
+    let activeWaSpeaker = 'me'; // 'me' or speaker name
+    let isCreatingGroup = false;
+    let activeNoteId = null;
+    let editingCallId = null;
+    let currentCallFilter = 'all';
+    let currentEditingPlatform = null;
+    let tempEditorAvatar = '';
+    let tempEditorCover = '';
+    let tempTweetImage = '';
+    let tempIgMediaUrl = '';
+    let tempIgMediaType = 'image';
+    let tempSnapMediaUrl = '';
+    let tempSnapMediaType = 'image';
+    let activeSnapStoryIndex = 0;
+    let snapStoryTimer = null;
+
+    // =========================================================
+    // SYSTEM UI, CLOCK & KEYBOARD SHORTCUTS
+    // =========================================================
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      hours = hours % 12 || 12;
+      const timeStr = `${hours}:${minutes}`;
+
+      document.getElementById('status-time').textContent = timeStr;
+      document.getElementById('lock-clock').textContent = timeStr;
+
+      try {
+        const arabicDate = new Intl.DateTimeFormat('ar-SA', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long'
+        }).format(now);
+        document.getElementById('lock-date').textContent = arabicDate;
+      } catch (e) {}
+    }
+    updateClock();
+    setInterval(updateClock, 15000);
+
+    function applySystemSettings() {
+      const s = appState.system;
+      document.getElementById('lock-owner-badge').textContent = `جوال ${s.ownerName}`;
+      const sideLabel = document.getElementById('side-owner-label');
+      if (sideLabel) sideLabel.textContent = `iPhone — ${s.ownerName}`;
+
+      document.getElementById('widget-city').textContent = s.widgetCity;
+      document.getElementById('widget-temp').textContent = s.widgetTemp;
+      document.getElementById('notif-app-name').textContent = s.notifApp;
+      document.getElementById('notif-body').textContent = s.notifBody;
+
+      const lockEl = document.getElementById('lock-screen');
+      const homeEl = document.getElementById('iphone');
+
+      if (s.lockWallpaper) {
+        if (s.lockWallpaper.startsWith('data:') || s.lockWallpaper.startsWith('http')) {
+          lockEl.style.background = `url(${s.lockWallpaper}) center/cover no-repeat`;
+        } else {
+          lockEl.style.background = s.lockWallpaper;
+        }
+      } else {
+        lockEl.style.background = '';
+      }
+
+      if (s.homeWallpaper) {
+        if (s.homeWallpaper.startsWith('data:') || s.homeWallpaper.startsWith('http')) {
+          homeEl.style.background = `url(${s.homeWallpaper}) center/cover no-repeat`;
+        } else {
+          homeEl.style.background = s.homeWallpaper;
+        }
+      } else {
+        homeEl.style.background = '';
+      }
+    }
+
+    // =========================================================
+    // LOCK SCREEN SWIPE & KEYBOARD UNLOCK (Space / Enter / ArrowUp)
+    // =========================================================
+    const lockScreen = document.getElementById('lock-screen');
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
+
+    lockScreen.addEventListener('touchstart', (e) => {
+      startY = e.touches[0].clientY;
+      isDragging = true;
+      lockScreen.style.transition = 'none';
+    }, { passive: true });
+
+    lockScreen.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      currentY = e.touches[0].clientY;
+      const diff = currentY - startY;
+      if (diff < 0) lockScreen.style.transform = `translateY(${diff}px)`;
+    }, { passive: true });
+
+    lockScreen.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      lockScreen.style.transition = '';
+      if (currentY !== 0 && (startY - currentY) > 65) unlockPhone();
+      else lockScreen.style.transform = '';
+      startY = 0;
+      currentY = 0;
+    });
+
+    lockScreen.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button')) return;
+      startY = e.clientY;
+      isDragging = true;
+      lockScreen.style.transition = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      currentY = e.clientY;
+      const diff = currentY - startY;
+      if (diff < 0) lockScreen.style.transform = `translateY(${diff}px)`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      lockScreen.style.transition = '';
+      if (currentY !== 0 && (startY - currentY) > 55) unlockPhone();
+      else lockScreen.style.transform = '';
+      startY = 0;
+      currentY = 0;
+    });
+
+    // Keyboard Support: Space, Enter, ArrowUp to unlock; Escape to close modals/apps
+    window.addEventListener('keydown', (e) => {
+      const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+      if (isTyping) return;
+
+      if (!lockScreen.classList.contains('unlocked')) {
+        if (e.code === 'Space' || e.key === 'Enter' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          unlockPhone();
+        }
+      } else if (e.key === 'Escape') {
+        closeAllApps();
+        closeStudio();
+      }
+    });
+
+    function unlockPhone() {
+      lockScreen.style.transform = '';
+      lockScreen.classList.add('unlocked');
+    }
+
+    function lockPhone() {
+      closeAllApps();
+      lockScreen.classList.remove('unlocked');
+    }
+
+    function unlockAndOpen(appId) {
+      unlockPhone();
+      setTimeout(() => openApp(appId), 180);
+    }
+
+    function openApp(appName) {
+      closeAllApps();
+      const target = document.getElementById(`app-${appName}`);
+      if (target) {
+        target.classList.add('active');
+        if (appName === 'whatsapp') backToWaList();
+        if (appName === 'notes') backToNotesList();
+      }
+    }
+
+    function closeAllApps() {
+      document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('ios-toast');
+      toast.textContent = msg;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => toast.classList.add('opacity-0'), 2200);
+    }
+
+    // =========================================================
+    // WHATSAPP (INDIVIDUAL & MULTI-SPEAKER GROUPS)
+    // =========================================================
+    function renderWaChatList() {
+      const container = document.getElementById('wa-chats-list');
+      const query = (document.getElementById('wa-search-input')?.value || '').trim().toLowerCase();
+      container.innerHTML = '';
+
+      const filtered = appState.waChats.filter(c => c.name.toLowerCase().includes(query));
+
+      // Update Home & Dock Badges
+      const badgeCount = appState.waChats.length;
+      document.getElementById('wa-home-badge').textContent = badgeCount;
+      document.getElementById('wa-dock-badge').textContent = badgeCount;
+
+      filtered.forEach(chat => {
+        const lastMsg = chat.messages[chat.messages.length - 1];
+        let previewText = '';
+        if (lastMsg) {
+          const prefix = chat.isGroup && lastMsg.sender !== 'me' ? `${lastMsg.senderName}: ` : '';
+          previewText = prefix + (lastMsg.mediaType ? (lastMsg.mediaType === 'video' ? '🎥 مقطع فيديو' : '📷 صورة') : lastMsg.text);
+        }
+
+        const row = document.createElement('div');
+        row.className = 'px-4 py-3 flex items-center gap-3 hover:bg-[#111b21] active:bg-[#202c33] cursor-pointer transition';
+        row.onclick = () => openWaChat(chat.id);
+
+        row.innerHTML = `
+          <div class="w-12 h-12 rounded-full ${chat.avatarBg} flex items-center justify-center font-bold text-lg text-white shrink-0 shadow relative">
+            ${chat.avatarText}
+            ${chat.isGroup ? '<span class="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-sky-500 text-black text-[9px] flex items-center justify-center"><i class="fa-solid fa-users"></i></span>' : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-bold text-white truncate">${chat.name}</h4>
+              <span class="text-[11px] text-zinc-400">${chat.time}</span>
+            </div>
+            <div class="flex items-center justify-between mt-0.5 gap-2">
+              <p class="text-xs text-zinc-400 truncate">
+                ${lastMsg && lastMsg.sender === 'me' ? '<i class="fa-solid fa-check-double text-sky-400 ml-1 text-[10px]"></i>' : ''}
+                ${previewText}
+              </p>
+              ${chat.blocked ? '<span class="shrink-0 text-[10px] bg-red-950/90 text-red-400 border border-red-800/60 px-2 py-0.5 rounded-full font-semibold">محظور</span>' : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function openWaChat(chatId) {
+      activeChatId = chatId;
+      activeWaSpeaker = 'me';
+      const chat = appState.waChats.find(c => c.id === chatId);
+      if (!chat) return;
+
+      document.getElementById('wa-list-view').classList.add('hidden');
+      document.getElementById('wa-chat-view').classList.remove('hidden');
+
+      const avatarEl = document.getElementById('wa-active-avatar');
+      avatarEl.textContent = chat.avatarText;
+      avatarEl.className = `w-9 h-9 rounded-full ${chat.avatarBg} flex items-center justify-center font-bold text-sm text-white shrink-0`;
+
+      document.getElementById('wa-active-name').textContent = chat.name;
+      document.getElementById('wa-active-status').textContent = chat.blocked
+        ? 'جهة اتصال محظورة'
+        : (chat.isGroup ? (chat.members || []).join('، ') : chat.status);
+
+      renderWaMessages(chat);
+      renderWaSpeakerBar(chat);
+      renderWaBottomBar(chat);
+    }
+
+    function backToWaList() {
+      activeChatId = null;
+      document.getElementById('wa-chat-view').classList.add('hidden');
+      document.getElementById('wa-list-view').classList.remove('hidden');
+      renderWaChatList();
+    }
+
+    function getSpeakerColorClass(name, members) {
+      const idx = (members || []).indexOf(name);
+      return speakerColors[(idx >= 0 ? idx : 0) % speakerColors.length];
+    }
+
+    function renderWaMessages(chat) {
+      const box = document.getElementById('wa-messages-box');
+      box.innerHTML = `
+        <div class="self-center bg-[#182229] text-zinc-400 text-[10px] px-3 py-1 rounded-lg text-center my-1 border border-white/5">
+          الرسائل مشفرة تماماً بين الطرفين
+        </div>
+      `;
+
+      chat.messages.forEach(msg => {
+        const isMe = msg.sender === 'me';
+        const bubble = document.createElement('div');
+        bubble.className = `max-w-[82%] rounded-2xl px-3 py-2 text-xs shadow relative group ${
+          isMe
+            ? 'self-start bg-[#005c4b] text-white rounded-tr-sm'
+            : 'self-end bg-[#202c33] text-zinc-100 rounded-tl-sm'
+        }`;
+
+        let mediaHtml = '';
+        if (msg.mediaUrl) {
+          mediaHtml = msg.mediaType === 'video'
+            ? `<video src="${msg.mediaUrl}" controls class="rounded-xl max-h-48 w-full object-cover mb-1.5 bg-black"></video>`
+            : `<img src="${msg.mediaUrl}" alt="صورة مرفقة" class="rounded-xl max-h-48 w-full object-cover mb-1.5" />`;
+        }
+
+        const speakerLabelHtml = (!isMe && chat.isGroup)
+          ? `<div class="text-[11px] font-bold mb-0.5 ${getSpeakerColorClass(msg.senderName, chat.members)}">${msg.senderName || chat.name}</div>`
+          : '';
+
+        bubble.innerHTML = `
+          ${speakerLabelHtml}
+          ${mediaHtml}
+          ${msg.text ? `<p class="leading-relaxed text-[13px] whitespace-pre-line">${msg.text}</p>` : ''}
+          <div class="flex items-center justify-between gap-3 mt-1 text-[9px] text-white/60">
+            <button onclick="deleteWaMessage(${msg.id})" class="opacity-0 group-hover:opacity-100 text-red-300 hover:text-red-400 transition" title="حذف الرسالة">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="flex items-center gap-1">
+              <span>${msg.time}</span>
+              ${isMe ? '<i class="fa-solid fa-check-double text-sky-300"></i>' : ''}
+            </div>
+          </div>
+        `;
+        box.appendChild(bubble);
+      });
+
+      if (chat.blocked) {
+        const blockNotice = document.createElement('div');
+        blockNotice.className = 'self-center bg-red-950/70 border border-red-800/50 text-red-200 text-[11px] px-3.5 py-2 rounded-xl text-center mt-2';
+        blockNotice.innerHTML = `<i class="fa-solid fa-ban ml-1 text-red-400"></i> لقد قمت بحظر ${chat.name}.`;
+        box.appendChild(blockNotice);
+      }
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function renderWaSpeakerBar(chat) {
+      const bar = document.getElementById('wa-speaker-bar');
+      if (chat.blocked) {
+        bar.classList.add('hidden');
+        return;
+      }
+      bar.classList.remove('hidden');
+
+      const speakers = [{ id: 'me', label: `أنا (${appState.system.ownerName})` }];
+      const members = chat.isGroup ? (chat.members || []) : [chat.name];
+      members.forEach(m => {
+        if (m && m.trim()) speakers.push({ id: m.trim(), label: m.trim() });
+      });
+
+      bar.innerHTML = `<span class="text-zinc-400 shrink-0">المتحدث:</span>`;
+      speakers.forEach(sp => {
+        const isSelected = activeWaSpeaker === sp.id;
+        const btn = document.createElement('button');
+        btn.className = `px-2.5 py-1 rounded-full shrink-0 font-semibold transition ${
+          isSelected
+            ? 'bg-[#00a884] text-black'
+            : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+        }`;
+        btn.textContent = sp.label;
+        btn.onclick = () => {
+          activeWaSpeaker = sp.id;
+          renderWaSpeakerBar(chat);
+        };
+        bar.appendChild(btn);
+      });
+    }
+
+    function renderWaBottomBar(chat) {
+      const bottom = document.getElementById('wa-bottom-area');
+
+      if (chat.blocked) {
+        bottom.innerHTML = `
+          <div class="flex items-center justify-between gap-2 py-1 px-2">
+            <span class="text-[11px] text-zinc-400">تم حظر جهة الاتصال هذه</span>
+            <button onclick="toggleBlockChat('${chat.id}')" class="text-xs font-semibold text-red-400 bg-red-950/60 border border-red-800/60 px-3 py-1.5 rounded-lg active:scale-95">
+              إلغاء الحظر
+            </button>
+          </div>
+        `;
+      } else {
+        bottom.innerHTML = `
+          <div class="flex items-center gap-2">
+            <label class="w-9 h-9 rounded-full bg-[#202c33] text-[#00a884] flex items-center justify-center cursor-pointer shrink-0 active:scale-90 transition" title="إرسال صورة أو فيديو">
+              <i class="fa-solid fa-plus text-base"></i>
+              <input type="file" accept="image/*,video/*" class="hidden" onchange="handleChatMediaUpload(event)">
+            </label>
+            <input id="wa-msg-input" type="text" placeholder="اكتب رسالة باسم المتحدث المختار..." class="flex-1 bg-[#202c33] text-white text-xs rounded-full px-4 py-2.5 outline-none placeholder:text-zinc-500" onkeydown="if(event.key==='Enter') sendWaTextMessage()" />
+            <button onclick="sendWaTextMessage()" class="w-9 h-9 rounded-full bg-[#00a884] text-black flex items-center justify-center shrink-0 active:scale-90 transition">
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function sendWaTextMessage() {
+      const input = document.getElementById('wa-msg-input');
+      if (!input || !input.value.trim() || !activeChatId) return;
+
+      const chat = appState.waChats.find(c => c.id === activeChatId);
+      const isMe = activeWaSpeaker === 'me';
+
+      chat.messages.push({
+        id: Date.now(),
+        sender: isMe ? 'me' : 'them',
+        senderName: isMe ? appState.system.ownerName : activeWaSpeaker,
+        text: input.value.trim(),
+        time: 'الآن'
+      });
+      chat.time = 'الآن';
+      input.value = '';
+      persistState();
+      renderWaMessages(chat);
+    }
+
+    async function handleChatMediaUpload(event) {
+      const file = event.target.files[0];
+      if (!file || !activeChatId) return;
+
+      const isVideo = file.type.startsWith('video/');
+      const url = isVideo ? URL.createObjectURL(file) : await fileToDataUrl(file);
+      const chat = appState.waChats.find(c => c.id === activeChatId);
+      const isMe = activeWaSpeaker === 'me';
+
+      chat.messages.push({
+        id: Date.now(),
+        sender: isMe ? 'me' : 'them',
+        senderName: isMe ? appState.system.ownerName : activeWaSpeaker,
+        mediaUrl: url,
+        mediaType: isVideo ? 'video' : 'image',
+        text: '',
+        time: 'الآن'
+      });
+      chat.time = 'الآن';
+      if (!isVideo) persistState();
+      renderWaMessages(chat);
+      showToast('تم إرسال الوسائط في المحادثة');
+    }
+
+    function deleteWaMessage(msgId) {
+      const chat = appState.waChats.find(c => c.id === activeChatId);
+      if (!chat) return;
+      chat.messages = chat.messages.filter(m => m.id !== msgId);
+      persistState();
+      renderWaMessages(chat);
+      showToast('تم حذف الرسالة');
+    }
+
+    function toggleBlockChat(chatId) {
+      const chat = appState.waChats.find(c => c.id === chatId);
+      if (!chat) return;
+      chat.blocked = !chat.blocked;
+      persistState();
+      openWaChat(chatId);
+    }
+
+    function openNewWaChatModal(asGroup) {
+      isCreatingGroup = asGroup;
+      document.getElementById('wa-new-chat-title').textContent = asGroup ? 'إنشاء قروب جديد' : 'محادثة فردية جديدة';
+      document.getElementById('wa-create-name').value = '';
+      document.getElementById('wa-create-members').value = '';
+      document.getElementById('wa-create-members-box').classList.toggle('hidden', !asGroup);
+      document.getElementById('wa-new-chat-modal').classList.remove('hidden');
+    }
+
+    function createNewWaChat() {
+      const name = document.getElementById('wa-create-name').value.trim();
+      if (!name) {
+        showToast('أدخل الاسم أولاً');
+        return;
+      }
+      const rawMembers = document.getElementById('wa-create-members').value;
+      const members = isCreatingGroup
+        ? rawMembers.split(/[،,]/).map(s => s.trim()).filter(Boolean)
+        : [name];
+
+      const bgPool = ['bg-sky-800', 'bg-emerald-800', 'bg-purple-800', 'bg-amber-700', 'bg-rose-800'];
+      const newChat = {
+        id: 'chat_' + Date.now(),
+        name,
+        isGroup: isCreatingGroup,
+        members: members.length ? members : [name],
+        avatarText: name.charAt(0),
+        avatarBg: bgPool[appState.waChats.length % bgPool.length],
+        status: document.getElementById('wa-create-status').value.trim() || 'متصل الآن',
+        blocked: false,
+        time: 'الآن',
+        messages: []
+      };
+
+      appState.waChats.unshift(newChat);
+      persistState();
+      document.getElementById('wa-new-chat-modal').classList.add('hidden');
+      renderWaChatList();
+      openWaChat(newChat.id);
+      showToast(isCreatingGroup ? 'تم إنشاء القروب ✓' : 'تمت إضافة المحادثة ✓');
+    }
+
+    function openWaChatSettings() {
+      const chat = appState.waChats.find(c => c.id === activeChatId);
+      if (!chat) return;
+      document.getElementById('wa-edit-chat-name').value = chat.name;
+      document.getElementById('wa-edit-chat-status').value = chat.status;
+      document.getElementById('wa-edit-chat-members').value = (chat.members || []).join('، ');
+      document.getElementById('wa-edit-chat-blocked').checked = chat.blocked;
+      document.getElementById('wa-chat-settings-modal').classList.remove('hidden');
+    }
+
+    function saveWaChatSettings() {
+      const chat = appState.waChats.find(c => c.id === activeChatId);
+      if (!chat) return;
+      chat.name = document.getElementById('wa-edit-chat-name').value.trim() || chat.name;
+      chat.avatarText = chat.name.charAt(0);
+      chat.status = document.getElementById('wa-edit-chat-status').value.trim();
+      const membersList = document.getElementById('wa-edit-chat-members').value
+        .split(/[،,]/)
+        .map(s => s.trim())
+        .filter(Boolean);
+      if (membersList.length) chat.members = membersList;
+      chat.blocked = document.getElementById('wa-edit-chat-blocked').checked;
+
+      persistState();
+      document.getElementById('wa-chat-settings-modal').classList.add('hidden');
+      openWaChat(chat.id);
+      showToast('تم حفظ إعدادات المحادثة ✓');
+    }
+
+    function deleteCurrentWaChat() {
+      appState.waChats = appState.waChats.filter(c => c.id !== activeChatId);
+      persistState();
+      document.getElementById('wa-chat-settings-modal').classList.add('hidden');
+      backToWaList();
+      showToast('تم حذف المحادثة');
+    }
+
+    // =========================================================
+    // SNAPCHAT APP LOGIC (STORIES, MEMORIES, CHATS, PROFILE)
+    // =========================================================
+    function switchSnapTab(tab) {
+      ['stories', 'chats', 'profile'].forEach(t => {
+        document.getElementById(`snap-tab-${t}`).classList.toggle('hidden', t !== tab);
+        const navBtn = document.getElementById(`snap-nav-${t}`);
+        if (navBtn) {
+          navBtn.className = t === tab
+            ? 'flex flex-col items-center gap-1 text-[#FFFC00]'
+            : 'flex flex-col items-center gap-1 text-zinc-500';
+        }
+      });
+
+      const titles = {
+        stories: 'القصص والذكريات',
+        chats: 'محادثات سناب',
+        profile: 'ملفي الشخصي'
+      };
+      document.getElementById('snap-header-title').textContent = titles[tab] || 'سناب شات';
+    }
+
+    function renderSnapchat() {
+      const sp = appState.snapProfile;
+
+      // Profile & Header Avatar
+      document.getElementById('snap-profile-name').textContent = sp.displayName;
+      document.getElementById('snap-profile-username').textContent = sp.username;
+      document.getElementById('snap-profile-score').textContent = sp.score;
+      document.getElementById('snap-edit-name').value = sp.displayName;
+      document.getElementById('snap-edit-user').value = sp.username;
+      document.getElementById('snap-edit-score').value = sp.score;
+
+      const headerAvatar = document.getElementById('snap-header-avatar');
+      const headerIcon = document.getElementById('snap-header-icon');
+      const profAvatar = document.getElementById('snap-profile-avatar');
+      const profIcon = document.getElementById('snap-profile-icon');
+
+      if (sp.avatarUrl) {
+        headerAvatar.src = sp.avatarUrl;
+        headerAvatar.classList.remove('hidden');
+        headerIcon.classList.add('hidden');
+        profAvatar.src = sp.avatarUrl;
+        profAvatar.classList.remove('hidden');
+        profIcon.classList.add('hidden');
+      } else {
+        headerAvatar.classList.add('hidden');
+        headerIcon.classList.remove('hidden');
+        profAvatar.classList.add('hidden');
+        profIcon.classList.remove('hidden');
+      }
+
+      // Render Stories Row
+      const storiesRow = document.getElementById('snap-stories-row');
+      storiesRow.innerHTML = `
+        <button onclick="openSnapComposer()" class="flex flex-col items-center gap-1.5 shrink-0">
+          <div class="w-16 h-16 rounded-full bg-zinc-900 border-2 border-dashed border-[#FFFC00] flex items-center justify-center text-[#FFFC00]">
+            <i class="fa-solid fa-plus text-xl"></i>
+          </div>
+          <span class="text-[11px] text-zinc-300 font-medium">إضافة ستوري</span>
+        </button>
+      `;
+
+      sp.stories.forEach((story, index) => {
+        const item = document.createElement('button');
+        item.className = 'flex flex-col items-center gap-1.5 shrink-0 max-w-[74px]';
+        item.onclick = () => openSnapStoryViewer(index);
+
+        let thumbHtml = '';
+        if (story.mediaType === 'image' && story.mediaUrl) {
+          thumbHtml = `<img src="${story.mediaUrl}" class="w-full h-full object-cover" />`;
+        } else if (story.mediaType === 'video' && story.mediaUrl) {
+          thumbHtml = `<video src="${story.mediaUrl}" class="w-full h-full object-cover" muted></video>`;
+        } else {
+          thumbHtml = `<div class="w-full h-full flex items-center justify-center" style="background:${story.gradient || '#18181b'}"><i class="fa-brands fa-snapchat text-[#FFFC00] text-xl"></i></div>`;
+        }
+
+        item.innerHTML = `
+          <div class="w-16 h-16 rounded-full p-[2.5px] bg-gradient-to-tr from-[#FFFC00] via-amber-400 to-purple-500">
+            <div class="w-full h-full rounded-full overflow-hidden border-2 border-black">
+              ${thumbHtml}
+            </div>
+          </div>
+          <span class="text-[11px] text-white font-medium truncate w-full text-center">${story.author}</span>
+        `;
+        storiesRow.appendChild(item);
+      });
+
+      // Render Memories Grid
+      const memGrid = document.getElementById('snap-memories-grid');
+      memGrid.innerHTML = '';
+      if (sp.stories.length === 0) {
+        memGrid.innerHTML = `<div class="col-span-2 text-center py-8 text-zinc-500 text-xs">لا توجد صور حالياً، اضغط + إضافة صورة بالاعلى</div>`;
+      } else {
+        sp.stories.forEach((story, index) => {
+          const card = document.createElement('div');
+          card.className = 'aspect-[3/4] rounded-2xl overflow-hidden relative bg-zinc-900 border border-zinc-800 cursor-pointer group';
+          card.onclick = () => openSnapStoryViewer(index);
+
+          let mediaPreview = '';
+          if (story.mediaType === 'image' && story.mediaUrl) {
+            mediaPreview = `<img src="${story.mediaUrl}" class="w-full h-full object-cover" />`;
+          } else if (story.mediaType === 'video' && story.mediaUrl) {
+            mediaPreview = `<video src="${story.mediaUrl}" class="w-full h-full object-cover" muted></video>`;
+          } else {
+            mediaPreview = `<div class="w-full h-full flex items-center justify-center p-3 text-center" style="background:${story.gradient || '#18181b'}"><i class="fa-brands fa-snapchat text-[#FFFC00] text-3xl"></i></div>`;
+          }
+
+          card.innerHTML = `
+            ${mediaPreview}
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-2.5 text-right">
+              <div class="text-[11px] font-bold text-white truncate">${story.author}</div>
+              ${story.caption ? `<div class="text-[10px] text-zinc-300 truncate">${story.caption}</div>` : ''}
+            </div>
+            <button onclick="event.stopPropagation(); deleteSnapStory(${story.id})" class="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/70 text-red-400 text-xs opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          `;
+          memGrid.appendChild(card);
+        });
+      }
+
+      // Render Snapchat Chats
+      const chatsList = document.getElementById('snap-chats-list');
+      chatsList.innerHTML = '';
+      (sp.chats || []).forEach(ch => {
+        const row = document.createElement('div');
+        row.className = 'px-4 py-3 flex items-center justify-between hover:bg-zinc-900/70';
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full ${ch.avatarBg || 'bg-amber-600'} flex items-center justify-center font-bold text-white">
+              ${ch.name.charAt(0)}
+            </div>
+            <div>
+              <div class="text-sm font-bold text-white">${ch.name}</div>
+              <div class="text-[11px] text-zinc-400 flex items-center gap-1.5 mt-0.5">
+                <span class="w-2.5 h-2.5 rounded-[2px] ${ch.type === 'snap' ? 'bg-red-500' : 'bg-sky-500'} inline-block"></span>
+                <span>${ch.status}</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="openSnapComposer()" class="text-zinc-400 hover:text-[#FFFC00] p-2" title="إرسال سناب">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+        `;
+        chatsList.appendChild(row);
+      });
+    }
+
+    function openSnapComposer() {
+      tempSnapMediaUrl = '';
+      document.getElementById('snap-upload-label').textContent = 'اختر صورة أو فيديو من جهازك';
+      document.getElementById('snap-preview-box').classList.add('hidden');
+      document.getElementById('snap-preview-box').innerHTML = '';
+      document.getElementById('snap-caption-input').value = '';
+      document.getElementById('snap-author-input').value = `قصتي (${appState.system.ownerName})`;
+      document.getElementById('snap-composer-modal').classList.remove('hidden');
+    }
+
+    function closeSnapComposer() {
+      document.getElementById('snap-composer-modal').classList.add('hidden');
+    }
+
+    async function handleSnapMediaSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const isVideo = file.type.startsWith('video/');
+      tempSnapMediaType = isVideo ? 'video' : 'image';
+      tempSnapMediaUrl = isVideo ? URL.createObjectURL(file) : await fileToDataUrl(file);
+
+      document.getElementById('snap-upload-label').textContent = `✓ تم اختيار: ${file.name}`;
+      const previewBox = document.getElementById('snap-preview-box');
+      previewBox.classList.remove('hidden');
+      previewBox.innerHTML = isVideo
+        ? `<video src="${tempSnapMediaUrl}" class="max-h-48 w-full object-contain" muted autoplay loop></video>`
+        : `<img src="${tempSnapMediaUrl}" class="max-h-48 w-full object-contain" />`;
+    }
+
+    function submitNewSnap() {
+      const caption = document.getElementById('snap-caption-input').value.trim();
+      if (!tempSnapMediaUrl && !caption) {
+        showToast('اختر صورة أو اكتب تعليقاً أولاً');
+        return;
+      }
+
+      appState.snapProfile.stories.unshift({
+        id: Date.now(),
+        author: document.getElementById('snap-author-input').value.trim() || 'قصتي',
+        time: document.getElementById('snap-time-input').value.trim() || 'الآن',
+        caption,
+        mediaType: tempSnapMediaUrl ? tempSnapMediaType : 'gradient',
+        mediaUrl: tempSnapMediaUrl,
+        gradient: 'linear-gradient(135deg, #1e1b4b 0%, #09090b 100%)'
+      });
+
+      if (tempSnapMediaType === 'image') persistState();
+      renderSnapchat();
+      closeSnapComposer();
+      showToast('تمت إضافة الصورة في سناب شات ✓');
+    }
+
+    function openSnapStoryViewer(index) {
+      const stories = appState.snapProfile.stories;
+      if (!stories[index]) return;
+      activeSnapStoryIndex = index;
+      const story = stories[index];
+
+      const viewer = document.getElementById('snap-story-viewer');
+      const bars = document.getElementById('snap-viewer-progress-bars');
+      bars.innerHTML = stories.map((_, i) => `
+        <div class="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
+          <div class="h-full bg-white ${i < index ? 'w-full' : (i === index ? 'story-progress-active' : 'w-0')}"></div>
+        </div>
+      `).join('');
+
+      document.getElementById('snap-viewer-author').textContent = story.author;
+      document.getElementById('snap-viewer-time').textContent = story.time;
+
+      const imgEl = document.getElementById('snap-viewer-img');
+      const vidEl = document.getElementById('snap-viewer-video');
+      imgEl.classList.add('hidden');
+      vidEl.classList.add('hidden');
+      vidEl.pause();
+
+      if (story.mediaType === 'image' && story.mediaUrl) {
+        imgEl.src = story.mediaUrl;
+        imgEl.classList.remove('hidden');
+      } else if (story.mediaType === 'video' && story.mediaUrl) {
+        vidEl.src = story.mediaUrl;
+        vidEl.classList.remove('hidden');
+        vidEl.play().catch(() => {});
+      }
+
+      const capWrap = document.getElementById('snap-viewer-caption-wrap');
+      const capEl = document.getElementById('snap-viewer-caption');
+      if (story.caption) {
+        capEl.textContent = story.caption;
+        capWrap.classList.remove('hidden');
+      } else {
+        capWrap.classList.add('hidden');
+      }
+
+      document.getElementById('snap-viewer-delete').onclick = () => {
+        deleteSnapStory(story.id);
+        closeSnapViewer();
+      };
+
+      viewer.classList.remove('hidden');
+      clearTimeout(snapStoryTimer);
+      snapStoryTimer = setTimeout(() => nextSnapStory(), 5000);
+    }
+
+    function nextSnapStory() {
+      clearTimeout(snapStoryTimer);
+      if (activeSnapStoryIndex + 1 < appState.snapProfile.stories.length) {
+        openSnapStoryViewer(activeSnapStoryIndex + 1);
+      } else {
+        closeSnapViewer();
+      }
+    }
+
+    function closeSnapViewer() {
+      clearTimeout(snapStoryTimer);
+      const vidEl = document.getElementById('snap-viewer-video');
+      vidEl.pause();
+      document.getElementById('snap-story-viewer').classList.add('hidden');
+    }
+
+    function deleteSnapStory(id) {
+      appState.snapProfile.stories = appState.snapProfile.stories.filter(s => s.id !== id);
+      persistState();
+      renderSnapchat();
+      showToast('تم حذف السنابة');
+    }
+
+    async function handleSnapAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      appState.snapProfile.avatarUrl = await fileToDataUrl(file);
+      persistState();
+      renderSnapchat();
+      showToast('تم تحديث صورة سناب شات ✓');
+    }
+
+    function saveSnapProfile() {
+      appState.snapProfile.displayName = document.getElementById('snap-edit-name').value.trim() || 'جبران';
+      appState.snapProfile.username = document.getElementById('snap-edit-user').value.trim() || 'jbran_rp';
+      appState.snapProfile.score = document.getElementById('snap-edit-score').value.trim() || '84,920';
+      persistState();
+      renderSnapchat();
+      showToast('تم حفظ بيانات سناب شات ✓');
+    }
+
+    // =========================================================
+    // NOTES APP LOGIC
+    // =========================================================
+    function renderNotesList() {
+      const container = document.getElementById('notes-list-container');
+      const query = (document.getElementById('notes-search-input')?.value || '').trim().toLowerCase();
+      container.innerHTML = '';
+
+      const filtered = appState.notes.filter(n =>
+        n.title.toLowerCase().includes(query) || n.content.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center text-zinc-500 text-xs py-10">لا توجد ملاحظات مطابقة</div>`;
+        return;
+      }
+
+      filtered.forEach(note => {
+        const card = document.createElement('div');
+        card.className = 'bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 rounded-2xl p-3.5 cursor-pointer transition';
+        card.onclick = () => openNoteEditor(note.id);
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <h4 class="text-sm font-bold text-white truncate">${note.title || 'ملاحظة بدون عنوان'}</h4>
+            <span class="text-[10px] text-zinc-500 shrink-0">${note.date}</span>
+          </div>
+          <p class="text-xs text-zinc-400 mt-1 line-clamp-2 whitespace-pre-line">${note.content}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openNoteEditor(noteId) {
+      activeNoteId = noteId;
+      document.getElementById('notes-list-view').classList.add('hidden');
+      document.getElementById('note-editor-view').classList.remove('hidden');
+
+      const delBtn = document.getElementById('note-delete-btn');
+      if (noteId) {
+        const note = appState.notes.find(n => n.id === noteId);
+        document.getElementById('note-title-input').value = note ? note.title : '';
+        document.getElementById('note-content-input').value = note ? note.content : '';
+        delBtn.classList.remove('hidden');
+      } else {
+        document.getElementById('note-title-input').value = '';
+        document.getElementById('note-content-input').value = '';
+        delBtn.classList.add('hidden');
+      }
+    }
+
+    function saveAndCloseNote() {
+      const title = document.getElementById('note-title-input').value.trim();
+      const content = document.getElementById('note-content-input').value.trim();
+
+      if (title || content) {
+        if (activeNoteId) {
+          const note = appState.notes.find(n => n.id === activeNoteId);
+          if (note) {
+            note.title = title || 'ملاحظة';
+            note.content = content;
+            note.date = 'الآن';
+          }
+        } else {
+          appState.notes.unshift({
+            id: Date.now(),
+            title: title || 'ملاحظة جديدة',
+            content,
+            date: 'الآن'
+          });
+        }
+        persistState();
+      }
+      backToNotesList();
+    }
+
+    function deleteCurrentNote() {
+      if (activeNoteId) {
+        appState.notes = appState.notes.filter(n => n.id !== activeNoteId);
+        persistState();
+        showToast('تم حذف الملاحظة');
+      }
+      backToNotesList();
+    }
+
+    function backToNotesList() {
+      activeNoteId = null;
+      document.getElementById('note-editor-view').classList.add('hidden');
+      document.getElementById('notes-list-view').classList.remove('hidden');
+      renderNotesList();
+    }
+
+    // =========================================================
+    // PHONE / CALL LOGS LOGIC
+    // =========================================================
+    function setCallFilter(filter) {
+      currentCallFilter = filter;
+      document.getElementById('call-filter-all').className = filter === 'all'
+        ? 'px-3 py-1 rounded-md bg-zinc-700 text-white font-semibold'
+        : 'px-3 py-1 rounded-md text-zinc-400';
+      document.getElementById('call-filter-missed').className = filter === 'missed'
+        ? 'px-3 py-1 rounded-md bg-zinc-700 text-white font-semibold'
+        : 'px-3 py-1 rounded-md text-zinc-400';
+      renderCallsList();
+    }
+
+    function renderCallsList() {
+      const container = document.getElementById('calls-list-container');
+      container.innerHTML = '';
+
+      const missedCount = appState.calls.filter(c => c.type === 'missed').length;
+      ['phone-home-badge', 'phone-dock-badge', 'phone-tab-badge'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = missedCount;
+          el.style.display = missedCount > 0 ? 'flex' : 'none';
+        }
+      });
+
+      const list = currentCallFilter === 'missed'
+        ? appState.calls.filter(c => c.type === 'missed')
+        : appState.calls;
+
+      list.forEach(call => {
+        const isMissed = call.type === 'missed';
+        const iconClass = isMissed
+          ? 'fa-phone-slash text-red-500'
+          : (call.type === 'outgoing' ? 'fa-phone-volume text-emerald-400' : 'fa-phone text-sky-400');
+
+        const row = document.createElement('div');
+        row.className = 'py-3.5 flex items-center justify-between';
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <i class="fa-solid ${iconClass} text-xs"></i>
+            <div>
+              <div class="text-base font-bold ${isMissed ? 'text-red-500' : 'text-white'}">${call.name}</div>
+              <div class="text-xs text-zinc-500">${call.label} • ${isMissed ? 'مكالمة فائتة' : (call.type === 'outgoing' ? 'صادرة' : 'واردة')}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-zinc-400">
+            <span class="text-xs">${call.time}</span>
+            <button onclick="openCallModal(${call.id})" class="text-sky-400 p-1" title="تعديل"><i class="fa-solid fa-pen text-xs"></i></button>
+            <button onclick="deleteCallEntry(${call.id})" class="text-red-400 p-1" title="حذف"><i class="fa-solid fa-trash text-xs"></i></button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function openCallModal(callId) {
+      editingCallId = callId;
+      if (callId) {
+        const c = appState.calls.find(item => item.id === callId);
+        document.getElementById('call-modal-title').textContent = 'تعديل المكالمة';
+        document.getElementById('call-name-input').value = c.name;
+        document.getElementById('call-type-input').value = c.type;
+        document.getElementById('call-time-input').value = c.time;
+        document.getElementById('call-label-input').value = c.label;
+      } else {
+        document.getElementById('call-modal-title').textContent = 'إضافة مكالمة جديدة';
+        document.getElementById('call-name-input').value = '';
+        document.getElementById('call-type-input').value = 'missed';
+        document.getElementById('call-time-input').value = 'الآن';
+        document.getElementById('call-label-input').value = 'جوال';
+      }
+      document.getElementById('call-modal').classList.remove('hidden');
+    }
+
+    function saveCallEntry() {
+      const name = document.getElementById('call-name-input').value.trim();
+      if (!name) {
+        showToast('أدخل الاسم أولاً');
+        return;
+      }
+      const entry = {
+        id: editingCallId || Date.now(),
+        name,
+        type: document.getElementById('call-type-input').value,
+        time: document.getElementById('call-time-input').value.trim() || 'الآن',
+        label: document.getElementById('call-label-input').value.trim() || 'جوال'
+      };
+
+      if (editingCallId) {
+        const idx = appState.calls.findIndex(c => c.id === editingCallId);
+        if (idx >= 0) appState.calls[idx] = entry;
+      } else {
+        appState.calls.unshift(entry);
+      }
+
+      persistState();
+      document.getElementById('call-modal').classList.add('hidden');
+      renderCallsList();
+      showToast('تم تحديث سجل المكالمات ✓');
+    }
+
+    function deleteCallEntry(id) {
+      appState.calls = appState.calls.filter(c => c.id !== id);
+      persistState();
+      renderCallsList();
+      showToast('تم حذف المكالمة');
+    }
+
+    // =========================================================
+    // CUSTOMIZATION STUDIO MODAL
+    // =========================================================
+    function openStudio() {
+      const s = appState.system;
+      document.getElementById('st-owner-name').value = s.ownerName;
+      document.getElementById('st-widget-city').value = s.widgetCity;
+      document.getElementById('st-widget-temp').value = s.widgetTemp;
+      document.getElementById('st-notif-app').value = s.notifApp;
+      document.getElementById('st-notif-body').value = s.notifBody;
+
+      renderStudioSubLists();
+      document.getElementById('studio-modal').classList.remove('hidden');
+    }
+
+    function closeStudio() {
+      document.getElementById('studio-modal').classList.add('hidden');
+    }
+
+    function switchStudioTab(tab) {
+      ['wallpapers', 'whatsapp', 'snapchat', 'calls', 'notes'].forEach(t => {
+        document.getElementById(`st-panel-${t}`).classList.toggle('hidden', t !== tab);
+        document.getElementById(`st-tab-${t}`).className = t === tab
+          ? 'px-3.5 py-2.5 text-sky-400 border-b-2 border-sky-400 shrink-0'
+          : 'px-3.5 py-2.5 text-zinc-400 shrink-0';
+      });
+    }
+
+    function renderStudioSubLists() {
+      // WhatsApp quick items
+      const waList = document.getElementById('st-wa-list');
+      waList.innerHTML = appState.waChats.map(c => `
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between">
+          <div>
+            <div class="font-bold text-white">${c.name} ${c.isGroup ? '<span class="text-sky-400 text-[10px]">(قروب)</span>' : ''}</div>
+            <div class="text-[10px] text-zinc-400">${c.messages.length} رسائل</div>
+          </div>
+          <button onclick="closeStudio(); openApp('whatsapp'); openWaChat('${c.id}');" class="bg-zinc-800 text-emerald-400 px-3 py-1 rounded-lg font-semibold">فتح وتعديل</button>
+        </div>
+      `).join('');
+
+      // Calls quick items
+      const callsList = document.getElementById('st-calls-list');
+      callsList.innerHTML = appState.calls.map(c => `
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between">
+          <div>
+            <span class="font-bold ${c.type === 'missed' ? 'text-red-400' : 'text-white'}">${c.name}</span>
+            <span class="text-zinc-500 text-[10px] mr-2">${c.time}</span>
+          </div>
+          <button onclick="closeStudio(); openApp('phone'); openCallModal(${c.id});" class="bg-zinc-800 text-sky-400 px-2.5 py-1 rounded-lg">تعديل</button>
+        </div>
+      `).join('');
+
+      // Notes quick items
+      const notesList = document.getElementById('st-notes-list');
+      notesList.innerHTML = appState.notes.map(n => `
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between">
+          <span class="font-bold text-white truncate max-w-[180px]">${n.title}</span>
+          <button onclick="closeStudio(); openApp('notes'); openNoteEditor(${n.id});" class="bg-zinc-800 text-amber-400 px-2.5 py-1 rounded-lg">تعديل</button>
+        </div>
+      `).join('');
+    }
+
+    async function handleWallpaperUpload(event, target) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const dataUrl = await fileToDataUrl(file);
+      if (target === 'lock') appState.system.lockWallpaper = dataUrl;
+      else appState.system.homeWallpaper = dataUrl;
+      persistState();
+      applySystemSettings();
+      showToast('تم تحديث الخلفية وحفظها ✓');
+    }
+
+    function applyPresetWallpaper(val) {
+      const w = val === 'default' ? '' : val;
+      appState.system.lockWallpaper = w;
+      appState.system.homeWallpaper = w;
+      persistState();
+      applySystemSettings();
+      showToast('تم تطبيق الخلفية ✓');
+    }
+
+    function saveSystemSettings() {
+      appState.system.ownerName = document.getElementById('st-owner-name').value.trim() || 'جبران';
+      appState.system.widgetCity = document.getElementById('st-widget-city').value.trim() || 'الرياض';
+      appState.system.widgetTemp = document.getElementById('st-widget-temp').value.trim() || '21°';
+      appState.system.notifApp = document.getElementById('st-notif-app').value.trim() || 'so matcha';
+      appState.system.notifBody = document.getElementById('st-notif-body').value.trim();
+      persistState();
+      applySystemSettings();
+      showToast('تم حفظ إعدادات النظام ✓');
+    }
+
+    function resetToFactoryDefaults() {
+      localStorage.removeItem(STORAGE_KEY);
+      appState = JSON.parse(JSON.stringify(defaultState));
+      applySystemSettings();
+      renderAll();
+      closeStudio();
+      showToast('تمت استعادة البيانات الافتراضية ✓');
+    }
+
+    // =========================================================
+    // PHOTOS APP LOGIC
+    // =========================================================
+    async function handlePhotosUpload(event) {
+      const files = Array.from(event.target.files);
+      if (!files.length) return;
+
+      for (const file of files) {
+        const isVideo = file.type.startsWith('video/');
+        const url = isVideo ? URL.createObjectURL(file) : await fileToDataUrl(file);
+        appState.photos.unshift({
+          id: Date.now() + Math.random(),
+          url,
+          type: isVideo ? 'video' : 'image',
+          name: file.name
+        });
+      }
+
+      persistState();
+      renderPhotosGrid();
+      showToast(`تمت إضافة ${files.length} عنصر إلى الصور`);
+      event.target.value = '';
+    }
+
+    function renderPhotosGrid() {
+      const emptyEl = document.getElementById('photos-empty-state');
+      const gridEl = document.getElementById('photos-grid');
+      const countLabel = document.getElementById('photos-count-label');
+
+      if (appState.photos.length === 0) {
+        emptyEl.classList.remove('hidden');
+        gridEl.classList.add('hidden');
+        countLabel.textContent = 'ألبوم جبران الخاص';
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      gridEl.classList.remove('hidden');
+      countLabel.textContent = `${appState.photos.length} عناصر محفوظة`;
+
+      gridEl.innerHTML = '';
+      appState.photos.forEach(item => {
+        const cell = document.createElement('div');
+        cell.className = 'aspect-square bg-zinc-900 relative overflow-hidden cursor-pointer group';
+        cell.onclick = () => openLightbox(item.id);
+
+        cell.innerHTML = item.type === 'video'
+          ? `<video src="${item.url}" class="w-full h-full object-cover" muted></video><div class="absolute bottom-1.5 right-1.5 bg-black/70 px-1.5 py-0.5 rounded text-[10px] text-white"><i class="fa-solid fa-play text-[8px]"></i> فيديو</div>`
+          : `<img src="${item.url}" alt="${item.name}" class="w-full h-full object-cover group-active:scale-95 transition" />`;
+        gridEl.appendChild(cell);
+      });
+    }
+
+    function openLightbox(id) {
+      const item = appState.photos.find(m => m.id === id);
+      if (!item) return;
+
+      const lightbox = document.getElementById('media-lightbox');
+      const content = document.getElementById('lightbox-content');
+      document.getElementById('lightbox-title').textContent = item.name || 'معاينة';
+
+      content.innerHTML = item.type === 'video'
+        ? `<video src="${item.url}" controls autoplay class="max-h-full max-w-full rounded-xl"></video>`
+        : `<img src="${item.url}" alt="${item.name}" class="max-h-full max-w-full rounded-xl object-contain" />`;
+
+      document.getElementById('lightbox-delete-btn').onclick = () => {
+        appState.photos = appState.photos.filter(m => m.id !== id);
+        persistState();
+        closeLightbox();
+        renderPhotosGrid();
+        showToast('تم حذف العنصر');
+      };
+
+      lightbox.classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-content').innerHTML = '';
+      document.getElementById('media-lightbox').classList.add('hidden');
+    }
+
+    // =========================================================
+    // TWITTER (X) & INSTAGRAM LOGIC
+    // =========================================================
+    function renderTwitterProfile() {
+      const p = appState.xProfile;
+      document.getElementById('x-display-name').textContent = p.displayName;
+      document.getElementById('x-handle').textContent = p.handle.startsWith('@') ? p.handle : `@${p.handle}`;
+      document.getElementById('x-bio').textContent = p.bio;
+      document.getElementById('x-followers-count').textContent = p.followers;
+      document.getElementById('x-following-count').textContent = p.following;
+      document.getElementById('x-verified-badge').style.display = p.verified ? 'inline-block' : 'none';
+
+      const bioLinkEl = document.getElementById('x-bio-link');
+      if (p.link) {
+        bioLinkEl.href = p.link.startsWith('http') ? p.link : `https://${p.link}`;
+        document.getElementById('x-external-link').href = bioLinkEl.href;
+        document.getElementById('x-bio-link-text').textContent = p.link.replace(/^https?:\/\/(www\.)?/, '');
+        bioLinkEl.classList.remove('hidden');
+      } else {
+        bioLinkEl.classList.add('hidden');
+      }
+
+      const avatarImg = document.getElementById('x-avatar-img');
+      const avatarFallback = document.getElementById('x-avatar-fallback');
+      if (p.avatarUrl) {
+        avatarImg.src = p.avatarUrl;
+        avatarImg.classList.remove('hidden');
+        avatarFallback.classList.add('hidden');
+      } else {
+        avatarImg.classList.add('hidden');
+        avatarFallback.classList.remove('hidden');
+        avatarFallback.textContent = (p.displayName || 'F').charAt(0).toUpperCase();
+      }
+
+      const coverImg = document.getElementById('x-cover-img');
+      if (p.coverUrl) {
+        coverImg.src = p.coverUrl;
+        coverImg.classList.remove('hidden');
+      } else {
+        coverImg.classList.add('hidden');
+      }
+
+      const feed = document.getElementById('x-tweets-feed');
+      feed.innerHTML = '';
+      p.tweets.forEach(tw => {
+        const article = document.createElement('article');
+        article.className = 'p-3.5 flex gap-2.5';
+        const miniAvatar = p.avatarUrl
+          ? `<img src="${p.avatarUrl}" class="w-9 h-9 rounded-full object-cover shrink-0" />`
+          : `<div class="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-xs shrink-0">${(p.displayName || 'F').charAt(0).toUpperCase()}</div>`;
+
+        article.innerHTML = `
+          ${miniAvatar}
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1 text-xs truncate">
+                <span class="font-bold text-white truncate">${p.displayName}</span>
+                ${p.verified ? '<i class="fa-solid fa-circle-check text-sky-500 text-[10px]"></i>' : ''}
+                <span class="text-zinc-500 truncate" dir="ltr">${p.handle}</span>
+                <span class="text-zinc-600">• ${tw.time}</span>
+              </div>
+              <button onclick="deleteTweet(${tw.id})" class="text-zinc-600 hover:text-red-400 text-xs px-1"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <p class="text-xs text-zinc-100 mt-1 leading-relaxed whitespace-pre-line">${tw.text}</p>
+            ${tw.imageUrl ? `<img src="${tw.imageUrl}" class="mt-2 rounded-2xl max-h-52 w-full object-cover border border-zinc-800" />` : ''}
+            <div class="flex items-center justify-between text-zinc-500 text-xs mt-3 pl-4">
+              <span><i class="fa-regular fa-comment"></i> ${tw.replies || '5'}</span>
+              <span><i class="fa-solid fa-retweet"></i> ${tw.retweets || '10'}</span>
+              <span><i class="fa-regular fa-heart"></i> ${tw.likes || '99'}</span>
+              <span><i class="fa-solid fa-chart-simple"></i> ${tw.views || '1.2K'}</span>
+            </div>
+          </div>
+        `;
+        feed.appendChild(article);
+      });
+    }
+
+    function renderInstagramProfile() {
+      const p = appState.igProfile;
+      const cleanHandle = p.handle.replace(/^@/, '');
+      document.getElementById('ig-top-handle').textContent = cleanHandle;
+      document.getElementById('ig-display-name').textContent = p.displayName;
+      document.getElementById('ig-bio').textContent = p.bio;
+      document.getElementById('ig-followers-count').textContent = p.followers;
+      document.getElementById('ig-following-count').textContent = p.following;
+      document.getElementById('ig-posts-count').textContent = p.postsCount;
+      document.getElementById('ig-verified-badge').style.display = p.verified ? 'inline-block' : 'none';
+
+      const bioLinkEl = document.getElementById('ig-bio-link');
+      if (p.link) {
+        bioLinkEl.href = p.link.startsWith('http') ? p.link : `https://${p.link}`;
+        document.getElementById('ig-bio-link-text').textContent = p.link.replace(/^https?:\/\/(www\.)?/, '');
+        bioLinkEl.classList.remove('hidden');
+      } else {
+        bioLinkEl.classList.add('hidden');
+      }
+
+      const avatarImg = document.getElementById('ig-avatar-img');
+      const avatarFallback = document.getElementById('ig-avatar-fallback');
+      if (p.avatarUrl) {
+        avatarImg.src = p.avatarUrl;
+        avatarImg.classList.remove('hidden');
+        avatarFallback.classList.add('hidden');
+      } else {
+        avatarImg.classList.add('hidden');
+        avatarFallback.classList.remove('hidden');
+        avatarFallback.textContent = (cleanHandle || 'F').slice(0, 2).toUpperCase();
+      }
+
+      const grid = document.getElementById('ig-posts-grid');
+      grid.innerHTML = '';
+      p.posts.forEach(post => {
+        const cell = document.createElement('div');
+        cell.className = 'aspect-square bg-zinc-900 relative overflow-hidden group';
+        if (post.type === 'image') {
+          cell.innerHTML = `<img src="${post.url}" class="w-full h-full object-cover" /><button onclick="deleteIgPost(${post.id})" class="absolute top-1.5 left-1.5 w-6 h-6 rounded-full bg-black/70 text-red-400 text-[10px] opacity-0 group-hover:opacity-100 flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>`;
+        } else if (post.type === 'video') {
+          cell.innerHTML = `<video src="${post.url}" class="w-full h-full object-cover" muted></video><button onclick="deleteIgPost(${post.id})" class="absolute top-1.5 left-1.5 w-6 h-6 rounded-full bg-black/70 text-red-400 text-[10px] opacity-0 group-hover:opacity-100 flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>`;
+        } else {
+          cell.className = 'aspect-square bg-gradient-to-br from-zinc-900 to-black flex flex-col items-center justify-center p-2 text-center border border-zinc-900/50 relative group';
+          cell.innerHTML = `<i class="fa-solid ${post.icon || 'fa-camera'} text-zinc-600 text-xl mb-1"></i><span class="text-[9px] text-zinc-500">${post.label || ''}</span><button onclick="deleteIgPost(${post.id})" class="absolute top-1.5 left-1.5 w-6 h-6 rounded-full bg-black/70 text-red-400 text-[10px] opacity-0 group-hover:opacity-100 flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>`;
+        }
+        grid.appendChild(cell);
+      });
+    }
+
+    async function handleDirectMediaUpdate(event, platform, field) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const dataUrl = await fileToDataUrl(file);
+      if (platform === 'x') {
+        if (field === 'avatar') appState.xProfile.avatarUrl = dataUrl;
+        if (field === 'cover') appState.xProfile.coverUrl = dataUrl;
+        renderTwitterProfile();
+      } else {
+        if (field === 'avatar') appState.igProfile.avatarUrl = dataUrl;
+        renderInstagramProfile();
+      }
+      persistState();
+      showToast('تم تحديث الصورة ✓');
+    }
+
+    function openProfileEditor(platform) {
+      currentEditingPlatform = platform;
+      const modal = document.getElementById('profile-editor-modal');
+      const coverBox = document.getElementById('editor-cover-upload-box');
+      const postsCountBox = document.getElementById('editor-posts-count-box');
+
+      if (platform === 'x') {
+        const p = appState.xProfile;
+        document.getElementById('editor-modal-title').textContent = 'تخصيص حساب تويتر (X)';
+        document.getElementById('edit-display-name').value = p.displayName;
+        document.getElementById('edit-handle').value = p.handle;
+        document.getElementById('edit-bio').value = p.bio;
+        document.getElementById('edit-link').value = p.link;
+        document.getElementById('edit-followers').value = p.followers;
+        document.getElementById('edit-following').value = p.following;
+        document.getElementById('edit-verified').checked = p.verified;
+        tempEditorAvatar = p.avatarUrl;
+        tempEditorCover = p.coverUrl;
+        coverBox.classList.remove('hidden');
+        postsCountBox.classList.add('hidden');
+      } else {
+        const p = appState.igProfile;
+        document.getElementById('editor-modal-title').textContent = 'تخصيص حساب انستقرام';
+        document.getElementById('edit-display-name').value = p.displayName;
+        document.getElementById('edit-handle').value = p.handle;
+        document.getElementById('edit-bio').value = p.bio;
+        document.getElementById('edit-link').value = p.link;
+        document.getElementById('edit-followers').value = p.followers;
+        document.getElementById('edit-following').value = p.following;
+        document.getElementById('edit-posts-count').value = p.postsCount;
+        document.getElementById('edit-verified').checked = p.verified;
+        tempEditorAvatar = p.avatarUrl;
+        coverBox.classList.add('hidden');
+        postsCountBox.classList.remove('hidden');
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeProfileEditor() {
+      document.getElementById('profile-editor-modal').classList.add('hidden');
+    }
+
+    async function handleEditorImageUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const dataUrl = await fileToDataUrl(file);
+      if (type === 'avatar') tempEditorAvatar = dataUrl;
+      else tempEditorCover = dataUrl;
+      showToast('تم تجهيز الصورة — اضغط حفظ');
+    }
+
+    function saveProfileEditor() {
+      if (currentEditingPlatform === 'x') {
+        const p = appState.xProfile;
+        p.displayName = document.getElementById('edit-display-name').value.trim() || 'fttir';
+        p.handle = document.getElementById('edit-handle').value.trim() || '@fttir';
+        p.bio = document.getElementById('edit-bio').value;
+        p.link = document.getElementById('edit-link').value.trim();
+        p.followers = document.getElementById('edit-followers').value.trim() || '0';
+        p.following = document.getElementById('edit-following').value.trim() || '0';
+        p.verified = document.getElementById('edit-verified').checked;
+        p.avatarUrl = tempEditorAvatar;
+        p.coverUrl = tempEditorCover;
+        renderTwitterProfile();
+      } else {
+        const p = appState.igProfile;
+        p.displayName = document.getElementById('edit-display-name').value.trim() || 'fttir';
+        p.handle = document.getElementById('edit-handle').value.trim() || '_fttir';
+        p.bio = document.getElementById('edit-bio').value;
+        p.link = document.getElementById('edit-link').value.trim();
+        p.followers = document.getElementById('edit-followers').value.trim() || '0';
+        p.following = document.getElementById('edit-following').value.trim() || '0';
+        p.postsCount = document.getElementById('edit-posts-count').value.trim() || '0';
+        p.verified = document.getElementById('edit-verified').checked;
+        p.avatarUrl = tempEditorAvatar;
+        renderInstagramProfile();
+      }
+      persistState();
+      closeProfileEditor();
+      showToast('تم حفظ بيانات الحساب ✓');
+    }
+
+    function openNewTweetModal() {
+      tempTweetImage = '';
+      document.getElementById('tweet-text-input').value = '';
+      document.getElementById('new-tweet-modal').classList.remove('hidden');
+    }
+    function closeNewTweetModal() { document.getElementById('new-tweet-modal').classList.add('hidden'); }
+    async function handleNewTweetImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      tempTweetImage = await fileToDataUrl(file);
+      document.getElementById('tweet-img-label').textContent = `✓ ${file.name}`;
+    }
+    function submitNewTweet() {
+      const text = document.getElementById('tweet-text-input').value.trim();
+      if (!text && !tempTweetImage) return;
+      appState.xProfile.tweets.unshift({
+        id: Date.now(),
+        text,
+        imageUrl: tempTweetImage,
+        likes: document.getElementById('tweet-likes-input').value.trim() || '120',
+        retweets: document.getElementById('tweet-retweets-input').value.trim() || '15',
+        replies: '4',
+        views: '1.8K',
+        time: document.getElementById('tweet-time-input').value.trim() || 'الآن'
+      });
+      persistState();
+      renderTwitterProfile();
+      closeNewTweetModal();
+    }
+    function deleteTweet(id) {
+      appState.xProfile.tweets = appState.xProfile.tweets.filter(t => t.id !== id);
+      persistState();
+      renderTwitterProfile();
+    }
+
+    function openNewIgPostModal() {
+      tempIgMediaUrl = '';
+      document.getElementById('new-ig-modal').classList.remove('hidden');
+    }
+    function closeNewIgModal() { document.getElementById('new-ig-modal').classList.add('hidden'); }
+    async function handleNewIgMedia(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const isVideo = file.type.startsWith('video/');
+      tempIgMediaType = isVideo ? 'video' : 'image';
+      tempIgMediaUrl = isVideo ? URL.createObjectURL(file) : await fileToDataUrl(file);
+      document.getElementById('ig-media-label').textContent = `✓ ${file.name}`;
+    }
+    function submitNewIgPost() {
+      if (!tempIgMediaUrl) return;
+      appState.igProfile.posts.unshift({
+        id: Date.now(),
+        type: tempIgMediaType,
+        url: tempIgMediaUrl,
+        caption: document.getElementById('ig-caption-input').value.trim()
+      });
+      if (tempIgMediaType === 'image') persistState();
+      renderInstagramProfile();
+      closeNewIgModal();
+    }
+    function deleteIgPost(id) {
+      appState.igProfile.posts = appState.igProfile.posts.filter(p => p.id !== id);
+      persistState();
+      renderInstagramProfile();
+    }
+
+    function toggleFollowX(btn) {
+      const f = btn.dataset.following === 'true';
+      btn.dataset.following = f ? 'false' : 'true';
+      btn.textContent = f ? 'متابعة' : 'متابَع';
+    }
+    function toggleFollowIG(btn) {
+      const f = btn.dataset.following === 'true';
+      btn.dataset.following = f ? 'false' : 'true';
+      btn.textContent = f ? 'متابعة' : 'تتابعه';
+    }
+
+    // =========================================================
+    // EXPORT STANDALONE index.html FOR GITHUB PAGES
+    // =========================================================
+    function exportGitHubHtml() {
+      try {
+        const docClone = document.documentElement.cloneNode(true);
+        docClone.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+        ['studio-modal', 'profile-editor-modal', 'new-tweet-modal', 'new-ig-modal', 'snap-composer-modal', 'snap-story-viewer', 'wa-new-chat-modal', 'wa-chat-settings-modal', 'call-modal', 'media-lightbox'].forEach(id => {
+          const modal = docClone.querySelector(`#${id}`);
+          if (modal) modal.classList.add('hidden');
+        });
+        const lockEl = docClone.querySelector('#lock-screen');
+        if (lockEl) {
+          lockEl.classList.remove('unlocked');
+          lockEl.style.transform = '';
+        }
+
+        let htmlString = '<!DOCTYPE html>\n' + docClone.outerHTML;
+        const stateJson = JSON.stringify(appState);
+        htmlString = htmlString.replace(
+          /const defaultState = \{[\s\S]*?\n    \};/,
+          `const defaultState = ${stateJson};`
+        );
+
+        const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('تم تصدير index.html الجاهز للنشر على GitHub Pages ✓');
+      } catch (err) {
+        showToast('حدث خطأ أثناء التصدير');
+      }
+    }
+
+    function renderAll() {
+      applySystemSettings();
+      renderWaChatList();
+      renderSnapchat();
+      renderNotesList();
+      renderCallsList();
+      renderPhotosGrid();
+      renderTwitterProfile();
+      renderInstagramProfile();
+    }
+
+    // Initial Boot
+    renderAll();
+  </script>
 </body>
 </html>
