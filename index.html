@@ -12,26 +12,36 @@
 <main class="phone">
 
   <div class="lock-screen">
+
+    <div class="dynamic-island"></div>
+
     <div class="status-bar">
       <span>9:41</span><span>●●● WiFi ▰</span>
     </div>
+
     <div class="lock-content">
       <p class="day">Tuesday, November 24</p>
       <h1 id="clock">9:41</h1>
       <p>Welcome to my phone</p>
     </div>
+
     <div class="widgets">
       <div class="widget">☁️<br>Weather</div>
       <div class="widget">📅<br>Calendar</div>
     </div>
+
     <div class="bottom-icons">
-      <button>🔦</button><button>📷</button>
+      <button>🔦</button>
+      <button>📷</button>
     </div>
+
     <div class="swipe">Swipe up to unlock</div>
     <button class="unlock" onclick="unlockPhone()">Unlock</button>
+
   </div>
 
   <section id="home-screen" class="home-screen hidden">
+
     <div class="home-status">
       <span>9:41</span><span>●●● WiFi ▰</span>
     </div>
@@ -53,9 +63,11 @@
       <button class="app" data-app="Photos"><span class="app-icon white">🌈</span></button>
       <button class="app" data-app="Music"><span class="app-icon pink">🎵</span></button>
     </div>
+
   </section>
 
   <section id="app-screen" class="app-screen hidden">
+
     <button id="back-home">← Home</button>
 
     <div id="phone-app" class="hidden">
@@ -68,21 +80,26 @@
     <div id="messages-app" class="hidden">
       <h2>Messages</h2>
       <p class="message-subtitle">Your conversations</p>
+
       <form id="add-contact-form">
         <input id="contact-name" placeholder="Person's name" required>
         <label for="contact-photo">Choose a photo</label>
         <input id="contact-photo" type="file" accept="image/*">
         <button type="submit">＋ Add Contact</button>
       </form>
+
       <div id="conversation-list"></div>
+
       <div id="chat-view" class="hidden">
         <button id="back-messages">← Conversations</button>
         <h3 id="chat-name"></h3>
         <div id="chat-messages"></div>
+
         <form id="send-message-form">
           <input id="message-input" placeholder="iMessage" required>
           <button type="submit">Send</button>
         </form>
+
         <form id="receive-message-form">
           <input id="receive-input" placeholder="Incoming message">
           <button type="button" id="receive-button">Receive</button>
@@ -96,6 +113,7 @@
       <label for="gallery-upload">＋ Add Photos</label>
       <input id="gallery-upload" type="file" accept="image/*" multiple>
       <div id="photo-gallery"></div>
+
       <div id="photo-viewer" class="hidden">
         <button id="close-photo">✕ Close</button>
         <img id="large-photo" alt="Selected photo">
@@ -124,11 +142,13 @@
     <div id="tiktok-app" class="hidden">
       <h2>♪ TikTok</h2>
       <p class="message-subtitle">For You</p>
+
       <div class="social-post">
         <div class="social-placeholder">🎬</div>
         <p>Welcome to your feed!</p>
         <button class="like-button">♡ Like</button>
       </div>
+
       <div class="social-post">
         <div class="social-placeholder">🌸</div>
         <p>Enjoy your day!</p>
@@ -139,11 +159,13 @@
     <div id="instagram-app" class="hidden">
       <h2>Instagram</h2>
       <p class="message-subtitle">Your Feed</p>
+
       <div class="social-post">
         <div class="social-placeholder">📸</div>
         <p>Welcome to Instagram!</p>
         <button class="like-button">♡ Like</button>
       </div>
+
       <div class="social-post">
         <div class="social-placeholder">🌷</div>
         <p>Beautiful moments</p>
@@ -162,18 +184,22 @@
 
     <div id="settings-app" class="hidden">
       <h2>Settings</h2>
+
       <div class="setting-item">
         <span>Dark Mode</span>
         <input id="dark-mode" type="checkbox">
       </div>
+
       <div class="setting-item">
         <span>Phone Name</span>
         <strong>My iPhone</strong>
       </div>
+
       <div class="setting-item">
         <span>Software Version</span>
         <strong>1.0</strong>
       </div>
+
       <div class="setting-item">
         <span>About</span>
         <strong>My Phone</strong>
