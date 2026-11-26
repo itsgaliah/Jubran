@@ -1,0 +1,14 @@
+    async function handleSnapMediaSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const isVideo = file.type.startsWith('video/');
+      tempSnapMediaType = isVideo ? 'video' : 'image';
+      tempSnapMediaUrl = isVideo ? encodeURI(file.name) : await fileToDataUrl(file);
+
+      document.getElementById('snap-upload-label').textContent = `✓ تم اختيار: ${file.name}`;
+      const previewBox = document.getElementById('snap-preview-box');
+      previewBox.classList.remove('hidden');
+      previewBox.innerHTML = isVideo
+        ? `<video src="${tempSnapMediaUrl}" class="max-h-48 w-full object-contain" muted autoplay loop></video>`
+        : `<img src="${tempSnapMediaUrl}" class="max-h-48 w-full object-contain" />`;
+    }
