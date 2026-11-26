@@ -1,0 +1,20 @@
+    async function handlePhotosUpload(event) {
+      const files = Array.from(event.target.files);
+      if (!files.length) return;
+
+      for (const file of files) {
+        const isVideo = file.type.startsWith('video/');
+        const url = isVideo ? encodeURI(file.name) : await fileToDataUrl(file);
+        appState.photos.unshift({
+          id: Date.now() + Math.random(),
+          url,
+          type: isVideo ? 'video' : 'image',
+          name: file.name
+        });
+      }
+
+      persistState();
+      renderPhotosGrid();
+      showToast(`تمت إضافة ${files.length} عنصر إلى الصور`);
+      event.target.value = '';
+    }
