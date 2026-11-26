@@ -1,0 +1,8 @@
+    async function handleNewIgMedia(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const isVideo = file.type.startsWith('video/');
+      tempIgMediaType = isVideo ? 'video' : 'image';
+      tempIgMediaUrl = isVideo ? encodeURI(file.name) : await fileToDataUrl(file);
+      document.getElementById('ig-media-label').textContent = `✓ ${file.name}`;
+    }
