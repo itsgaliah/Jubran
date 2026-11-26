@@ -1,0 +1,23 @@
+    async function handleChatMediaUpload(event) {
+      const file = event.target.files[0];
+      if (!file || !activeChatId) return;
+
+      const isVideo = file.type.startsWith('video/');
+      const url = isVideo ? encodeURI(file.name) : await fileToDataUrl(file);
+      const chat = appState.waChats.find(c => c.id === activeChatId);
+      const isMe = activeWaSpeaker === 'me';
+
+      chat.messages.push({
+        id: Date.now(),
+        sender: isMe ? 'me' : 'them',
+        senderName: isMe ? appState.system.ownerName : activeWaSpeaker,
+        mediaUrl: url,
+        mediaType: isVideo ? 'video' : 'image',
+        text: '',
+        time: 'الآن'
+      });
+      chat.time = 'الآن';
+      if (!isVideo) persistState();
+      renderWaMessages(chat);
+      showToast('تم إرسال الوسائط في المحادثة');
+    }
